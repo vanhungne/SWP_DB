@@ -1,0 +1,157 @@
+@import url('https://fonts.gstatic.com/s/quicksand/v31/6xKtdSZaM9iE8KbpRA_hJFQNcOM.woff2');
+
+// Variables
+$navbar-bg-color: #041a43;
+$brand-color: #ffffff;
+$link-color: black;
+$link-hover-color: #9f169f;
+$dropdown-bg-color: #fff;
+$dropdown-hover-bg-color: #f8f9fa;
+$dropdown-shadow-color: rgba(0, 0, 0, 0.15);
+
+// Mixins
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+}
+.custom-navbar {
+    background-color: $navbar-bg-color;
+    padding: 50px 0px 15px 0px;
+    margin-bottom: 0;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Noto Sans', sans-serif;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    transition: top 0.3s;
+
+    &.hidden {
+        top: -100px;
+    }
+}
+
+
+body {
+    padding-top: 120px;
+}
+
+.container {
+    margin: 0 auto;
+    padding: 0 10px;
+}
+
+
+
+.custom-brand {
+    @include flex-center;
+    font-weight: 400;
+    color: $brand-color !important;
+    font-size: 1.8rem;
+    font-family: 'Noto Serif', serif;
+
+    .brand-logo {
+        margin-right: 10px;
+        border-radius: 50%;
+        border: 2px solid $brand-color;
+    }
+}
+
+.custom-nav {
+    @include flex-center;
+    justify-content: center;
+    width: 100%;
+}
+
+.custom-nav-link {
+    font-weight: 400;
+    color: $link-color !important;
+    margin: 0 15px;
+    position: relative;
+    font-size: 1.4rem;
+    transition: color 0.3s, transform 0.3s;
+    font-family: 'Noto Sans', sans-serif;
+
+    &:hover {
+        color: $link-hover-color !important;
+        transform: scale(1.05);
+    }
+}
+.custom-nav-link-cart{
+    font-weight: 400;
+    color: white !important;
+    margin: 0 15px;
+    position: relative;
+    font-size: 1.4rem;
+    transition: color 0.3s, transform 0.3s;
+    font-family: 'Noto Sans', sans-serif;
+
+    &:hover {
+        color: $link-hover-color !important;
+        transform: scale(1.05);
+    }
+}
+.nav-link {
+    color: white;
+}
+
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    margin-top: 0.5rem;
+    box-shadow: 0 0.5rem 1rem $dropdown-shadow-color;
+    border-radius: 0.25rem;
+    padding: 0.5rem 0;
+    background-color: $dropdown-bg-color;
+    z-index: 1000;
+}
+
+.dropdown-item {
+    color: $link-color !important;
+    padding: 0.5rem 1.5rem;
+    font-family: 'Noto Sans', sans-serif;
+
+    &:hover {
+        background-color: $dropdown-hover-bg-color;
+        color: $link-hover-color !important;
+    }
+}
+
+.nav-right {
+    @include flex-center;
+    justify-content: end;
+}
+
+.custom-nav-link .dropdown-toggle::after {
+    display: none;
+}
+
+.nav-right-items {
+    display: flex;
+    align-items: center;
+}
+
+.nav-account {
+    margin-right: 1rem;
+}
+
+@media (max-width: 767px) {
+    .container {
+        padding: 0 10px;
+    }
+
+    .custom-brand {
+        font-size: 1.5rem;
+
+        .brand-logo {
+            height: 40px;
+        }
+    }
+
+    .custom-nav-link {
+        font-size: 1.2rem;
+        margin: 0 10px;
+    }
+}

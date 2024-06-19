@@ -1,0 +1,35 @@
+.login-container {
+    min-height: 100vh;
+    background: #f8f9fa;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+}
+
+.card-body {
+    padding: 2rem;
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.btn-primary:hover {
+    background-color: #2e59d9;
+    border-color: #2653d4;
+}
+
+.btn-danger {
+    background-color: #e74a3b;
+    border-color: #e74a3b;
+}
+
+.btn-danger:hover {
+    background-color: #d73833;
+    border-color: #d32823;
+}
+.btn-secondaryi{
+    background-color: #0048ff;
+}

@@ -1,0 +1,74 @@
+/* Checkout.css */
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.order-summary-section {
+    margin-bottom: 20px;
+}
+
+.card {
+    margin-bottom: 20px;
+}
+
+.card-header {
+    background-color: #000;
+    color: #fff;
+    font-size: 1.25rem;
+    font-weight: bold;
+    padding: 4px;
+}
+
+.card-body {
+    padding: 20px;
+}
+
+.card-footer {
+    background-color: #f8f9fa;
+    font-size: 1.25rem;
+    font-weight: bold;
+    text-align: right;
+}
+
+.table {
+    width: 100%;
+    margin-bottom: 1rem;
+    color: #212529;
+    border-collapse: collapse; /* Ensure borders don't collapse */
+}
+
+.table th,
+.table td {
+    vertical-align: middle;
+    border: none; /* Remove all borders */
+    padding: 0.75rem;
+    text-align: left;
+}
+
+.table thead th {
+    border-bottom: 2px solid #000; /* Bottom border for table header */
+}
+
+.table tbody tr {
+    border-bottom: 1px solid #dee2e6; /* Bottom border for table rows */
+}
+
+.table img {
+    max-width: 100px;
+    margin-right: 10px;
+}
+
+.delivery-address-section {
+    margin-top: 20px;
+}
+
+h2 {
+    margin-bottom: 20px;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    font-size: 1rem;
+}

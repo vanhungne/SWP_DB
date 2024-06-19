@@ -1,0 +1,137 @@
+.product-detail {
+  .product-images {
+    .img-fluid {
+      width: 100%; // Occupy full width of container
+      max-width: 500px; // Adjust maximum width for larger image
+      height: 500px;
+      margin-bottom: 2rem; // Increased margin bottom for spacing
+    }
+
+    .additional-images {
+      display: flex;
+      gap: 1rem; // Increased gap between additional images
+
+      .img-thumbnail {
+        max-width: 100px; // Increased thumbnail size
+        height: 100px;
+      }
+    }
+  }
+
+  .details-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+
+    .diamond-info,
+    .shell-info {
+      max-width: 40%;
+      flex: 1;
+      border: 1px solid #dee2e6;
+      border-radius: 5px;
+      padding: 15px;
+      margin-bottom: 20px;
+
+      h4 {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+        color: black;
+        cursor: pointer;
+        font-size: 1.2rem; /* Adjust title font size */
+        font-weight: bold; /* Bold title */
+        text-transform: uppercase; /* Convert title to uppercase */
+      }
+
+      .details {
+        p {
+          margin-bottom: 5px;
+          font-size: 0.9rem; /* Adjust details font size */
+        }
+      }
+    }
+  }
+
+  .form-group {
+    max-width: 40%;
+    display: flex;
+    align-items: center; // Align items vertically
+    gap: 10px; // Adjust the gap between size selector and quantity selector
+
+    label {
+      font-weight: bold;
+      flex: 1; // Ensure label takes up available space
+    }
+    select,
+    input[type="number"] {
+      flex: 2; // Adjust size to take up more space
+      max-width: 150px; // Set maximum width for better layout
+      font-size: 0.9rem; // Reduce font size
+    }
+  }
+
+  .btn {
+    margin-top: 1rem;
+    padding: 0.5rem 0.5rem;
+    width: 20%;
+    font-size: 0.9rem; // Smaller font size
+  }
+
+  .diamond-info {
+    /* Adjust background and border */
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+
+    h4 {
+      margin-bottom: 10px;
+      color: #007bff;
+      cursor: pointer;
+      font-size: 1rem; /* Adjust title font size */
+    }
+
+    .details {
+      p {
+        margin-bottom: 5px;
+        font-size: 0.9rem; /* Adjust details font size */
+      }
+    }
+  }
+
+  .shell-info {
+    /* Adjust background and border */
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+
+    h4 {
+      margin-bottom: 10px;
+      color: #007bff;
+      cursor: pointer;
+      font-size: 1rem; /* Adjust title font size */
+    }
+
+    .details {
+      p {
+        margin-bottom: 5px;
+        font-size: 0.9rem; /* Adjust details font size */
+      }
+    }
+  }
+
+  .btn-outline-primary {
+    color:#fff;
+    border-color: #007bff;
+    background-color: #ff0000;
+
+    &:hover {
+      color: #fff;
+      background-color: #007bff;
+      border-color: #ff0000;
+    }
+  }
+}

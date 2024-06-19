@@ -1,0 +1,72 @@
+.cart-container {
+  max-width: 800px;
+  margin: 20px auto;
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.cart-header {
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+
+  h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    text-align: center; /* Đưa tiêu đề về giữa */
+  }
+
+  p {
+    text-align: center; /* Đưa phần mô tả về giữa */
+  }
+}
+
+.cart-empty {
+  text-align: center;
+  margin: 50px 0;
+  font-size: 18px;
+}
+
+.cart-items {
+  .cart-item {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+
+    img {
+      max-width: 100px;
+      margin-right: 20px;
+      border-radius: 5px;
+    }
+
+    .item-details {
+      flex: 1;
+
+      h3 {
+        font-size: 18px;
+        margin-bottom: 5px;
+      }
+
+      p {
+        margin-bottom: 5px;
+        font-size: 14px;
+      }
+    }
+
+    .item-actions {
+      display: flex;
+      align-items: center;
+
+      button {
+        margin-left: 10px;
+      }
+    }
+  }
+  .row-cols-6{
+    text-align: center;
+  }
+  }

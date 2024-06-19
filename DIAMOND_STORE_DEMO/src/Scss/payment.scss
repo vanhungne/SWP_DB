@@ -1,0 +1,68 @@
+.payment-vnpay-container {
+  max-width: 600px;
+  margin: auto;
+}
+
+.payment-vnpay-header {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.payment-vnpay-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(239, 4, 4, 0.1);
+  margin-top: 2rem;
+}
+
+.payment-vnpay-card-body {
+  padding: 1.5rem;
+}
+
+.payment-vnpay-form-label {
+  font-weight: bold;
+}
+
+.payment-vnpay-form-select {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.payment-vnpay-btn-success {
+  display: block;
+  width: 40%;
+
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: #0048ff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #1b03ef;
+  }
+
+  &:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+  }
+}
+
+.payment-vnpay-error-message {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.payment-vnpay-card-footer {
+  padding-bottom: 120px;
+}

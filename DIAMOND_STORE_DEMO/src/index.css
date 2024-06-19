@@ -1,0 +1,12 @@
+body {
+  margin: 0;
+  font-family: 'Playfair Display', Menlo, Monaco, Consolas, 'Courier New',
+  sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: 'Playfair Display', Menlo, Monaco, Consolas, 'Courier New',
+  sans-serif;
+}
