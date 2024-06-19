@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../Scss/account.css';
+import {API_URL} from "../Config/config";
 
 const ManageAccount = () => {
     const [users, setUsers] = useState([]);
@@ -15,7 +16,7 @@ const ManageAccount = () => {
     const fetchUsers = async () => {
         const token = localStorage.getItem('token');
         try {
-            const response = await axios.get('http://localhost:8080/manage/accounts', {
+            const response = await axios.get(`${API_URL}manage/accounts`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -38,7 +39,7 @@ const ManageAccount = () => {
     const handleUpdateUser = async (updatedUser) => {
         const token = localStorage.getItem('token');
         try {
-            await axios.put(`http://localhost:8080/manage/accounts/${updatedUser.userid}`, updatedUser, {
+            await axios.put(`${API_URL}manage/accounts/${updatedUser.userid}`, updatedUser, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -58,7 +59,7 @@ const ManageAccount = () => {
         }
         const token = localStorage.getItem('token');
         try {
-            await axios.post('http://localhost:8080/manage/accounts', newUser, {
+            await axios.post(`${API_URL}manage/accounts`, newUser, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -74,7 +75,7 @@ const ManageAccount = () => {
     const handleDeleteUser = async (userId) => {
         const token = localStorage.getItem('token');
         try {
-            await axios.delete(`http://localhost:8080/manage/accounts/${userId}`, {
+            await axios.delete(`${API_URL}manage/accounts/${userId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }

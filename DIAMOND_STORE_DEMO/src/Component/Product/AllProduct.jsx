@@ -7,7 +7,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../../Scss/home.scss';
 import VideoBanner from "../../Layouttest/VideoBanner";
 import ProductCard from './ProductCard'; // Import the ProductCard component
-
+import {API_URL} from "../../Config/config";
 const Products = () => {
     const [productsPage, setProductsPage] = useState({
         content: [],
@@ -16,7 +16,7 @@ const Products = () => {
         totalElements: 0
     });
     const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize, setPageSize] = useState(8);
+    const [pageSize] = useState(8);
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
@@ -26,7 +26,7 @@ const Products = () => {
 
     const fetchProducts = async (page, size) => {
         try {
-            const response = await axios.get(`http://localhost:8080/home?page=${page}&size=${size}`);
+            const response = await axios.get(`${API_URL}home?page=${page}&size=${size}`);
             setProductsPage(response.data);
         } catch (error) {
             console.error('Error fetching products:', error);
@@ -38,9 +38,9 @@ const Products = () => {
         setCurrentPage(pageNumber);
     };
 
-    const handleProductClick = (productId) => {
-        navigate(`/product/${productId}`);
-    };
+    // const handleProductClick = (productId) => {
+    //     navigate(`/product/${productId}`);
+    // };
 
     const getPaginationRange = (currentPage, totalPages) => {
         const delta = 2; // Number of pages to show before and after the current page

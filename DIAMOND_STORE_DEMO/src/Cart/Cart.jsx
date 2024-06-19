@@ -6,6 +6,7 @@ import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom'; // Import useHistory
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../Scss/cart.scss'; // Import the SCSS file
+import {API_URL} from "../Config/config";
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -15,33 +16,32 @@ const Cart = () => {
         const cartFromCookie = getCartFromCookie();
         setCartItems(cartFromCookie);
     }, []);
-
-    const fetchCartItems = async () => {
-        try {
-            const token = localStorage.getItem('token');
-            const response = await axios.get('http://localhost:8080/cart', {
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                },
-                withCredentials: true
-            });
-            setCartItems(response.data);
-        } catch (error) {
-            console.error('Error fetching cart items:', error);
-            Swal.fire({
-                title: 'Error',
-                text: 'There was an error fetching cart items. Please try again later.',
-                icon: 'error',
-                confirmButtonText: 'Ok'
-            });
-        }
-    };
+    // const fetchCartItems = async () => {
+    //     try {
+    //         const token = localStorage.getItem('token');
+    //         const response = await axios.get(`${API_URL}cart`, {
+    //             headers: {
+    //                 'Authorization': `Bearer ${token}`
+    //             },
+    //             withCredentials: true
+    //         });
+    //         setCartItems(response.data);
+    //     } catch (error) {
+    //         console.error('Error fetching cart items:', error);
+    //         Swal.fire({
+    //             title: 'Error',
+    //             text: 'There was an error fetching cart items. Please try again later.',
+    //             icon: 'error',
+    //             confirmButtonText: 'Ok'
+    //         });
+    //     }
+    // };
 
     const handleQuantityChange = async (productId, quantity) => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.put(
-                `http://localhost:8080/cart/update`,
+                `${API_URL}cart/update`,
                 { productId, quantity },
                 {
                     headers: {
@@ -69,7 +69,7 @@ const Cart = () => {
     const handleRemoveFromCart = async (productId) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.delete(`http://localhost:8080/cart/remove`, {
+            const response = await axios.delete(`${API_URL}cart/remove`, {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json'

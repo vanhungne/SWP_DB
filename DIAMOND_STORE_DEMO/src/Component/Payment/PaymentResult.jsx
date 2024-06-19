@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useLocation } from 'react-router-dom';
+import {API_URL} from "../../Config/config";
 
 const PaymentResult = () => {
     const location = useLocation();
@@ -10,7 +11,7 @@ const PaymentResult = () => {
 
         const verifyPayment = async () => {
             try {
-                const response = await axios.get('http://localhost:8080/payment/VNPayBack', {
+                const response = await axios.get(`${API_URL}payment/VNPayBack`, {
                     params: {
                         vnp_Amount: searchParams.get('vnp_Amount'),
                         vnp_BankCode: searchParams.get('vnp_BankCode'),

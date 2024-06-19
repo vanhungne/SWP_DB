@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
 import Swal from 'sweetalert2';
 import '../Scss/Login.scss';
+import {API_URL} from "../Config/config";
 
 function Resetpassword() {
     const { email } = useParams();
@@ -26,7 +27,7 @@ function Resetpassword() {
         }
 
         try {
-            const response = await axios.post("http://localhost:8080/login/resetpassword", {
+            const response = await axios.post(`${API_URL}login/resetpassword`, {
 
                 email,
                 verificationCode,

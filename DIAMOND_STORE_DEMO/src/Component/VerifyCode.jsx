@@ -3,6 +3,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate, useParams } from 'react-router-dom';
 import MetaTags from "react-meta-tags";
+import {API_URL} from "../Config/config";
 
 const VerifyCodeForm = () => {
     const { email } = useParams();
@@ -17,7 +18,7 @@ const VerifyCodeForm = () => {
     const handleVerifyCode = async () => {
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:8080/login/verify-registration', {
+            const response = await axios.post(`${API_URL}login/verify-registration`, {
                 email,
                 verificationCode,
             });

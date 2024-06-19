@@ -4,6 +4,7 @@ import axios from "axios";
 import Swal from 'sweetalert2';
 import '../Scss/Login.scss';
 import { FcGoogle } from 'react-icons/fc'; // Import Google icon from react-icons
+import {API_URL} from "../Config/config";
 
 function Login() {
     const [email, setEmail] = useState("");
@@ -13,7 +14,7 @@ function Login() {
     const login = async (event) => {
         event.preventDefault();
         try {
-            const response = await axios.post("http://localhost:8080/login/signin", null, {
+            const response = await axios.post(`${API_URL}login/signin`, null, {
                 params: { email, password },
             });
 
@@ -44,7 +45,7 @@ function Login() {
     };
 
     const handleGoogleLogin = () => {
-        window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+        window.location.href = `${API_URL}oauth2/authorization/google`;
     };
 
     return (

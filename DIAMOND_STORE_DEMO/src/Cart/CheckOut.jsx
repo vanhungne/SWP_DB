@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Cookies from 'js-cookie';
 import '../Scss/Checkout.scss';
 import { useNavigate } from "react-router-dom";
+import {API_URL} from "../Config/config";
 
 const Checkout = () => {
     const [deliveryAddress, setDeliveryAddress] = useState('');
@@ -44,7 +44,7 @@ const Checkout = () => {
         try {
             const token = localStorage.getItem('token');
             const response = await axios.post(
-                'http://localhost:8080/cart/checkout',
+                `${API_URL}cart/checkout`,
                 { deliveryAddress },
                 {
                     headers: {
@@ -93,7 +93,7 @@ return (
                             <tr key={item.id}>
                                 <td>
                                     <img
-                                        src={`http://localhost:8080/product/load-image/${item.image1}.jpg`}
+                                        src={`${API_URL}product/load-image/${item.image1}.jpg`}
                                         alt={item.name}
                                         className="img-fluid"
                                         style={{ maxWidth: '100px', marginRight: '10px' }}

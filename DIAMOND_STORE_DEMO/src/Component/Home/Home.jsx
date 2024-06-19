@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
-import Swal from 'sweetalert2';
 import MetaTags from 'react-meta-tags';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
@@ -8,12 +7,13 @@ import '../../Scss/home.scss';
 import VideoBanner from "../../Layouttest/VideoBanner";
 import ProductCard from "../Product/ProductCard";
 import { useNavigate } from 'react-router-dom';
+import {API_URL} from "../../Config/config";
 
 const Home = () => {
     const [featuredProducts, setFeaturedProducts] = useState([]);
     const [collectionProducts, setCollectionProducts] = useState([]);
     const [collectionError, setCollectionError] = useState('');
-    const [categories, setCategories] = useState([]);
+    // const [categories, setCategories] = useState([]);
     const [error, setError] = useState('');
     const [collection, setCollection] = useState(null);
     const videoRef = useRef(null);
@@ -22,7 +22,7 @@ const Home = () => {
     useEffect(() => {
         fetchFeaturedProducts();
         fetchCollectionProducts();
-        fetchCategories();
+        // fetchCategories();
 
         const handleVisibilityChange = () => {
             if (document.visibilityState === 'visible' && videoRef.current) {
@@ -47,7 +47,7 @@ const Home = () => {
 
     const fetchFeaturedProducts = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/home/featured');
+            const response = await axios.get(`${API_URL}home/featured`);
             setFeaturedProducts(response.data);
         } catch (error) {
             console.error('Error fetching featured products:', error);
@@ -57,7 +57,7 @@ const Home = () => {
 
     const fetchCollectionProducts = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/home/collection', {
+            const response = await axios.get(`${API_URL}home/collection`, {
                 params: {
                     page: 0,
                     size: 4,
@@ -72,14 +72,14 @@ const Home = () => {
         }
     };
 
-    const fetchCategories = async () => {
-        try {
-            const response = await axios.get('http://localhost:8080/home/categories');
-            setCategories(response.data);
-        } catch (error) {
-            console.error('Error fetching categories:', error);
-        }
-    };
+    // const fetchCategories = async () => {
+    //     try {
+    //         const response = await axios.get(`${API_URL}home/categories`);
+    //         setCategories(response.data);
+    //     } catch (error) {
+    //         console.error('Error fetching categories:', error);
+    //     }
+    // };
 
     return (
         <>

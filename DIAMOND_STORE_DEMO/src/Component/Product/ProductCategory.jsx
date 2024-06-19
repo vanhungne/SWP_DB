@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import {API_URL} from "../../Config/config";
+
 
 const CategoryProducts = () => {
     const { categoryId } = useParams();
@@ -26,7 +28,7 @@ const CategoryProducts = () => {
 
     const fetchCategories = async () => {
         try {
-            const response = await axios.get('http://localhost:8080/home/getCategories');
+            const response = await axios.get(`${API_URL}home/getCategories`);
             setCategories(response.data);
         } catch (error) {
             console.error('Error fetching categories:', error);
@@ -37,7 +39,7 @@ const CategoryProducts = () => {
     const fetchProductsByCategory = async (categoryId) => {
         try {
             setLoading(true);
-            const response = await axios.get(`http://localhost:8080/home/getProductByCategoryId`, {
+            const response = await axios.get(`${API_URL}home/getProductByCategoryId`, {
                 params: {
                     categoryId: categoryId,
                     page: page,
@@ -85,7 +87,7 @@ const CategoryProducts = () => {
                     <div key={product.productId} className="col-md-3 mb-4">
                         <div className="card h-100" onClick={() => handleProductClick(product.productId)}>
                             <img
-                                src={`http://localhost:8080/product/load-image/${product.image1}`}
+                                src={`${API_URL}product/load-image/${product.image1}`}
                                 alt={product.productName}
                                 className="card-img-top"
                             />

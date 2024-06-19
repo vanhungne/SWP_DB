@@ -4,6 +4,7 @@ import {useParams, Link} from 'react-router-dom'; // Import Link for navigation
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../Scss/ProductDetails.scss';
 import Swal from 'sweetalert2';
+import {API_URL} from "../../Config/config";
 
 // Utility function to set a cookie
 const setCookie = (name, value, days) => {
@@ -45,7 +46,7 @@ const ProductDetail = () => {
 
     const fetchProductDetail = async () => {
         try {
-            const response = await axios.get(`http://localhost:8080/product/${productId}`);
+            const response = await axios.get(`${API_URL}product/${productId}`);
             const fetchedProduct = response.data;
             setProduct(fetchedProduct);
             setMainImage(fetchedProduct.image1);
@@ -62,7 +63,7 @@ const ProductDetail = () => {
     const fetchSizesForCategory = async (categoryId) => {
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get(`http://localhost:8080/sizes/${categoryId}`, {
+            const response = await axios.get(`${API_URL}sizes/${categoryId}`, {
                 headers: {
                     'Authorization': `Bearer ${token}`
                 }
@@ -98,11 +99,12 @@ const ProductDetail = () => {
             const token = localStorage.getItem('token');
 
             const input = {
-                productId: product.productId, quantity: 1,
+                productId: product.productId,
+                quantity: 1,
                 sizeId: selectedSize
             };
 
-            const response = await axios.post('http://localhost:8080/cart/add', input, {
+            const response = await axios.post(`${API_URL}cart/add`, input, {
                 headers: {
                     'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'
                 }
@@ -148,7 +150,7 @@ const ProductDetail = () => {
         if (ProductId) {
             try {
                 const token = localStorage.getItem('token')
-                const response = await axios.get(`http://localhost:8080/manage/diamond/pro/${ProductId}`, {
+                const response = await axios.get(`${API_URL}manage/diamond/pro/${ProductId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -164,7 +166,7 @@ const ProductDetail = () => {
         if (shellId) {
             try {
                 const token = localStorage.getItem('token')
-                const response = await axios.get(`http://localhost:8080/manage/shell/${shellId}`, {
+                const response = await axios.get(`${API_URL}manage/shell/${shellId}`, {
                     headers: {
                         'Authorization': `Bearer ${token}`
                     }
@@ -181,10 +183,10 @@ const ProductDetail = () => {
         setShowShell(false);
     };
 
-    const toggleShellDetails = () => {
-        setShowShell(!showShell);
-        setShowDiamond(false);
-    };
+    // const toggleShellDetails = () => {
+    //     setShowShell(!showShell);
+    //     setShowDiamond(false);
+    // };
 
     return (<div style={{marginTop: '100px'}} className="container product-detail">
         <div className="py-3"></div>
@@ -194,7 +196,7 @@ const ProductDetail = () => {
                 <div className="product-images">
                     <div className="d-flex justify-content-center">
                         <img
-                            src={`http://localhost:8080/product/load-image/${mainImage}.jpg`}
+                            src={`${API_URL}product/load-image/${mainImage}.jpg`}
                             alt={product.productName}
                             className="img-fluid mb-2 border border-3 "
                         />
@@ -202,7 +204,7 @@ const ProductDetail = () => {
                     <div className="additional-images d-flex justify-content-center gap-4">
                         {[product.image1, product.image2, product.image3, product.image4].map((image, index) => (<img
                             key={index}
-                            src={`http://localhost:8080/product/load-image/${image}.jpg`}
+                            src={`${API_URL}product/load-image/${image}.jpg`}
                             alt={`${product.productName} ${index + 1}`}
                             className="img-thumbnail mr-2"
                             onClick={() => handleImageClick(image)}

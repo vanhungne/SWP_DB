@@ -6,15 +6,12 @@ import Swal from 'sweetalert2';
 import '../Scss/Header.scss'; // Import the SCSS file
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faUser } from '@fortawesome/free-solid-svg-icons';
-import axios from "axios";
 import Cookies from 'js-cookie';
 
 const Header = () => {
     const { currentUser, logout } = useAuth();
     const [scrollDirection, setScrollDirection] = useState('up');
     const [lastScrollTop, setLastScrollTop] = useState(0);
-    const [cartItems, setCartItems] = useState([]);
-
     const handleLogout = async () => {
         try {
             await logout();

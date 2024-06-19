@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../Scss/payment.scss'; // Import your scoped SCSS file here
+import {API_URL} from "../../Config/config";
 
 const PaymentVnPay = () => {
     const { orderId } = useParams();
@@ -30,7 +31,7 @@ const PaymentVnPay = () => {
         }
 
         try {
-            const response = await axios.post('http://localhost:8080/payment',
+            const response = await axios.post(`${API_URL}payment`,
                 {
                     bankCode,
                     orderId: parseInt(orderId)

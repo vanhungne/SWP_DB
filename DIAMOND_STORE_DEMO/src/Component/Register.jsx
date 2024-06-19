@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Swal from 'sweetalert2';
 import '../Scss/Register.css'; // Assuming you have some custom CSS
+import {API_URL} from "../Config/config";
 
 function Register() {
     const navigate = useNavigate();
@@ -18,7 +19,7 @@ function Register() {
         if (email) {
             const checkEmail = async () => {
                 try {
-                    const response = await axios.post("http://localhost:8080/login/checkemail", { email });
+                    const response = await axios.post(`${API_URL}login/checkemail`, { email });
                     if (response.data.exists) {
                         setEmailValidationMessage("Email is already taken");
                     } else {
@@ -60,7 +61,7 @@ function Register() {
         }
 
         try {
-            await axios.post("http://localhost:8080/login/signup", {
+            await axios.post(`${API_URL}login/signup`, {
                 name: name,
                 password: password,
                 phoneNumber: phoneNumber,

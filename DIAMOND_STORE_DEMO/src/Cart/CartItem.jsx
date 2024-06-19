@@ -1,12 +1,13 @@
 // CartItem.js
 import React from 'react';
 import '../Scss/CartItem.scss';
+import {API_URL} from "../Config/config";
 
 const CartItem = ({item, onQuantityChange, onRemoveFromCart}) => {
-    const handleQuantityChange = (event) => {
-        const newQuantity = event.target.value;
-        onQuantityChange(item.productId, newQuantity);
-    };
+    // const handleQuantityChange = (event) => {
+    //     const newQuantity = event.target.value;
+    //     onQuantityChange(item.productId, newQuantity);
+    // };
 
     const handleRemoveFromCart = () => {
         onRemoveFromCart(item.productId);
@@ -15,7 +16,7 @@ const CartItem = ({item, onQuantityChange, onRemoveFromCart}) => {
     return (
         <div className="cart-item">
             <img
-                src={`http://localhost:8080/product/load-image/${item.image1}.jpg`}
+                src={`${API_URL}product/load-image/${item.image1}.jpg`}
                 alt={item.productName}
             />
             <div className="item-details">

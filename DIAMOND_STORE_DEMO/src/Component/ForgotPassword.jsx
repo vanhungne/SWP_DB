@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Swal from 'sweetalert2';
 import '../Scss/Login.scss';
+import {API_URL} from "../Config/config";
 
 function ForgotPass() {
     const [email, setEmail] = useState("");
@@ -11,7 +12,7 @@ function ForgotPass() {
     async function getcode(event) {
         event.preventDefault();
         try {
-            const response = await axios.post("http://localhost:8080/login/forgotpassword", {
+            const response = await axios.post(`${API_URL}}login/forgotpassword`, {
                 email
             });
 

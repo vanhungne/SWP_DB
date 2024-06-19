@@ -3,6 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import '../../Scss/home.scss';
+import {API_URL} from "../../Config/config";
 
 const ProductCard = ({ product }) => {
     const navigate = useNavigate();
@@ -15,7 +16,7 @@ const ProductCard = ({ product }) => {
         <div className="col-md-3 mb-4">
             <div className="card h-100" onClick={() => handleProductClick(product.productId)}>
                 <img
-                    src={`http://localhost:8080/product/load-image/${product.image1}.jpg`}
+                    src={`${API_URL}product/load-image/${product.image1}.jpg`}
                     alt={product.productName}
                     className="card-img-top"
                 />
