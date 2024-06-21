@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Cookies from 'js-cookie';
-import '../Scss/Checkout.scss';
+import '../../Scss/Checkout.scss';
 import { useNavigate } from "react-router-dom";
-import {API_URL} from "../Config/config";
+import {API_URL} from "../../Config/config";
 
 const Checkout = () => {
     const [deliveryAddress, setDeliveryAddress] = useState('');

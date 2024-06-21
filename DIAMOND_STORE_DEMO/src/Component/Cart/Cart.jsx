@@ -5,8 +5,8 @@ import CartItem from './CartItem'; // Adjust path if necessary
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom'; // Import useHistory
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../Scss/cart.scss'; // Import the SCSS file
-import {API_URL} from "../Config/config";
+import '../../Scss/cart.scss'; // Import the SCSS file
+import {API_URL} from "../../Config/config";
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);

@@ -216,6 +216,7 @@ const ProductDetail = () => {
             <div className="col-md-6 product-info">
                 <h1>{product.productName}</h1>
                 <p>{product.description}</p>
+                <h5>Stock quantity: <span style={{color:'red'}}>{product.stockQuantity}</span></h5>
                 <label htmlFor=" sizeSelect">Select Size:</label>
                 <div>
                     <div className="row">
@@ -291,8 +292,12 @@ const ProductDetail = () => {
                     </div>
                 </div>
                 <div className=" text-right">
-                    <button className=" btn btn-dark mr-2 " onClick={handleAddToCart}>Add to Cart</button>
-                    <Link to="/cart" className=" btn btn-outline-primary ms-3">View Cart</Link>
+                    {product.stockQuantity > 0 ? (
+                        <button className="btn btn-dark mr-2" onClick={handleAddToCart}>Add to Cart</button>
+                    ) : (
+                        <button className="btn btn-dark mr-2" disabled>Sold Out</button>
+                    )}
+                    <Link to="/cart" className="btn btn-outline-primary ms-3">View Cart</Link>
                 </div>
             </div>
             {/*    */}

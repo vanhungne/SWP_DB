@@ -87,6 +87,9 @@ return (
                             {currentUser ? (
                                     <NavDropdown title={<FontAwesomeIcon icon={faUser} />} id="account-dropdown" className="custom-nav-link">
                                         <NavDropdown.Item as={Link} to="/account">My Account</NavDropdown.Item>
+                                        {currentUser.roles ==='ADMIN' && (
+                                            <NavDropdown.Item as={Link} to="/dashboard-account">Dashboard</NavDropdown.Item>
+                                        )}
                                         <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
 
                                     </NavDropdown>

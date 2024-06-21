@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 import '../Scss/Register.css'; // Assuming you have some custom CSS
 import {API_URL} from "../Config/config";
 
+
 function Register() {
     const navigate = useNavigate();
     const [name, setName] = useState("");

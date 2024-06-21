@@ -1,23 +1,22 @@
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import {AuthProvider} from "./Authentication/AuthContext";
+import ProtectedRoute from "./Component/ProtectedRoute/ProtectedRoute";
 import Register from "./Component/Register";
 import Login from "./Component/Login";
 import Home from "./Component/Home/Home";
-import ManageAccount from "./Component/ManageAccount";
 import Layout from "./Layouttest/Layout";
 import VerifyCode from "./Component/VerifyCode";
 import ProductDetail from "./Component/Product/ProductDetails"; // Correct import
-import Cart from "./Cart/Cart";
-import Checkout from "./Cart/CheckOut";
+import Cart from "./Component/Cart/Cart";
+import Checkout from "./Component/Cart/CheckOut";
 import ForgotPassword from "./Component/ForgotPassword";
 import ResetPassword from "./Component/ResetPassword";
 import ProductCategory from "./Component/Product/ProductCategory";
 import Products from "./Component/Product/AllProduct";
-// import BankSelection from "./Component/Payment/BankSelection";
 import PaymentVnPayment from "./Component/Payment/PaymentVnPay";
 import PaymentResult from "./Component/Payment/PaymentResult";
 import OAuth2RedirectHandler from "./Component/O/OAuth2RedirectHandler";
-
+import Dashboard from "./Component/DashboardAdmin/Dashboard";
 function App() {
     return (
         <AuthProvider>
@@ -37,8 +36,18 @@ function App() {
                         <Route path="forgot-password" element={<ForgotPassword />} />
                         <Route path="reset-password/:email" element={<ResetPassword />} />
                         <Route path="verifycode/:email" element={<VerifyCode />} />
-                        <Route path="manageAccount" element={<ManageAccount />} />
                         <Route path="category" element={<ProductCategory />} />
+
+
+                        {/* Protected router*/}
+                        <Route
+                            path="dashboard-account"
+                            element={
+                                <ProtectedRoute requiredRoles={['ADMIN']}>
+                                    <Dashboard />
+                                </ProtectedRoute>
+                            }
+                        />
                     </Route>
                 </Routes>
             </BrowserRouter>
