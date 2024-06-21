@@ -1,74 +1,28 @@
-/* Checkout.css */
-.container {
-    max-width: 1200px;
-    margin: auto;
-}
+.checkout-container {
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    }
 
-.order-summary-section {
-    margin-bottom: 20px;
-}
+    .card-header {
+        border-radius: 10px 10px 0 0;
+    }
 
-.card {
-    margin-bottom: 20px;
-}
+    .btn-primary {
+        background-color: #4285f4;
+        border-color: #4285f4;
+        &:hover {
+            background-color: #3367d6;
+            border-color: #3367d6;
+        }
+    }
 
-.card-header {
-    background-color: #000;
-    color: #fff;
-    font-size: 1.25rem;
-    font-weight: bold;
-    padding: 4px;
-}
+    .form-control {
+        border-radius: 5px;
+    }
 
-.card-body {
-    padding: 20px;
-}
-
-.card-footer {
-    background-color: #f8f9fa;
-    font-size: 1.25rem;
-    font-weight: bold;
-    text-align: right;
-}
-
-.table {
-    width: 100%;
-    margin-bottom: 1rem;
-    color: #212529;
-    border-collapse: collapse; /* Ensure borders don't collapse */
-}
-
-.table th,
-.table td {
-    vertical-align: middle;
-    border: none; /* Remove all borders */
-    padding: 0.75rem;
-    text-align: left;
-}
-
-.table thead th {
-    border-bottom: 2px solid #000; /* Bottom border for table header */
-}
-
-.table tbody tr {
-    border-bottom: 1px solid #dee2e6; /* Bottom border for table rows */
-}
-
-.table img {
-    max-width: 100px;
-    margin-right: 10px;
-}
-
-.delivery-address-section {
-    margin-top: 20px;
-}
-
-h2 {
-    margin-bottom: 20px;
-}
-
-button {
-    width: 100%;
-    padding: 10px;
-    font-size: 1rem;
+    .img-fluid {
+        border-radius: 5px;
+    }
 }

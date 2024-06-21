@@ -18,7 +18,8 @@ import PaymentResult from "./Component/Payment/PaymentResult";
 import OAuth2RedirectHandler from "./Component/O/OAuth2RedirectHandler";
 import Dashboard from "./Component/DashboardAdmin/Dashboard";
 import MyAccount from "./Component/MyAccount";
-
+import SuccessPage from "./Component/Payment/SuccessPage";
+import FailurePage from "./Component/Payment/FailurePage";
 function App() {
     return (
         <AuthProvider>
@@ -32,6 +33,8 @@ function App() {
                         <Route path="checkout" element={<Checkout />} />
                         <Route path="/payment/:orderId" element={<PaymentVnPayment />} />
                         <Route path="/payment/result" element={<PaymentResult />} />
+                        <Route path="/payment/success" element={<SuccessPage />} />
+                        <Route path="/payment/fail" element={<FailurePage />} />
                         <Route path="login" element={<Login />} />
                         <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
                         <Route path="register" element={<Register />} />

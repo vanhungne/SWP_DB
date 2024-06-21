@@ -2,20 +2,33 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Cookies from 'js-cookie';
-import '../../Scss/Checkout.scss';
 import { useNavigate } from "react-router-dom";
-import {API_URL} from "../../Config/config";
+import { API_URL } from "../../Config/config";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGift, faTruck, faStore, faCreditCard } from '@fortawesome/free-solid-svg-icons';
+import { motion } from 'framer-motion';
+import '../../Scss/Checkout.scss';
+import {jwtDecode} from 'jwt-decode';
 
 const Checkout = () => {
     const [deliveryAddress, setDeliveryAddress] = useState('');
     const [cartItems, setCartItems] = useState([]);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [discountCode, setDiscountCode] = useState('');
+    const [shippingMethod, setShippingMethod] = useState('ship');
     const navigate = useNavigate();
-
+    const [userInfo, setUserInfo] = useState({
+        name: '',
+        phoneNumber: '',
+        email: '',
+        address: '',
+        accumulatedPoints: 0
+    });
     useEffect(() => {
         const cartFromCookie = getCartFromCookie();
         setCartItems(cartFromCookie);
+        fetchUserInfo();
     }, []);
 
     const getCartFromCookie = () => {
@@ -27,14 +40,37 @@ const Checkout = () => {
         return [];
     };
 
-
+    const fetchUserInfo = async () => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            const decodedToken = jwtDecode(token);
+            if (decodedToken && decodedToken.id) {
+                try {
+                    const response = await axios.get(`${API_URL}manage/accounts/${decodedToken.id}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    });
+                    setUserInfo(response.data);
+                    setDeliveryAddress(response.data.address);
+                } catch (error) {
+                    setError('Failed to fetch user information');
+                    console.error('Error fetching user info:', error);
+                }
+            } else {
+                setError('User ID not found in the token');
+            }
+        } else {
+            setError('User is not logged in or token is missing');
+        }
+    };
     const calculateTotal = () => {
         return cartItems.reduce((acc, item) => acc + item.totalPrice * item.quantity, 0).toFixed(2);
     };
 
     const handleCheckout = async () => {
-        if (!deliveryAddress) {
-            setError('Delivery address is required');
+        if (!deliveryAddress && shippingMethod === 'ship') {
+            setError('Delivery address is required for shipping');
             return;
         }
 
@@ -45,7 +81,7 @@ const Checkout = () => {
             const token = localStorage.getItem('token');
             const response = await axios.post(
                 `${API_URL}cart/checkout`,
-                { deliveryAddress },
+                { deliveryAddress, code: discountCode, shippingMethod },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -70,77 +106,153 @@ const Checkout = () => {
         }
     };
 
-return (
-    <div className="container mt-5">
-        <div className="order-summary-section">
-            <div className="mb-3">
-                <div className="card-header">
-                    <h3>Order Summary</h3>
-                </div>
-                <div className="card-body">
-                    <table className="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">Item</th>
-                            <th scope="col">Size</th>
-                            <th scope="col">Quantity</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Total</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {cartItems.map((item) => (
-                            <tr key={item.id}>
-                                <td>
-                                    <img
-                                        src={`${API_URL}product/load-image/${item.image1}.jpg`}
-                                        alt={item.name}
-                                        className="img-fluid"
-                                        style={{ maxWidth: '100px', marginRight: '10px' }}
+    return (
+        <div className="container mt-5 checkout-container">
+            <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="row"
+            >
+                <div className="col-md-6">
+                    <div className="card mb-4 shadow-sm">
+                        <div className="card-header bg-primary text-white">
+                            <h3><FontAwesomeIcon icon={faGift} className="me-2" />Express Checkout</h3>
+                        </div>
+                        <div className="card-body">
+
+                            <div className="mb-3">
+                                <label className="form-label">Shipping Method</label>
+                                <div className="d-flex">
+                                    <div className="form-check me-3">
+                                        <input
+                                            type="radio"
+                                            className="form-check-input"
+                                            id="shipItems"
+                                            name="shippingMethod"
+                                            value="ship"
+                                            checked={shippingMethod === 'ship'}
+                                            onChange={() => setShippingMethod('ship')}
+                                        />
+                                        <label className="form-check-label" htmlFor="shipItems">
+                                            <FontAwesomeIcon icon={faTruck} className="me-2"/>Ship My Items
+                                        </label>
+                                    </div>
+                                    <div className="form-check">
+                                        <input
+                                            type="radio"
+                                            className="form-check-input"
+                                            id="pickupInStore"
+                                            name="shippingMethod"
+                                            value="pickup"
+                                            checked={shippingMethod === 'pickup'}
+                                            onChange={() => setShippingMethod('pickup')}
+                                        />
+                                        <label className="form-check-label" htmlFor="pickupInStore">
+                                            <FontAwesomeIcon icon={faStore} className="me-2"/>Pick up In-Store
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="Name" className="form-label">Name:</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="Name"
+                                    value={userInfo.name}
+                                    disabled
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="phoneNumber" className="form-label">Phone Number:</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="phoneNumber"
+                                    value={userInfo.phoneNumber}
+                                    disabled
+                                />
+                            </div>
+                            {shippingMethod === 'ship' && (
+                                <div className="mb-3">
+                                    <label htmlFor="deliveryAddress" className="form-label">Shipping Address:</label>
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        id="deliveryAddress"
+                                        value={deliveryAddress}
+                                        onChange={(e) => setDeliveryAddress(e.target.value)}
                                     />
-                                    {item.name}
-                                </td>
-                                <td>{item.size}</td>
-                                <td>{item.quantity}</td>
-                                <td>${item.totalPrice.toFixed(2)}</td>
-                                <td>${(item.totalPrice * item.quantity).toFixed(2)}</td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                </div>
-                <div className="card-footer text-right">
-                    <h4>Total: ${calculateTotal()}</h4>
-                </div>
-            </div>
-        </div>
-        <div className="delivery-address-section">
-            <h2>Delivery Address</h2>
-            <div className="card mb-3">
-                <div className="card-body">
-                    <div className="mb-3">
-                        <label htmlFor="deliveryAddress" className="form-label">Delivery Address:</label>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="deliveryAddress"
-                            value={deliveryAddress}
-                            onChange={(e) => setDeliveryAddress(e.target.value)}
-                        />
+                                </div>
+                            )}
+                            <div className="mb-3">
+                                <label htmlFor="discountCode" className="form-label">Discount Code:</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="discountCode"
+                                    value={discountCode}
+                                    onChange={(e) => setDiscountCode(e.target.value)}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="accumulatedPoints" className="form-label">Accumulated Points:</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="accumulatedPoints"
+                                    value={userInfo.accumulatedPoints}
+                                    disabled
+                                />
+                            </div>
+                            {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                            <button
+                                className="btn btn-primary w-100"
+                                onClick={handleCheckout}
+                                disabled={loading}
+                            >
+                                {loading ? 'Processing...' : <><FontAwesomeIcon icon={faCreditCard} className="me-2"/>Place
+                                    Order</>}
+                            </button>
+                        </div>
                     </div>
-                    {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                    <button
-                        className="btn btn-primary"
-                        onClick={handleCheckout}
-                        disabled={loading}
-                    >
-                        {loading ? 'Placing Order...' : 'Place Order'}
-                    </button>
                 </div>
-            </div>
+                <div className="col-md-6">
+                    <div className="card shadow-sm">
+                        <div className="card-header bg-secondary text-white">
+                            <h3>Order Summary</h3>
+                        </div>
+                        <div className="card-body">
+                            {cartItems.map((item) => (
+                                <div key={item.id} className="d-flex justify-content-between align-items-center mb-3">
+                                <div className="d-flex align-items-center">
+                                        <img
+                                            src={`${API_URL}product/load-image/${item.image1}.jpg`}
+                                            alt={item.productName}
+                                            className="img-fluid me-2"
+                                            style={{maxWidth: '100px'}}
+                                        />
+                                        <div>
+                                            <h6 className="mb-0">{item.productName}</h6>
+                                            <small className="text-muted">Size: {item.size}, Quantity: {item.quantity}</small>
+                                        </div>
+                                    </div>
+                                    <span>${(item.totalPrice * item.quantity).toFixed(2)}</span>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="card-footer">
+                            <div className="d-flex justify-content-between">
+                                <h5>Total:</h5>
+                                <h5>${calculateTotal()}</h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </motion.div>
         </div>
-    </div>
-);
+    );
 };
 
 export default Checkout;
