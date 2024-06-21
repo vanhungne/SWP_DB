@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Swal from 'sweetalert2';
-import '../Scss/Register.css'; // Assuming you have some custom CSS
+import '../Scss/Register.css';
 import {API_URL} from "../Config/config";
 
 

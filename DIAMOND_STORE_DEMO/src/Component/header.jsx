@@ -3,7 +3,7 @@ import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../Authentication/AuthContext';
 import Swal from 'sweetalert2';
-import '../Scss/Header.scss'; // Import the SCSS file
+import '../Scss/Header.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faUser } from '@fortawesome/free-solid-svg-icons';
 import Cookies from 'js-cookie';
@@ -13,6 +13,7 @@ const Header = () => {
     const [scrollDirection, setScrollDirection] = useState('up');
     const [lastScrollTop, setLastScrollTop] = useState(0);
     const handleLogout = async () => {
+
         try {
             await logout();
             Cookies.remove('cart');
@@ -86,7 +87,7 @@ return (
                         <div className="nav-account">
                             {currentUser ? (
                                     <NavDropdown title={<FontAwesomeIcon icon={faUser} />} id="account-dropdown" className="custom-nav-link">
-                                        <NavDropdown.Item as={Link} to="/account">My Account</NavDropdown.Item>
+                                        <NavDropdown.Item as={Link} to="/myAccount">My Account</NavDropdown.Item>
                                         {currentUser.roles ==='ADMIN' && (
                                             <NavDropdown.Item as={Link} to="/dashboard-account">Dashboard</NavDropdown.Item>
                                         )}

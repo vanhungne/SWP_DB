@@ -115,6 +115,7 @@ const UserDashboard = () => {
             });
             await fetchUsers();
             setError('');
+
         } catch (error) {
             console.error('Error deleting user:', error);
             setError('Error deleting user. Please try again later.');

@@ -36,6 +36,17 @@ export function AuthProvider({ children }) {
 }
 
 function getUserFromToken(token) {
-    const userData = jwtDecode(token);
-    return {token, name: userData.name, roles: userData.role};
+    const decodedToken = jwtDecode(token);
+    console.log('Decoded token:', decodedToken);
+    const userId = decodedToken.id;
+    if (!userId) {
+        console.warn('User ID not found in the token');
+    }
+
+    return {
+        token,
+        name: decodedToken.name,
+        roles: decodedToken.role,
+        userid: userId
+    };
 }
