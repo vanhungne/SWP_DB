@@ -55,10 +55,10 @@ const UserDashboard = () => {
         setEditingUser(user);
         setShowEditModal(true);
     };
-
-    const toggleCreateUserModal = (value) => {
-        setShowCreateUser(value);
-    };
+    //
+    // const toggleCreateUserModal = (value) => {
+    //     setShowCreateUser(value);
+    // };
 
     const handleUpdateUser = async (updatedUser) => {
         const token = localStorage.getItem('token');
