@@ -8,6 +8,8 @@ $link-hover-color: #3c0c33;
 $dropdown-bg-color: rgba(119, 87, 87, 0.45);
 $dropdown-hover-bg-color: #e3c8d3;
 $dropdown-shadow-color: rgb(218, 208, 185);
+$btn-login-bg: #3c0c33;
+$btn-register-bg: #e3c8d3;
 
 // Mixins
 @mixin flex-center {
@@ -161,6 +163,40 @@ body {
         border: none;
         cursor: pointer;
     }
+
+}
+.auth-buttons {
+    display: flex;
+    align-items: center;
+    margin-left: 5px;
+
+    .btn {
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-weight: 500;
+        font-size: 0.95rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        margin-left: 10px;
+
+        &-login {
+            background-color: $btn-login-bg;
+            color: white;
+
+            &:hover {
+                background-color: darken($btn-login-bg, 10%);
+            }
+        }
+
+        &-register {
+            background-color: $btn-register-bg;
+            color: $brand-color;
+
+            &:hover {
+                background-color: darken($btn-register-bg, 10%);
+            }
+        }
+    }
 }
 
 // Hover Dropdown Styles
@@ -197,4 +233,5 @@ body {
     .nav-right-items {
         margin-top: 10px;
     }
+
 }

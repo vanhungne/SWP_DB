@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faUser, faSearch } from '@fortawesome/free-solid-svg-icons';
 import Cookies from 'js-cookie';
 import '../Scss/Header.scss';
+
 const Header = () => {
     const { currentUser, logout } = useAuth();
     const [scrollDirection, setScrollDirection] = useState('up');
@@ -139,6 +140,12 @@ const Header = () => {
                     </Nav>
                 </Navbar.Collapse>
             </Container>
+            {!currentUser && (
+                <div className="auth-buttons">
+                    <Link to="/login" className="btn btn-login">Sign in</Link>
+                    <Link to="/register" className="btn btn-register">Sign up</Link>
+                </div>
+            )}
             {isSearchOpen && (
                 <div className="search-overlay">
                     <Container>
