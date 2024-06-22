@@ -1,134 +1,168 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from "react-router-dom";
-import axios from 'axios';
-import { motion } from 'framer-motion';
+import React, { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faTimesCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { faShoppingBag, faCreditCard, faCheckCircle, faTimesCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { API_URL } from "../../Config/config";
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-const PaymentResult = () => {
-    const [paymentStatus, setPaymentStatus] = useState(null);
-    const [orderDetails, setOrderDetails] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+import axios from "axios";
+import '../../Scss/paymentResult.scss';
+const VNPayCallback = () => {
     const location = useLocation();
-    const navigate = useNavigate();
-
+    const [message, setMessage] = useState('');
+    const [orderId, setOrderId] = useState('');
+    const [order, setOrder] = useState(null);
+    const [orderDetails, setOrderDetails] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState('');
     useEffect(() => {
-        const verifyPayment = async () => {
-            try {
-                console.log('Verifying payment with query:', location.search);
-                const response = await axios.get(`${API_URL}payment/VNPayBack${location.search}`);
-                console.log('Server response:', response.data);
+        const query = new URLSearchParams(location.search);
+        const responseCode = query.get('vnp_ResponseCode');
+        const orderId = query.get('orderId');
 
-                if (response.data.code === 200) {
-                    setPaymentStatus(response.data.data.code);
-                    setOrderDetails(response.data.data);
-                } else {
-                    throw new Error(response.data.message || 'Payment verification failed');
-                }
-            } catch (err) {
-                console.error('Error verifying payment:', err);
-                if (err.response) {
-                    console.error('Error response:', err.response.data);
-                    setError(`Failed to verify payment. Server error: ${err.response.data.message || err.message}`);
-                } else if (err.request) {
-                    console.error('No response received:', err.request);
-                    setError('Failed to verify payment. No response from server.');
-                } else {
-                    console.error('Error setting up request:', err.message);
-                    setError(`Failed to verify payment. Error: ${err.message}`);
-                }
-            } finally {
-                setLoading(false);
-            }
+        const messageMap = {
+            '00': 'Payment successful.',
+            '01': 'Order is already confirmed.',
+            '02': 'Order not found.',
+            '97': 'Invalid signature.',
+            '99': 'Payment unsuccessful.'
         };
 
-        verifyPayment();
-    }, [location.search]); // Only dependency is location.search
+        setMessage(messageMap[responseCode] || 'An error occurred during payment.');
+        setOrderId(orderId);
 
-    const handleReturnToHome = () => {
-        navigate('/');
+        if (responseCode === '00' && orderId) {
+            fetchOrder(orderId);
+            fetchOrderDetails(orderId);
+        } else {
+            setLoading(false);
+        }
+    }, [location]);
+
+
+    const fetchOrder = async (orderId) => {
+        try {
+            const token = localStorage.getItem('token');
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
+
+            const orderResponse = await axios.get(`${API_URL}order/OrdersData/${orderId}`, config);
+            const order = orderResponse.data.data;
+            console.log("Order data:", order);
+            setOrder(order);
+        } catch (error) {
+            console.error("Error fetching order data:", error);
+            if (error.response) {
+                console.log("Response data:", error.response.data);
+                console.log("Response status:", error.response.status);
+                console.log("Response headers:", error.response.headers);
+            } else if (error.request) {
+                console.log("No response received:", error.request);
+            } else {
+                console.log("Error message:", error.message);
+            }
+            setError('Failed to fetch order details. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
     };
 
-    if (loading) {
-        return (
-            <div className="container mt-5 text-center">
-                <FontAwesomeIcon icon={faSpinner} spin size="3x" />
-                <p className="mt-3">Verifying payment...</p>
-            </div>
-        );
-    }
+    const fetchOrderDetails = async (orderId) => {
+        try {
+            const token = localStorage.getItem('token');
+            const config = {
+                headers: { Authorization: `Bearer ${token}` }
+            };
 
-    if (error) {
-        return (
-            <div className="container mt-5">
-                <div className="alert alert-danger" role="alert">
-                    <FontAwesomeIcon icon={faTimesCircle} className="me-2" />
-                    {error}
-                </div>
-                <button className="btn btn-primary" onClick={handleReturnToHome}>Return to Home</button>
-            </div>
-        );
-    }
+            const orderDetailsResponse = await axios.get(`${API_URL}order/OrderDetailByCustomer/${orderId}`, config);
+            const { status, success, description, data: orderDetailsData } = orderDetailsResponse.data;
 
-    if (paymentStatus === "00") {
-        return (
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="container mt-5"
-            >
-                <div className="card shadow-sm">
-                    <div className="card-header bg-success text-white">
-                        <h3>
-                            <FontAwesomeIcon icon={faCheckCircle} className="me-2" />
-                            Payment Successful
-                        </h3>
-                    </div>
-                    <div className="card-body">
-                        {orderDetails && (
-                            <>
-                                <h5 className="card-title">Order Details</h5>
-                                <p><strong>Order ID:</strong> {orderDetails.orderId}</p>
-                                {/* Add more order details as needed */}
-                            </>
-                        )}
-                        <button className="btn btn-primary mt-3" onClick={handleReturnToHome}>
-                            Return to Home
-                        </button>
+            if (!success) {
+                setError(description);
+                setLoading(false);
+                return;
+            }
+
+            const orderDetailsWithProducts = await Promise.all(
+                orderDetailsData.map(async (item) => {
+                    const productResponse = await axios.get(`${API_URL}product/${item.productId}`, config);
+                    return {
+                        ...item,
+                        productName: productResponse.data.productName,
+                        productImage: productResponse.data.image1
+                    };
+                })
+            );
+
+            setOrderDetails(orderDetailsWithProducts);
+        } catch (err) {
+            console.error('Error fetching order details:', err);
+            setError('Failed to fetch order details. Please try again later.');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (
+        <div className="container">
+            <h1 className="page-title">Payment Result</h1>
+
+            <div className={`payment-result ${message.includes('successful') ? 'success' : 'error'} fade-in`}>
+                <p>
+                    <FontAwesomeIcon
+                        icon={message.includes('successful') ? faCheckCircle : faTimesCircle}
+                    />
+                    {message}
+                </p>
+            </div>
+
+            {error && <p className="error-message">{error}</p>}
+
+            {loading && (
+                <div className="loading-spinner">
+                    <FontAwesomeIcon icon={faSpinner} />
+                    <span>Loading...</span>
+                </div>
+            )}
+            {order && (
+                <div className="order-details">
+                    <h2>
+                        <FontAwesomeIcon icon={faShoppingBag} />
+                        Order Details
+                    </h2>
+                    <div className="grid">
+                        <p><strong>Order ID:</strong> {order.orderId}</p>
+                        <p><strong>Date:</strong> {order.orderDate ? new Date(order.orderDate).toLocaleString() : ''}</p>
+                        <p><strong>Total Amount:</strong> {order.orderTotalAmount !== undefined ? `$${order.orderTotalAmount.toFixed(2)}` : ''}</p>
+                        <p><strong>Delivery Address:</strong> {order.orderDeliveryAddress}</p>
+                        <p><strong>Discount Code:</strong> {order.discountCode || 'N/A'}</p>
                     </div>
                 </div>
-            </motion.div>
-        );
-    } else {
-        return (
-            <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="container mt-5"
-            >
-                <div className="card shadow-sm">
-                    <div className="card-header bg-danger text-white">
-                        <h3>
-                            <FontAwesomeIcon icon={faTimesCircle} className="me-2" />
-                            Payment Failed
-                        </h3>
-                    </div>
-                    <div className="card-body">
-                        <p>Payment was not successful. Please try again.</p>
-                        <p>Error code: {paymentStatus}</p>
-                        <button className="btn btn-primary mt-3" onClick={handleReturnToHome}>
-                            Return to Home
-                        </button>
-                    </div>
+            )}
+
+            {orderDetails.length > 0 && (
+                <div className="order-items">
+                    <h2>
+                        <FontAwesomeIcon icon={faCreditCard} />
+                        Order Items
+                    </h2>
+                    <ul>
+                        {orderDetails.map((item, index) => (
+                            <li key={index} className="order-item">
+                                <div className="item-info">
+                                    <img src={item.productImage} alt={item.productName} />
+                                    <div>
+                                        <p className="item-name">{item.productName}</p>
+                                        <p className="item-quantity">Quantity: {item.quantity}</p>
+                                    </div>
+                                </div>
+                                <p className="item-price">${(item.price * item.quantity).toFixed(2)}</p>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
-            </motion.div>
-        );
-    }
+            )}
+        </div>
+    );
 };
 
-export default PaymentResult;
+export default VNPayCallback;
