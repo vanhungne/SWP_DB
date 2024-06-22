@@ -13,7 +13,6 @@ const Home = () => {
     const [featuredProducts, setFeaturedProducts] = useState([]);
     const [collectionProducts, setCollectionProducts] = useState([]);
     const [collectionError, setCollectionError] = useState('');
-    // const [categories, setCategories] = useState([]);
     const [error, setError] = useState('');
     const [collection, setCollection] = useState(null);
     const videoRef = useRef(null);
@@ -22,8 +21,6 @@ const Home = () => {
     useEffect(() => {
         fetchFeaturedProducts();
         fetchCollectionProducts();
-        // fetchCategories();
-
         const handleVisibilityChange = () => {
             if (document.visibilityState === 'visible' && videoRef.current) {
                 videoRef.current.play().catch((error) => {
@@ -71,15 +68,6 @@ const Home = () => {
             setCollectionError('Error fetching collection products. Please try again later.');
         }
     };
-
-    // const fetchCategories = async () => {
-    //     try {
-    //         const response = await axios.get(`${API_URL}home/categories`);
-    //         setCategories(response.data);
-    //     } catch (error) {
-    //         console.error('Error fetching categories:', error);
-    //     }
-    // };
 
     return (
         <>

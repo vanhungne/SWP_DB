@@ -1,4 +1,4 @@
-.container {
+.payment-result-container {
     max-width: 800px;
     margin: 0 auto;
     padding: 24px;
@@ -33,7 +33,7 @@
             font-size: 18px;
             font-weight: 500;
 
-            svg {
+            .icon {
                 margin-right: 8px;
             }
         }
@@ -50,8 +50,7 @@
         justify-content: center;
         color: #6b7280;
 
-        svg {
-            animation: spin 1s linear infinite;
+        .icon {
             margin-right: 8px;
         }
     }
@@ -71,7 +70,7 @@
             display: flex;
             align-items: center;
 
-            svg {
+            .icon {
                 margin-right: 8px;
             }
         }
@@ -102,7 +101,7 @@
                     display: flex;
                     align-items: center;
 
-                    img {
+                    .item-image {
                         width: 64px;
                         height: 64px;
                         object-fit: cover;

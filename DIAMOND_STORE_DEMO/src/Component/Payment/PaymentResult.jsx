@@ -13,6 +13,7 @@ const VNPayCallback = () => {
     const [orderDetails, setOrderDetails] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+
     useEffect(() => {
         const query = new URLSearchParams(location.search);
         const responseCode = query.get('vnp_ResponseCode');
@@ -37,7 +38,6 @@ const VNPayCallback = () => {
         }
     }, [location]);
 
-
     const fetchOrder = async (orderId) => {
         try {
             const token = localStorage.getItem('token');
@@ -47,19 +47,9 @@ const VNPayCallback = () => {
 
             const orderResponse = await axios.get(`${API_URL}order/OrdersData/${orderId}`, config);
             const order = orderResponse.data.data;
-            console.log("Order data:", order);
             setOrder(order);
         } catch (error) {
             console.error("Error fetching order data:", error);
-            if (error.response) {
-                console.log("Response data:", error.response.data);
-                console.log("Response status:", error.response.status);
-                console.log("Response headers:", error.response.headers);
-            } else if (error.request) {
-                console.log("No response received:", error.request);
-            } else {
-                console.log("Error message:", error.message);
-            }
             setError('Failed to fetch order details. Please try again later.');
         } finally {
             setLoading(false);
@@ -74,11 +64,10 @@ const VNPayCallback = () => {
             };
 
             const orderDetailsResponse = await axios.get(`${API_URL}order/OrderDetailByCustomer/${orderId}`, config);
-            const { status, success, description, data: orderDetailsData } = orderDetailsResponse.data;
+            const { success, description, data: orderDetailsData } = orderDetailsResponse.data;
 
             if (!success) {
                 setError(description);
-                setLoading(false);
                 return;
             }
 
@@ -97,19 +86,18 @@ const VNPayCallback = () => {
         } catch (err) {
             console.error('Error fetching order details:', err);
             setError('Failed to fetch order details. Please try again later.');
-        } finally {
-            setLoading(false);
         }
     };
 
     return (
-        <div className="container">
+        <div className="payment-result-container">
             <h1 className="page-title">Payment Result</h1>
 
             <div className={`payment-result ${message.includes('successful') ? 'success' : 'error'} fade-in`}>
                 <p>
                     <FontAwesomeIcon
                         icon={message.includes('successful') ? faCheckCircle : faTimesCircle}
+                        className="icon"
                     />
                     {message}
                 </p>
@@ -117,49 +105,52 @@ const VNPayCallback = () => {
 
             {error && <p className="error-message">{error}</p>}
 
-            {loading && (
+            {loading ? (
                 <div className="loading-spinner">
-                    <FontAwesomeIcon icon={faSpinner} />
+                    <FontAwesomeIcon icon={faSpinner} spin />
                     <span>Loading...</span>
                 </div>
-            )}
-            {order && (
-                <div className="order-details">
-                    <h2>
-                        <FontAwesomeIcon icon={faShoppingBag} />
-                        Order Details
-                    </h2>
-                    <div className="grid">
-                        <p><strong>Order ID:</strong> {order.orderId}</p>
-                        <p><strong>Date:</strong> {order.orderDate ? new Date(order.orderDate).toLocaleString() : ''}</p>
-                        <p><strong>Total Amount:</strong> {order.orderTotalAmount !== undefined ? `$${order.orderTotalAmount.toFixed(2)}` : ''}</p>
-                        <p><strong>Delivery Address:</strong> {order.orderDeliveryAddress}</p>
-                        <p><strong>Discount Code:</strong> {order.discountCode || 'N/A'}</p>
-                    </div>
-                </div>
-            )}
+            ) : (
+                <>
+                    {order && (
+                        <div className="order-details">
+                            <h2>
+                                <FontAwesomeIcon icon={faShoppingBag} className="icon" />
+                                Order Details
+                            </h2>
+                            <div className="grid">
+                                <p><strong>Order ID:</strong> {order.orderId}</p>
+                                <p><strong>Date:</strong> {order.orderDate ? new Date(order.orderDate).toLocaleString() : ''}</p>
+                                <p><strong>Total Amount:</strong> {order.orderTotalAmount !== undefined ? `$${order.orderTotalAmount.toFixed(2)}` : ''}</p>
+                                <p><strong>Delivery Address:</strong> {order.orderDeliveryAddress}</p>
+                                <p><strong>Discount Code:</strong> {order.discountCode || 'N/A'}</p>
+                            </div>
+                        </div>
+                    )}
 
-            {orderDetails.length > 0 && (
-                <div className="order-items">
-                    <h2>
-                        <FontAwesomeIcon icon={faCreditCard} />
-                        Order Items
-                    </h2>
-                    <ul>
-                        {orderDetails.map((item, index) => (
-                            <li key={index} className="order-item">
-                                <div className="item-info">
-                                    <img src={item.productImage} alt={item.productName} />
-                                    <div>
-                                        <p className="item-name">{item.productName}</p>
-                                        <p className="item-quantity">Quantity: {item.quantity}</p>
-                                    </div>
-                                </div>
-                                <p className="item-price">${(item.price * item.quantity).toFixed(2)}</p>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                    {orderDetails.length > 0 && (
+                        <div className="order-items">
+                            <h2>
+                                <FontAwesomeIcon icon={faCreditCard} className="icon" />
+                                Order Items
+                            </h2>
+                            <ul>
+                                {orderDetails.map((item, index) => (
+                                    <li key={index} className="order-item">
+                                        <div className="item-info">
+                                            <img src={item.productImage} alt={item.productName} className="item-image" />
+                                            <div>
+                                                <p className="item-name">{item.productName}</p>
+                                                <p className="item-quantity">Quantity: {item.quantity}</p>
+                                            </div>
+                                        </div>
+                                        <p className="item-price">${(item.price * item.quantity).toFixed(2)}</p>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </>
             )}
         </div>
     );

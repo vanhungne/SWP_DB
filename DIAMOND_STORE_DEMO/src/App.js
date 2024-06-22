@@ -16,11 +16,9 @@ import Products from "./Component/Product/AllProduct";
 import PaymentVnPayment from "./Component/Payment/PaymentVnPay";
 import PaymentResult from "./Component/Payment/PaymentResult";
 import OAuth2RedirectHandler from "./Component/O/OAuth2RedirectHandler";
-import Dashboard from "./Component/DashboardAdmin/Dashboard";
 import MyAccount from "./Component/MyAccount";
-import SuccessPage from "./Component/Payment/SuccessPage";
-import FailurePage from "./Component/Payment/FailurePage";
 import ManagerDashBoard from "./Component/Manager/ManagerDashBoard";
+import AdminDashBoard from "./Component/DashboardAdmin/AdminDashBoard";
 function App() {
     return (
         <AuthProvider>
@@ -34,8 +32,6 @@ function App() {
                         <Route path="checkout" element={<Checkout />} />
                         <Route path="/payment/:orderId" element={<PaymentVnPayment />} />
                         <Route path="/payment/result" element={<PaymentResult />} />
-                        <Route path="/payment/success" element={<SuccessPage />} />
-                        <Route path="/payment/fail" element={<FailurePage />} />
                         <Route path="login" element={<Login />} />
                         <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
                         <Route path="register" element={<Register />} />
@@ -45,17 +41,17 @@ function App() {
                         <Route path="category" element={<ProductCategory />} />
                         <Route path="myAccount" element={<MyAccount />} />
                         <Route path="manager" element={<ManagerDashBoard />} />
-
                         {/* Protected router*/}
                         <Route
                             path="dashboard-account"
                             element={
                                 <ProtectedRoute requiredRoles={['ADMIN']}>
-                                    <Dashboard />
+                                    <AdminDashBoard />
                                 </ProtectedRoute>
                             }
                         />
                     </Route>
+
                 </Routes>
             </BrowserRouter>
         </AuthProvider>

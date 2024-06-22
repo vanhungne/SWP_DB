@@ -125,7 +125,7 @@ const Dashboard = () => {
         <div className="dashboard">
             <Sidebar activePage={activePage} setActivePage={setActivePage} />
             <div className="main-content">
-                {activePage === 'products' && (
+                {activePage === 'product' && (
                     <>
                         {currentView === 'productDashboard' && (
                             <>

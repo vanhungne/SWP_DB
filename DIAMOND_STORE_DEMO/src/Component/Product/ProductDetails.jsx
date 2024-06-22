@@ -202,10 +202,6 @@ const ProductDetail = () => {
         setShowShell(false);
     };
 
-    // const toggleShellDetails = () => {
-    //     setShowShell(!showShell);
-    //     setShowDiamond(false);
-    // };
 
     return (
         <div className="container product-detail">
@@ -217,7 +213,7 @@ const ProductDetail = () => {
                         <div className="product-images">
                             <div className="main-image-container">
                                 <img
-                                    src={product.image1}
+                                    src={mainImage}
                                     alt={product.productName}
                                     className="img-fluid mb-2 border border-3"
                                 />
@@ -239,7 +235,8 @@ const ProductDetail = () => {
                     <div className="col-md-6 product-info">
                         <h1>{product.productName}</h1>
                         <p>{product.description}</p>
-                        <h5>Stock quantity: <span className="text-danger" style={{fontSize:'20px',fontWeight:'bold'}}>{product.stockQuantity}</span></h5>
+                        <h5>Stock quantity: <span className="text-danger"
+                                                  style={{fontSize: '20px', fontWeight: 'bold'}}>{product.stockQuantity}</span></h5>
                         <div className="size-select-container">
                             <label htmlFor="sizeSelect">Select Size:</label>
                             <div className="size-select-wrapper">
