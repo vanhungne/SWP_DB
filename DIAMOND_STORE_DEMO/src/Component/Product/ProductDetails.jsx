@@ -217,7 +217,7 @@ const ProductDetail = () => {
                         <div className="product-images">
                             <div className="main-image-container">
                                 <img
-                                    src={`${API_URL}product/load-image/${mainImage}.jpg`}
+                                    src={product.image1}
                                     alt={product.productName}
                                     className="img-fluid mb-2 border border-3"
                                 />
@@ -226,7 +226,7 @@ const ProductDetail = () => {
                                 {[product.image1, product.image2, product.image3, product.image4].map((image, index) => (
                                     <img
                                         key={index}
-                                        src={`${API_URL}product/load-image/${image}.jpg`}
+                                        src={image}
                                         alt={`${product.productName} ${index + 1}`}
                                         className="img-thumbnail"
                                         onClick={() => handleImageClick(image)}

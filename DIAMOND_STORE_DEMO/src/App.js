@@ -20,6 +20,7 @@ import Dashboard from "./Component/DashboardAdmin/Dashboard";
 import MyAccount from "./Component/MyAccount";
 import SuccessPage from "./Component/Payment/SuccessPage";
 import FailurePage from "./Component/Payment/FailurePage";
+import ManagerDashBoard from "./Component/Manager/ManagerDashBoard";
 function App() {
     return (
         <AuthProvider>
@@ -43,6 +44,7 @@ function App() {
                         <Route path="verifycode/:email" element={<VerifyCode />} />
                         <Route path="category" element={<ProductCategory />} />
                         <Route path="myAccount" element={<MyAccount />} />
+                        <Route path="manager" element={<ManagerDashBoard />} />
 
                         {/* Protected router*/}
                         <Route

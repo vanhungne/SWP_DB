@@ -16,7 +16,7 @@ const ProductCard = ({ product }) => {
         <div className="col-md-3 mb-4">
             <div className="card h-100" onClick={() => handleProductClick(product.productId)}>
                 <img
-                    src={`${API_URL}product/load-image/${product.image1}.jpg`}
+                    src={product.image1}
                     alt={product.productName}
                     className="card-img-top"
                 />
