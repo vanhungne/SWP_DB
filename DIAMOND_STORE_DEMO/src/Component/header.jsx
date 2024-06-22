@@ -1,17 +1,28 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../Authentication/AuthContext';
 import Swal from 'sweetalert2';
-import '../Scss/Header.scss'; // Import the SCSS file
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingCart, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faShoppingCart, faUser, faSearch } from '@fortawesome/free-solid-svg-icons';
 import Cookies from 'js-cookie';
-
+import '../Scss/Header.scss';
 const Header = () => {
     const { currentUser, logout } = useAuth();
     const [scrollDirection, setScrollDirection] = useState('up');
     const [lastScrollTop, setLastScrollTop] = useState(0);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 992);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsMobile(window.innerWidth < 992);
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
     const handleLogout = async () => {
         try {
             await logout();
@@ -21,8 +32,6 @@ const Header = () => {
                 title: 'Logged out successfully',
                 showConfirmButton: false,
                 timer: 1500,
-
-
             });
         } catch (error) {
             Swal.fire({
@@ -32,6 +41,7 @@ const Header = () => {
             });
         }
     };
+
     useEffect(() => {
         const handleScroll = () => {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
@@ -47,62 +57,98 @@ const Header = () => {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [lastScrollTop]);
 
-return (
-    <Navbar className={`mb-4 custom-navbar ${scrollDirection === 'down' ? 'hidden' : ''}`} expand="lg">
-        <Container>
-            <Navbar.Brand as={Link} to="/" className="custom-brand">
-                <img
-                    src="https://ik.imagekit.io/tvlk/blog/2021/09/du-lich-anh-8-1024x576.jpg?tr=dpr-2,w-675"
-                    alt="My Store"
-                    height="50"
-                    className="brand-logo"
-                />
-                <span>Ethers Diamonds</span>
+    const toggleSearch = () => {
+        setIsSearchOpen(!isSearchOpen);
+    };
+
+    const renderNavDropdown = (title, id, items) => (
+        <NavDropdown
+            title={title}
+            id={id}
+            className={`custom-nav-link ${isMobile ? '' : 'hover-dropdown'}`}
+        >
+            {items.map((item, index) => (
+                <NavDropdown.Item key={index} as={Link} to={item.link}>
+                    {item.text}
+                </NavDropdown.Item>
+            ))}
+        </NavDropdown>
+    );
+
+    return (
+        <Navbar className={`mb-4 custom-navbar ${scrollDirection === 'down' ? 'hidden' : ''}`} expand="lg" sticky="top">
+            <Container>
+                <Navbar.Brand as={Link} to="/" className="custom-brand">
+                    <span>Ethers Diamonds</span>
                 </Navbar.Brand>
 
-            <Navbar.Toggle aria-controls="basic-navbar-nav" />
-            <Navbar.Collapse id="basic-navbar-nav">
-                <Nav className="mx-auto custom-nav">
-                    <NavDropdown title="Home" id="home-dropdown" className="custom-nav-link">
-                    </NavDropdown>
-                    <NavDropdown title="Products" id="products-dropdown" className="custom-nav-link">
-                        <NavDropdown.Item as={Link} to="/products">All products</NavDropdown.Item>
-                        <NavDropdown.Item as={Link} to="/products">Product</NavDropdown.Item>
-                    </NavDropdown>
-                    <NavDropdown title="About" id="about-dropdown" className="custom-nav-link">
-                        <NavDropdown.Item as={Link} to="/about">About 1</NavDropdown.Item>
-                        <NavDropdown.Item as={Link} to="/about">About 2</NavDropdown.Item>
-                    </NavDropdown>
-                    <NavDropdown title="Contact" id="contact-dropdown" className="custom-nav-link">
-                        <NavDropdown.Item as={Link} to="/contact">Contact 1</NavDropdown.Item>
-                        <NavDropdown.Item as={Link} to="/contact">Contact 2</NavDropdown.Item>
-                    </NavDropdown>
-                </Nav>
-                <Nav className="nav-right">
-                    <div className="nav-right-items">
-                        <Nav.Link as={Link} to="/cart" className="custom-nav-link-cart">
-                            <FontAwesomeIcon icon={faShoppingCart} />
-                        </Nav.Link>
-                        <div className="nav-account">
-                            {currentUser ? (
-                                    <NavDropdown title={<FontAwesomeIcon icon={faUser} />} id="account-dropdown" className="custom-nav-link">
-                                        <NavDropdown.Item as={Link} to="/account">My Account</NavDropdown.Item>
-                                        <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
-
-                                    </NavDropdown>
-                                    ) : (
-                                        <NavDropdown title={<FontAwesomeIcon icon={faUser} />} id="account-dropdown" className="custom-nav-link">
-                                            <NavDropdown.Item as={Link} to="/login">Login</NavDropdown.Item>
-                                            <NavDropdown.Item as={Link} to="/register">Sign Up</NavDropdown.Item>
-                                        </NavDropdown>
+                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Collapse id="basic-navbar-nav">
+                    <Nav className="mx-auto custom-nav">
+                        {renderNavDropdown("Home", "home-dropdown", [
+                            { text: "Home 1", link: "/" },
+                            { text: "Home 2", link: "/home-2" }
+                        ])}
+                        {renderNavDropdown("Products", "products-dropdown", [
+                            { text: "All products", link: "/products" },
+                            { text: "Featured Products", link: "/featured-products" },
+                            { text: "New Arrivals", link: "/new-arrivals" }
+                        ])}
+                        {renderNavDropdown("About", "about-dropdown", [
+                            { text: "Our Story", link: "/about" },
+                            { text: "Our Team", link: "/team" }
+                        ])}
+                        {renderNavDropdown("Contact", "contact-dropdown", [
+                            { text: "Contact Us", link: "/contact" },
+                            { text: "FAQ", link: "/faq" }
+                        ])}
+                    </Nav>
+                    <Nav className="nav-right">
+                        <div className="nav-right-items">
+                            <Nav.Link onClick={toggleSearch} className="custom-nav-link-icon">
+                                <FontAwesomeIcon icon={faSearch} />
+                            </Nav.Link>
+                            <Nav.Link as={Link} to="/cart" className="custom-nav-link-icon">
+                                <FontAwesomeIcon icon={faShoppingCart} />
+                            </Nav.Link>
+                            <div className="nav-account">
+                                {currentUser ? (
+                                    <NavDropdown
+                                        title={<FontAwesomeIcon icon={faUser} />}
+                                        id="account-dropdown"
+                                        className={`custom-nav-link ${isMobile ? '' : 'hover-dropdown'}`}
+                                    >
+                                        <NavDropdown.Item as={Link} to="/myAccount">My Account</NavDropdown.Item>
+                                        {currentUser.roles === 'ADMIN' && (
+                                            <NavDropdown.Item as={Link} to="/dashboard-account">Dashboard</NavDropdown.Item>
                                         )}
-                                    </div>
-                                </div>
-                                </Nav>
-                                </Navbar.Collapse>
-                                </Container>
-                                </Navbar>
-                                );
-                            };
+                                        <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
+                                    </NavDropdown>
+                                ) : (
+                                    <NavDropdown
+                                        title={<FontAwesomeIcon icon={faUser} />}
+                                        id="account-dropdown"
+                                        className={`custom-nav-link ${isMobile ? '' : 'hover-dropdown'}`}
+                                    >
+                                        <NavDropdown.Item as={Link} to="/login">Login</NavDropdown.Item>
+                                        <NavDropdown.Item as={Link} to="/register">Sign Up</NavDropdown.Item>
+                                    </NavDropdown>
+                                )}
+                            </div>
+                        </div>
+                    </Nav>
+                </Navbar.Collapse>
+            </Container>
+            {isSearchOpen && (
+                <div className="search-overlay">
+                    <Container>
+                        <input type="text" placeholder="Search..." className="search-input" />
+                        <button onClick={toggleSearch} className="close-search">×</button>
+                    </Container>
+                </div>
+            )}
+        </Navbar>
+    );
+};
 
 export default Header;

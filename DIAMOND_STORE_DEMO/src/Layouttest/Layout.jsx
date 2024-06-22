@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from "../Component/header";
 import Footer from "../Component/footer";
-
 const Layout = () => {
     const [headerHeight, setHeaderHeight] = useState(0);
 

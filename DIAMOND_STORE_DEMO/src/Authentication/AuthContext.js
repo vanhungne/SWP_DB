@@ -1,6 +1,7 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { jwtDecode } from 'jwt-decode';
 
-const AuthContext = React.createContext();
+const AuthContext = createContext();
 
 export function useAuth() {
     return useContext(AuthContext);
@@ -8,14 +9,15 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
     const [currentUser, setCurrentUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const token = localStorage.getItem('token');
         if (token) {
-            // Assume a function getUserFromToken(token) that fetches user details from token
             const userData = getUserFromToken(token);
             setCurrentUser(userData);
         }
+        setLoading(false);
     }, []);
 
     const login = (userData) => {
@@ -28,13 +30,23 @@ export function AuthProvider({ children }) {
         setCurrentUser(null);
     };
 
-    const value = { currentUser, login, logout };
+    const value = { currentUser, login, logout, loading };
 
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 function getUserFromToken(token) {
-    // Decode the token to extract user information
-    // This is a mock function for demonstration purposes
-    return { token, name: "User" };
+    const decodedToken = jwtDecode(token);
+    console.log('Decoded token:', decodedToken);
+    const userId = decodedToken.id;
+    if (!userId) {
+        console.warn('User ID not found in the token');
+    }
+
+    return {
+        token,
+        name: decodedToken.name,
+        roles: decodedToken.role,
+        userid: userId
+    };
 }

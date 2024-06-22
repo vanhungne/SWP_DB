@@ -1,8 +1,10 @@
+// PaymentVnPay.js
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../../Scss/payment.scss'; // Import your scoped SCSS file here
-import {API_URL} from "../../Config/config";
+import { API_URL } from "../../Config/config";
 
 const PaymentVnPay = () => {
     const { orderId } = useParams();
@@ -81,6 +83,9 @@ const PaymentVnPay = () => {
                         >
                             <option value="NCB">NCB</option>
                         </select>
+                        {/* Display bank logos */}
+                        {bankCode === 'NCB' && <img src={'/images/vnpay.png'} alt="VNPAY" className="bank-logo" />}
+                        {bankCode === 'NCB' && <img style={{width:'120px',height:'130px'}} src={'/images/NCB.jpg'} alt="NCB" className="bank-logo" />}
                     </div>
                     <button
                         className="payment-vnpay-btn-success"

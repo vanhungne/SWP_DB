@@ -12,7 +12,7 @@ function ForgotPass() {
     async function getcode(event) {
         event.preventDefault();
         try {
-            const response = await axios.post(`${API_URL}}login/forgotpassword`, {
+            const response = await axios.post(`${API_URL}login/forgotpassword`, {
                 email
             });
 

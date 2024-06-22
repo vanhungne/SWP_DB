@@ -1,10 +1,13 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import {useParams, Link} from 'react-router-dom'; // Import Link for navigation
+import { useParams, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../Scss/ProductDetails.scss';
 import Swal from 'sweetalert2';
-import {API_URL} from "../../Config/config";
+import { API_URL } from "../../Config/config";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRuler } from '@fortawesome/free-solid-svg-icons';
+import ProductCard from "./ProductCard";
 
 // Utility function to set a cookie
 const setCookie = (name, value, days) => {
@@ -37,6 +40,8 @@ const ProductDetail = () => {
     const [shell, setShell] = useState(null);
     const [showDiamond, setShowDiamond] = useState(false);
     const [showShell, setShowShell] = useState(false);
+    const [similarProducts, setSimilarProducts] = useState([]);
+    const [showSizeGuide, setShowSizeGuide] = useState(false);
 
     useEffect(() => {
         if (productId) {
@@ -51,6 +56,7 @@ const ProductDetail = () => {
             setProduct(fetchedProduct);
             setMainImage(fetchedProduct.image1);
             fetchSizesForCategory(fetchedProduct.categoryId);
+            fetchSimilarProducts(fetchedProduct.categoryId)
             fetchDiamondDetail(fetchedProduct.productId);
             fetchShellDetail(fetchedProduct.shellId);
         } catch (error) {
@@ -131,7 +137,7 @@ const ProductDetail = () => {
             setCookie('cart', btoa(JSON.stringify(cart)), 7);
             Swal.fire({
                 title: 'Added to Cart',
-                text: `${product.productName} (Size: ${cartItem.size}, Quantity: ${1}) has been added to your cart.`,
+                text: `Add to cart successfully`,
                 icon: 'success',
                 confirmButtonText: 'Ok'
             });
@@ -161,6 +167,19 @@ const ProductDetail = () => {
             }
         }
     };
+    const fetchSimilarProducts = async (categoryId) => {
+        try {
+            const response = await axios.get(`${API_URL}home/getProductByCategoryId?categoryId=${categoryId}&page=0&size=4`);
+            setSimilarProducts(response.data.content);
+        } catch (error) {
+            console.error('Error fetching similar products:', error);
+            setError('Error fetching similar products. Please try again later.');
+        }
+    };
+
+    const toggleSizeGuide = () => {
+        setShowSizeGuide(!showSizeGuide);
+    };
 
     const fetchShellDetail = async (shellId) => {
         if (shellId) {
@@ -188,116 +207,172 @@ const ProductDetail = () => {
     //     setShowDiamond(false);
     // };
 
-    return (<div style={{marginTop: '100px'}} className="container product-detail">
-        <div className="py-3"></div>
-        {error && <div className="alert alert-danger" role="alert">{error}</div>}
-        {product && (<div className="row">
-            <div className="col-md-6">
-                <div className="product-images">
-                    <div className="d-flex justify-content-center">
-                        <img
-                            src={`${API_URL}product/load-image/${mainImage}.jpg`}
-                            alt={product.productName}
-                            className="img-fluid mb-2 border border-3 "
-                        />
+    return (
+        <div className="container product-detail">
+            <div className="py-3"></div>
+            {error && <div className="alert alert-danger" role="alert">{error}</div>}
+            {product && (
+                <div className="row">
+                    <div className="col-md-6">
+                        <div className="product-images">
+                            <div className="main-image-container">
+                                <img
+                                    src={`${API_URL}product/load-image/${mainImage}.jpg`}
+                                    alt={product.productName}
+                                    className="img-fluid mb-2 border border-3"
+                                />
+                            </div>
+                            <div className="additional-images">
+                                {[product.image1, product.image2, product.image3, product.image4].map((image, index) => (
+                                    <img
+                                        key={index}
+                                        src={`${API_URL}product/load-image/${image}.jpg`}
+                                        alt={`${product.productName} ${index + 1}`}
+                                        className="img-thumbnail"
+                                        onClick={() => handleImageClick(image)}
+                                    />
+                                ))}
+                            </div>
+                        </div>
                     </div>
-                    <div className="additional-images d-flex justify-content-center gap-4">
-                        {[product.image1, product.image2, product.image3, product.image4].map((image, index) => (<img
-                            key={index}
-                            src={`${API_URL}product/load-image/${image}.jpg`}
-                            alt={`${product.productName} ${index + 1}`}
-                            className="img-thumbnail mr-2"
-                            onClick={() => handleImageClick(image)}
-                        />))}
-                    </div>
-                </div>
-            </div>
 
-            <div className="col-md-6 product-info">
-                <h1>{product.productName}</h1>
-                <p>{product.description}</p>
-                <label htmlFor=" sizeSelect">Select Size:</label>
-                <div>
-                    <div className="row">
-                        <div className='col-9 d-flex justify-content-around align-items-start'>
-                            <div style={{height: '75px', width: '200px', margin: '0'}}>
+                    <div className="col-md-6 product-info">
+                        <h1>{product.productName}</h1>
+                        <p>{product.description}</p>
+                        <h5>Stock quantity: <span className="text-danger" style={{fontSize:'20px',fontWeight:'bold'}}>{product.stockQuantity}</span></h5>
+                        <div className="size-select-container">
+                            <label htmlFor="sizeSelect">Select Size:</label>
+                            <div className="size-select-wrapper">
                                 <select
                                     className="form-control"
-                                    id=" sizeSelect"
+                                    id="sizeSelect"
                                     value={selectedSize}
                                     onChange={handleSizeChange}
                                 >
                                     <option value="">Choose...</option>
-                                    {sizes.map((size) => (<option key={size.sizeId} value={size.sizeId}>
-                                        {size.valueSize} cm
-                                    </option>))}
+                                    {sizes.map((size) => (
+                                        <option key={size.sizeId} value={size.sizeId}>
+                                            {size.valueSize} cm
+                                        </option>
+                                    ))}
                                 </select>
-                            </div>
-                            <div className='card-header-none'>
-                                <button style={{width: '200px', height: '40px'}}
-                                        className='bg-dark text-white rounded-3 d-flex align-items-center justify-content-center'
-                                        onClick={toggleDiamondDetails}>
-                                    Information
-                                </button>
-                                {showDiamond && (<div style={{width: '370px'}}
-                                                      className='card-body position-absolute'>
-                                    <div style={{lineHeight: '30px'}}
-                                         className="diamond-table text-bg-dark p-3 rounded-4 ">
-                                        <table>
-                                            <tbody>
-                                            <tr>
-                                                <th>Carat:</th>
-                                                <td>{diamond.carat}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Price:</th>
-                                                <td>{diamond.price}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Cut:</th>
-                                                <td>{diamond.cut}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Color:</th>
-                                                <td>{diamond.color}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Clarity:</th>
-                                                <td>{diamond.clarity}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Name:</th>
-                                                <td>{shell.shellName}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Material:</th>
-                                                <td>{shell.shellMaterial}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Design:</th>
-                                                <td>{shell.shellDesign}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Weight:</th>
-                                                <td>{shell.shellWeight}</td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>)}
+                                {product.categoryId !== 6 && (
+                                    <button className="size-guide-btn" style={{width:'30%'}} onClick={toggleSizeGuide}>
+                                        <FontAwesomeIcon icon={faRuler}/> Size Guide
+                                    </button>
+                                )}
                             </div>
                         </div>
+                        {showSizeGuide && (
+                            <div className="size-guide-overlay" onClick={toggleSizeGuide}>
+                                <div className="size-guide-content" onClick={(e) => e.stopPropagation()}>
+                                    <h3>Size Guide</h3>
+                                    <img
+                                        src={
+                                            product.categoryId <= 4
+                                                ? "/images/size1.png"
+                                                : product.categoryId === 5
+                                                    ? "/images/size2.png"
+                                                    : "/images/size3.png"
+                                        }
+                                        alt="Size Guide"
+                                    />
+                                    <p>Click anywhere outside this box to close</p>
+                                </div>
+                            </div>
+                        )}
+                        <div style={{textAlign: "center"}}>
+                            <button className="btn btn-info" style={{width: '40%',backgroundColor:'#2e3338'}} onClick={toggleDiamondDetails}>
+                               <span style={{color:'white'}}>Product Information</span>
+                            </button>
+                        </div>
+
+                        {showDiamond && (
+                            <div className="product-details-card">
+                                <h4>Diamond Details</h4>
+                                <table>
+                                    <tbody>
+                                    <tr>
+                                        <th>Carat:</th>
+                                        <td>{diamond.carat}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Price:</th>
+                                        <td>${diamond.price}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Cut:</th>
+                                        <td>{diamond.cut}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Color:</th>
+                                        <td>{diamond.color}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Clarity:</th>
+                                        <td>{diamond.clarity}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <h4>Shell Details</h4>
+                                <table>
+                                    <tbody>
+                                    <tr>
+                                        <th>Name:</th>
+                                        <td>{shell.shellName}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Material:</th>
+                                        <td>{shell.shellMaterial}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Design:</th>
+                                        <td>{shell.shellDesign}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>Weight:</th>
+                                        <td>{shell.shellWeight}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
                         <h5 className="text-success">Price: ${product.price.toFixed(2)}</h5>
+                        <div className="action-buttons">
+                            {product.stockQuantity > 0 ? (
+                                <button className="btn btn-primary" onClick={handleAddToCart}>Add to Cart</button>
+                            ) : (
+                                <button className="btn btn-secondary" disabled>Sold Out</button>
+                            )}
+                            <Link to="/cart" className="btn btn-outline-primary"
+                                  style={{backgroundColor:'red'}}><span style={{color:'white',fontWeight:'bold'}}>Cart</span></Link>
+                        </div>
                     </div>
                 </div>
-                <div className=" text-right">
-                    <button className=" btn btn-dark mr-2 " onClick={handleAddToCart}>Add to Cart</button>
-                    <Link to="/cart" className=" btn btn-outline-primary ms-3">View Cart</Link>
+            )}
+
+            <div className="similar-products">
+                <div style={{textAlign: 'center',padding:'45px 0'}}><span style={{color: 'black', fontSize: '38px', fontWeight: 'bold'}}>Similar Products</span>
+                </div>
+
+                <div className="row">
+                    {similarProducts.length === 0 && !error && (
+                        <div className="col-12">Loading...</div>
+                    )}
+                    {error && (
+                        <div className="col-12">
+                            <div className="alert alert-danger" role="alert">
+                                {error}
+                            </div>
+                        </div>
+                    )}
+                    {similarProducts.map((product) => (
+                        <ProductCard key={product.productId} product={product}/>
+                    ))}
                 </div>
             </div>
-            {/*    */}
-        </div>)}
-    </div>);
+        </div>
+    );
 };
 
 export default ProductDetail;

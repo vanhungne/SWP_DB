@@ -12,15 +12,16 @@
   border-bottom: 1px solid #ddd;
   padding-bottom: 10px;
   margin-bottom: 20px;
+  text-align: center; /* Center align all text within cart-header */
 
   h2 {
     font-size: 24px;
     margin-bottom: 10px;
-    text-align: center; /* Đưa tiêu đề về giữa */
   }
 
   p {
-    text-align: center; /* Đưa phần mô tả về giữa */
+    font-size: 16px;
+    margin-bottom: 0;
   }
 }
 
@@ -52,8 +53,8 @@
       }
 
       p {
-        margin-bottom: 5px;
         font-size: 14px;
+        margin-bottom: 5px;
       }
     }
 
@@ -66,7 +67,19 @@
       }
     }
   }
-  .row-cols-6{
-    text-align: center;
+}
+
+/* Example usage of .row-cols-6 */
+.row-cols-6 {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+  text-align: center;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+  .row-cols-6 {
+    grid-template-columns: repeat(2, 1fr);
   }
-  }
+}
