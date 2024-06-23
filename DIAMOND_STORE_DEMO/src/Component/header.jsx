@@ -86,17 +86,14 @@ const Header = () => {
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mx-auto custom-nav">
-                        {renderNavDropdown("Home", "home-dropdown", [
-                            { text: "Home 1", link: "/" },
-                            { text: "Home 2", link: "/home-2" }
-                        ])}
+                        <Nav.Link as={Link} to="/" className="custom-nav-link">Home</Nav.Link>
                         {renderNavDropdown("Products", "products-dropdown", [
-                            { text: "All products", link: "/products" },
+                            { text: "Category", link: "/category" },
                             { text: "Featured Products", link: "/featured-products" },
                             { text: "New Arrivals", link: "/new-arrivals" }
                         ])}
                         {renderNavDropdown("About", "about-dropdown", [
-                            { text: "Our Story", link: "/about" },
+                            { text: "Our Story", link: "/story" },
                             { text: "Our Team", link: "/team" }
                         ])}
                         {renderNavDropdown("Contact", "contact-dropdown", [

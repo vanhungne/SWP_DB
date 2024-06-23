@@ -38,9 +38,6 @@ const Products = () => {
         setCurrentPage(pageNumber);
     };
 
-    // const handleProductClick = (productId) => {
-    //     navigate(`/product/${productId}`);
-    // };
 
     const getPaginationRange = (currentPage, totalPages) => {
         const delta = 2; // Number of pages to show before and after the current page
@@ -74,7 +71,7 @@ const Products = () => {
                 <title>Product - Featured & Collection Products</title>
                 <meta name="description" content="Check out our featured and collection products!" />
             </MetaTags>
-            <VideoBanner />
+            {/*<VideoBanner />*/}
 
             <div className="container">
                 <div className="row">

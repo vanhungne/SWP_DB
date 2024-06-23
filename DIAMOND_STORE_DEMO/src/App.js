@@ -11,7 +11,7 @@ import Cart from "./Component/Cart/Cart";
 import Checkout from "./Component/Cart/CheckOut";
 import ForgotPassword from "./Component/ForgotPassword";
 import ResetPassword from "./Component/ResetPassword";
-// import ProductCategory from "./Component/Product/ProductCategory";
+import ProductCategory from "./Component/Product/ProductCategory";
 import Products from "./Component/Product/AllProduct";
 import PaymentVnPayment from "./Component/Payment/PaymentVnPay";
 import PaymentResult from "./Component/Payment/PaymentResult";
@@ -19,6 +19,7 @@ import OAuth2RedirectHandler from "./Component/O/OAuth2RedirectHandler";
 import MyAccount from "./Component/MyAccount";
 import ManagerDashBoard from "./Component/Manager/ManagerDashBoard";
 import AdminDashBoard from "./Component/DashboardAdmin/AdminDashBoard";
+import OurStory from "./Component/About/Our Story";
 function App() {
     return (
         <AuthProvider>
@@ -38,9 +39,10 @@ function App() {
                         <Route path="forgot-password" element={<ForgotPassword />} />
                         <Route path="reset-password/:email" element={<ResetPassword />} />
                         <Route path="verifycode/:email" element={<VerifyCode />} />
-                        {/*<Route path="category" element={<ProductCategory />} />*/}
+                        <Route path="category" element={<ProductCategory />} />
                         <Route path="myAccount" element={<MyAccount />} />
                         <Route path="manager" element={<ManagerDashBoard />} />
+                        <Route path="story" element={<OurStory />} />
                         {/* Protected router*/}
                         <Route
                             path="dashboard-account"
