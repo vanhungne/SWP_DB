@@ -211,7 +211,7 @@ const Checkout = () => {
                                 <div key={item.id} className="d-flex justify-content-between align-items-center mb-3">
                                     <div className="d-flex align-items-center">
                                         <img
-                                            src={`${API_URL}product/load-image/${item.image1}.jpg`}
+                                            src={item.image1}
                                             alt={item.productName}
                                             className="img-fluid me-2"
                                             style={{ maxWidth: '100px' }}
