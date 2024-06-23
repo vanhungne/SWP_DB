@@ -5,18 +5,17 @@ import Cookies from 'js-cookie';
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../Config/config";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faGift, faTruck, faStore, faCreditCard } from '@fortawesome/free-solid-svg-icons';
+import { faGift, faTruck, faCreditCard } from '@fortawesome/free-solid-svg-icons';
 import { motion } from 'framer-motion';
 import '../../Scss/Checkout.scss';
-import {jwtDecode} from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 const Checkout = () => {
     const [deliveryAddress, setDeliveryAddress] = useState('');
     const [cartItems, setCartItems] = useState([]);
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [discountCode, setDiscountCode] = useState('');
-    const [shippingMethod, setShippingMethod] = useState('ship');
+    const [code, setCode] = useState('');
     const navigate = useNavigate();
     const [userInfo, setUserInfo] = useState({
         name: '',
@@ -25,6 +24,7 @@ const Checkout = () => {
         address: '',
         accumulatedPoints: 0
     });
+
     useEffect(() => {
         const cartFromCookie = getCartFromCookie();
         setCartItems(cartFromCookie);
@@ -64,13 +64,14 @@ const Checkout = () => {
             setError('User is not logged in or token is missing');
         }
     };
+
     const calculateTotal = () => {
         return cartItems.reduce((acc, item) => acc + item.totalPrice * item.quantity, 0).toFixed(2);
     };
 
     const handleCheckout = async () => {
-        if (!deliveryAddress && shippingMethod === 'ship') {
-            setError('Delivery address is required for shipping');
+        if (!deliveryAddress) {
+            setError('Delivery address is required');
             return;
         }
 
@@ -81,7 +82,7 @@ const Checkout = () => {
             const token = localStorage.getItem('token');
             const response = await axios.post(
                 `${API_URL}cart/checkout`,
-                { deliveryAddress, code: discountCode, shippingMethod },
+                { deliveryAddress, code },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -120,7 +121,6 @@ const Checkout = () => {
                             <h3><FontAwesomeIcon icon={faGift} className="me-2" />Express Checkout</h3>
                         </div>
                         <div className="card-body">
-
                             <div className="mb-3">
                                 <label className="form-label">Shipping Method</label>
                                 <div className="d-flex">
@@ -131,25 +131,11 @@ const Checkout = () => {
                                             id="shipItems"
                                             name="shippingMethod"
                                             value="ship"
-                                            checked={shippingMethod === 'ship'}
-                                            onChange={() => setShippingMethod('ship')}
+                                            checked={true}
+                                            readOnly
                                         />
                                         <label className="form-check-label" htmlFor="shipItems">
-                                            <FontAwesomeIcon icon={faTruck} className="me-2"/>Ship My Items
-                                        </label>
-                                    </div>
-                                    <div className="form-check">
-                                        <input
-                                            type="radio"
-                                            className="form-check-input"
-                                            id="pickupInStore"
-                                            name="shippingMethod"
-                                            value="pickup"
-                                            checked={shippingMethod === 'pickup'}
-                                            onChange={() => setShippingMethod('pickup')}
-                                        />
-                                        <label className="form-check-label" htmlFor="pickupInStore">
-                                            <FontAwesomeIcon icon={faStore} className="me-2"/>Pick up In-Store
+                                            <FontAwesomeIcon icon={faTruck} className="me-2" />Ship My Items
                                         </label>
                                     </div>
                                 </div>
@@ -174,26 +160,24 @@ const Checkout = () => {
                                     disabled
                                 />
                             </div>
-                            {shippingMethod === 'ship' && (
-                                <div className="mb-3">
-                                    <label htmlFor="deliveryAddress" className="form-label">Shipping Address:</label>
-                                    <input
-                                        type="text"
-                                        className="form-control"
-                                        id="deliveryAddress"
-                                        value={deliveryAddress}
-                                        onChange={(e) => setDeliveryAddress(e.target.value)}
-                                    />
-                                </div>
-                            )}
                             <div className="mb-3">
-                                <label htmlFor="discountCode" className="form-label">Discount Code:</label>
+                                <label htmlFor="deliveryAddress" className="form-label">Shipping Address:</label>
                                 <input
                                     type="text"
                                     className="form-control"
-                                    id="discountCode"
-                                    value={discountCode}
-                                    onChange={(e) => setDiscountCode(e.target.value)}
+                                    id="deliveryAddress"
+                                    value={deliveryAddress}
+                                    onChange={(e) => setDeliveryAddress(e.target.value)}
+                                />
+                            </div>
+                            <div className="mb-3">
+                                <label htmlFor="code" className="form-label">Discount Code:</label>
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    id="code"
+                                    value={code}
+                                    onChange={(e) => setCode(e.target.value)}
                                 />
                             </div>
                             <div className="mb-3">
@@ -212,8 +196,7 @@ const Checkout = () => {
                                 onClick={handleCheckout}
                                 disabled={loading}
                             >
-                                {loading ? 'Processing...' : <><FontAwesomeIcon icon={faCreditCard} className="me-2"/>Place
-                                    Order</>}
+                                {loading ? 'Processing...' : <><FontAwesomeIcon icon={faCreditCard} className="me-2" />Place Order</>}
                             </button>
                         </div>
                     </div>
@@ -226,12 +209,12 @@ const Checkout = () => {
                         <div className="card-body">
                             {cartItems.map((item) => (
                                 <div key={item.id} className="d-flex justify-content-between align-items-center mb-3">
-                                <div className="d-flex align-items-center">
+                                    <div className="d-flex align-items-center">
                                         <img
                                             src={`${API_URL}product/load-image/${item.image1}.jpg`}
                                             alt={item.productName}
                                             className="img-fluid me-2"
-                                            style={{maxWidth: '100px'}}
+                                            style={{ maxWidth: '100px' }}
                                         />
                                         <div>
                                             <h6 className="mb-0">{item.productName}</h6>
