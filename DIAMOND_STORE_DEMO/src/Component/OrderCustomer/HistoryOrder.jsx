@@ -81,10 +81,13 @@ const OrderDashboard = () => {
         }
     };
 
-    const handleOrderDetailsClick = (orderId) => {
-        navigate(`/order-details/${orderId}`);
+    const handlePayNowClick = (orderId) => {
+        navigate(`/payment/${orderId}`);
     };
 
+    const handleDetailsClick = (orderId) => {
+        navigate(`/order-details/${orderId}`);
+    };
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     if (loading) {
@@ -136,13 +139,31 @@ const OrderDashboard = () => {
                                 </span>
                             </td>
                             <td>
-                                <button
-                                    onClick={() => handleOrderDetailsClick(order.orderId)}
-                                    className="details-button"
-                                >
-                                    Details
-                                    <FontAwesomeIcon icon={faChevronRight}/>
-                                </button>
+                                {order.status === 'PENDING' && (
+                                    <>
+                                        <button
+                                            onClick={() => handlePayNowClick(order.orderId)}
+                                            className="details-button" style={{ backgroundColor:"green",width:'102px',textAlign:'center'}}
+                                            disabled={order.status !== 'PENDING'}
+                                        >
+                                            Pay
+                                        </button>
+                                        <button
+                                            onClick={() => handleDetailsClick(order.orderId)}
+                                            className="details-button"
+                                        >
+                                            Details
+                                        </button>
+                                    </>
+                                )}
+                                {order.status === 'PAYMENT' && (
+                                    <button
+                                        onClick={() => handleDetailsClick(order.orderId)}
+                                        className="details-button"
+                                    >
+                                        Details
+                                    </button>
+                                )}
                             </td>
                         </tr>
                     ))}
