@@ -63,7 +63,7 @@ const VNPayCallback = () => {
                 headers: { Authorization: `Bearer ${token}` }
             };
 
-            const orderDetailsResponse = await axios.get(`${API_URL}order/OrderDetailByCustomer/${orderId}`, config);
+            const orderDetailsResponse = await axios.get(`${API_URL}order/OrderDetailByOrderId/${orderId}`, config);
             const { success, description, data: orderDetailsData } = orderDetailsResponse.data;
 
             if (!success) {
@@ -91,8 +91,6 @@ const VNPayCallback = () => {
 
     return (
         <div className="payment-result-container">
-            <h1 className="page-title">Payment Result</h1>
-
             <div className={`payment-result ${message.includes('successful') ? 'success' : 'error'} fade-in`}>
                 <p>
                     <FontAwesomeIcon

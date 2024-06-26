@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -15,6 +16,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import '../../Scss/AllOrder.scss';
 import { API_URL } from "../../Config/config";
+import { jwtDecode } from "jwt-decode";
 
 const statusIcons = {
     PENDING: faClock,
@@ -25,24 +27,46 @@ const statusIcons = {
     RECEIVED: faBoxOpen
 };
 
-const OrderDashboard = ({ onOrderClick }) => {
+const OrderDashboard = () => {
+    const navigate = useNavigate();
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
+    const [userId, setUserId] = useState(null);
     const ordersPerPage = 5;
 
     useEffect(() => {
-        fetchOrders(currentPage);
-    }, [currentPage]);
+        const token = localStorage.getItem('token');
+        if (token) {
+            try {
+                const decodedToken = jwtDecode(token);
+                if (decodedToken && decodedToken.id) {
+                    setUserId(decodedToken.id);
+                } else {
+                    setError('User ID not found in the token');
+                }
+            } catch (err) {
+                setError('Invalid token');
+            }
+        } else {
+            setError('User is not logged in or token is missing');
+        }
+    }, []);
+
+    useEffect(() => {
+        if (userId) {
+            fetchOrders(currentPage);
+        }
+    }, [userId, currentPage]);
 
     const fetchOrders = async (page) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) throw new Error('No authentication token found');
 
-            const response = await axios.get(`${API_URL}order`, {
+            const response = await axios.get(`${API_URL}order/OrderByCustomer/${userId}`, {
                 headers: { 'Authorization': `Bearer ${token}` },
                 params: { page: page, size: ordersPerPage }
             });
@@ -58,7 +82,7 @@ const OrderDashboard = ({ onOrderClick }) => {
     };
 
     const handleOrderDetailsClick = (orderId) => {
-        onOrderClick(orderId);
+        navigate(`/order-details/${orderId}`);
     };
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -84,25 +108,22 @@ const OrderDashboard = ({ onOrderClick }) => {
         <div className="order-dashboard">
             <h1 className="dashboard-title">
                 <FontAwesomeIcon icon={faShoppingCart} />
-                Order Dashboard
+                Purchase Order
             </h1>
             <div className="order-table-container">
                 <table className="order-table">
                     <thead>
                     <tr>
-                        <th>Order ID</th>
                         <th>Date</th>
                         <th>Total Amount</th>
                         <th>Delivery Address</th>
                         <th>Status</th>
-                        <th>Customer ID</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
                     {orders.map((order) => (
                         <tr key={order.orderId} className="order-row">
-                            <td>{order.orderId}</td>
                             <td style={{color: 'blue', fontSize: '15px'}}>
                                 {new Date(order.orderDate).toLocaleString()}
                             </td>
@@ -114,7 +135,6 @@ const OrderDashboard = ({ onOrderClick }) => {
                                     {order.status}
                                 </span>
                             </td>
-                            <td>{order.customerId}</td>
                             <td>
                                 <button
                                     onClick={() => handleOrderDetailsClick(order.orderId)}
@@ -150,7 +170,6 @@ const OrderDashboard = ({ onOrderClick }) => {
                     </button>
                 ))}
             </div>
-
         </div>
     );
 };

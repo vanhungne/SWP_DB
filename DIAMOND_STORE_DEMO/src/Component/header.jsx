@@ -117,6 +117,7 @@ const Header = () => {
                                         className={`custom-nav-link ${isMobile ? '' : 'hover-dropdown'}`}
                                     >
                                         <NavDropdown.Item as={Link} to="/myAccount">My Account</NavDropdown.Item>
+                                        <NavDropdown.Item as={Link} to="/history">Purchase Order</NavDropdown.Item>
                                         {currentUser.roles === 'ADMIN' && (
                                             <NavDropdown.Item as={Link} to="/dashboard-account">Dashboard</NavDropdown.Item>
                                         )}

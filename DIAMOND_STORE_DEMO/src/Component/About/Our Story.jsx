@@ -10,7 +10,7 @@ const OurStory = () => {
                 <h1>THREE SONS, THREE GENERATIONS, THREE VALUES.</h1>
             </div>
             <div className="our-story-content">
-                <div className="container">
+                <div className="container border-3">
                     <div className="row"
                          style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '40%'}}>
                         <div className="col-md-6" style={{textAlign: 'center'}}>

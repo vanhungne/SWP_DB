@@ -8,6 +8,7 @@ import VideoBanner from "../../Layouttest/VideoBanner";
 import ProductCard from "../Product/ProductCard";
 import { useNavigate } from 'react-router-dom';
 import {API_URL} from "../../Config/config";
+import ImageCarousel from "../../Layouttest/SliderHome";
 
 const Home = () => {
     const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -122,7 +123,7 @@ const Home = () => {
 
                 <div className="row mt-5">
                     <div className="col-12 mb-4">
-                        <h1>Tiffany Lock collection</h1>
+                        <h1>Esther Lock collection</h1>
                     </div>
                     {collectionProducts.length === 0 && !collectionError && <div className="col-12">Loading...</div>}
                     {collectionError && <div className="col-12">
@@ -133,6 +134,7 @@ const Home = () => {
                     ))}
                 </div>
             </div>
+            <div style={{padding:'0 5%'}}> <ImageCarousel/></div>
         </>
     );
 };

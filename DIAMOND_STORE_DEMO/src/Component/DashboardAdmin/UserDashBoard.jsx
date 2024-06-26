@@ -13,42 +13,36 @@ const UserDashboard = () => {
     const [showEditModal, setShowEditModal] = useState(false);
     const [showCreateUser, setShowCreateUser] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
-    const [searchType, setSearchType] = useState('id');
+    const [searchType, setSearchType] = useState('all');
+    const [currentPage, setCurrentPage] = useState(0);
+    const [totalPages, setTotalPages] = useState(0);
+    const [totalElements, setTotalElements] = useState(0);
+    const pageSize = 10;
 
     useEffect(() => {
-        fetchUsers();
-    }, []);
+        fetchUsers(currentPage);
+    }, [currentPage]);
 
-
-    const fetchUsers = async () => {
+    const fetchUsers = async (page) => {
         const token = localStorage.getItem('token');
-        const allUsers = [];
-        let page = 0;
-        let hasMoreData = true;
-
-        while (hasMoreData) {
-            try {
-                const response = await axios.get(`${API_URL}manage/accounts`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    },
-                    params: {
-                        page: page,
-                        size: 10
-                    }
-                });
-
-                allUsers.push(...response.data.content);
-                hasMoreData = page < response.data.totalPages - 1;
-                page++;
-            } catch (error) {
-                console.error('Error fetching users:', error);
-                setError('Error fetching users. Please try again later.');
-                hasMoreData = false;
-            }
+        try {
+            const response = await axios.get(`${API_URL}manage/accounts`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                },
+                params: {
+                    page: page,
+                    size: pageSize
+                }
+            });
+            setUsers(response.data.content);
+            setTotalPages(response.data.totalPages);
+            setTotalElements(response.data.totalElements);
+            setError('');
+        } catch (error) {
+            console.error('Error fetching users:', error);
+            setError('Error fetching users. Please try again later.');
         }
-
-        setUsers(allUsers);
     };
     const handleEditUser = (user) => {
         setEditingUser(user);
@@ -116,15 +110,9 @@ const UserDashboard = () => {
             setError('Error deleting user. Please try again later.');
         }
     };
-
     const handleSearch = async () => {
-        if (searchType === 'all') {
-            fetchUsers();
-            return;
-        }
-
-        if (!searchQuery) {
-            fetchUsers();
+        if (searchType === 'all' || !searchQuery) {
+            fetchUsers(0);
             return;
         }
 
@@ -146,6 +134,9 @@ const UserDashboard = () => {
                 params: searchType !== 'id' ? { [searchType]: searchQuery } : {}
             });
             setUsers(Array.isArray(response.data) ? response.data : [response.data]);
+            setTotalPages(1);
+            setTotalElements(Array.isArray(response.data) ? response.data.length : 1);
+            setCurrentPage(0);
             setError('');
         } catch (error) {
             console.error('Error searching users:', error);
@@ -153,11 +144,15 @@ const UserDashboard = () => {
         }
     };
 
+    const handlePageChange = (newPage) => {
+        setCurrentPage(newPage);
+    };
+
     return (
         <div className={`${styles['ud-container']} container`}>
-            <div style={{marginTop:'20px'}}></div>
+            <div style={{marginTop: '20px'}}></div>
             <div style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
-                <h1 className={`${styles['ud-title']} mb-4`} style={{textAlign: 'center',fontWeight:'bolder'}}>
+                <h1 className={`${styles['ud-title']} mb-4`} style={{textAlign: 'center', fontWeight: 'bolder'}}>
                     <i className="fas fa-users-cog mr-2"></i>Account Management
                 </h1>
             </div>
@@ -192,14 +187,35 @@ const UserDashboard = () => {
                         </div>
                     </div>
                     <div className="col-md-6 text-right">
-                        <button className={`btn ${styles['ud-create-button']}`} onClick={() => setShowCreateUser(true)}>
+                        <button
+                            className={`btn ${styles['ud-create-button']}`}
+                            onClick={() => setShowCreateUser(true)}
+                            style={{
+                                backgroundColor: '#4CAF50',
+                                color: 'white',
+                                padding: '8px 16px',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                            }}
+                        >
                             <i className="fas fa-plus mr-2"></i>Create New User
                         </button>
                     </div>
                 </div>
             </div>
-            <div className={`${styles['ud-table-container']} table-responsive`}>
-                <table className={`table ${styles['ud-table']}`}>
+            <div className={`${styles['ud-table-container']} table-responsive`}
+                 style={{
+                     borderRadius: '20px',
+                     boxShadow: '0 10px 20px rgba(0, 0, 0, 0.1)',
+                 }}>
+                <table className={`table ${styles['ud-table']}`}
+                       style={{
+                           borderCollapse: 'collapse',
+                           width: '100%',
+                       }}>
                     <thead>
                     <tr>
                         <th>ID</th>
@@ -222,7 +238,13 @@ const UserDashboard = () => {
                                 <td>{user.phoneNumber}</td>
                                 <td>{user.address}</td>
                                 <td>{user.role}</td>
-                                <td className={user.status ? styles['ud-status-active'] : styles['ud-status-inactive']}>
+                                <td
+                                    style={{
+                                        color: user.status ? 'green' : 'red',
+                                        fontWeight: user.status ? 'bold' : 'bold'
+                                    }}
+                                    className={user.status ? styles['ud-status-active'] : styles['ud-status-inactive']}
+                                >
                                     {user.status ? 'Active' : 'Inactive'}
                                 </td>
                                 <td>
@@ -245,6 +267,35 @@ const UserDashboard = () => {
                     </tbody>
                 </table>
             </div>
+
+            {/* Pagination */}
+            <div className={`${styles['ud-pagination']} d-flex justify-content-between align-items-center mt-4`}>
+                <div>
+                    Showing {users.length} of {totalElements} users
+                </div>
+                <nav>
+                    <ul className="pagination">
+                        <li className={`page-item ${currentPage === 0 ? 'disabled' : ''}`}>
+                            <button className="page-link" onClick={() => handlePageChange(currentPage - 1)} disabled={currentPage === 0}>
+                                <i className="fas fa-chevron-left"></i>
+                            </button>
+                        </li>
+                        {[...Array(totalPages).keys()].map((page) => (
+                            <li key={page} className={`page-item ${currentPage === page ? 'active' : ''}`}>
+                                <button className="page-link" onClick={() => handlePageChange(page)}>
+                                    {page + 1}
+                                </button>
+                            </li>
+                        ))}
+                        <li className={`page-item ${currentPage === totalPages - 1 ? 'disabled' : ''}`}>
+                            <button className="page-link" onClick={() => handlePageChange(currentPage + 1)} disabled={currentPage === totalPages - 1}>
+                                <i className="fas fa-chevron-right"></i>
+                            </button>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
             {showCreateUser && (
                 <div className={`modal ${styles['ud-modal']}`} style={{display: 'block'}}>
                     <div className="modal-dialog modal-dialog-centered">

@@ -3,19 +3,20 @@ import '../../Scss/sidebar.scss';
 
 const Sidebar = ({ selectedComponent, onComponentChange }) => {
     return (
-        <div className="sidebar1">
-            <ul className="sidebar-menu">
+        <div className="custom-sidebar">
+            <h3 className="custom-sidebar__title" style={{textAlign:'center'}}>Admin</h3>
+            <ul className="custom-sidebar__menu">
                 <li
-                    className={selectedComponent === 'Account' ? 'active' : ''}
+                    className={`custom-sidebar__item ${selectedComponent === 'Account' ? 'custom-sidebar__item--active' : ''}`}
                     onClick={() => onComponentChange('Account')}
                 >
-                    Account Management
+                    <span className="custom-sidebar__text">Account Management</span>
                 </li>
                 <li
-                    className={selectedComponent === 'Order' ? 'active' : ''}
+                    className={`custom-sidebar__item ${selectedComponent === 'Order' ? 'custom-sidebar__item--active' : ''}`}
                     onClick={() => onComponentChange('Order')}
                 >
-                    Order Management
+                    <span className="custom-sidebar__text">Order Management</span>
                 </li>
             </ul>
         </div>

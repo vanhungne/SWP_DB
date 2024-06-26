@@ -20,6 +20,8 @@ import MyAccount from "./Component/MyAccount";
 import ManagerDashBoard from "./Component/Manager/ManagerDashBoard";
 import AdminDashBoard from "./Component/DashboardAdmin/AdminDashBoard";
 import OurStory from "./Component/About/Our Story";
+import HistoryOrder from "./Component/OrderCustomer/HistoryOrder";
+import OrderDetailsCustomer from "./Component/OrderCustomer/OrderDetailsCustomer";
 function App() {
     return (
         <AuthProvider>
@@ -43,6 +45,8 @@ function App() {
                         <Route path="myAccount" element={<MyAccount />} />
                         <Route path="manager" element={<ManagerDashBoard />} />
                         <Route path="story" element={<OurStory />} />
+                        <Route path="history" element={<HistoryOrder />} />
+                        <Route path="order-details/:orderId" element={<OrderDetailsCustomer />} />
                         {/* Protected router*/}
                         <Route
                             path="dashboard-account"

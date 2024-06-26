@@ -1,4 +1,5 @@
-// editUser.scss and createUser.scss
+// editUser.scss
+
 .editUserModal, .createUserModal {
   position: fixed;
   top: 0;
@@ -15,28 +16,52 @@
     background-color: white;
     padding: 30px;
     border-radius: 8px;
-    width: 80%; // Increased width
-    max-width: 800px; // Maximum width to ensure readability on larger screens
+    width: 80%; // Adjust as needed
+    max-width: 800px; // Maximum width for readability
     max-height: 90vh;
     overflow-y: auto;
 
     .myaccount-info-wrapper {
       margin-bottom: 20px;
+      text-align: center;
+
+      h4 {
+        font-size: 24px;
+        font-weight: bold;
+        i {
+          margin-right: 5px;
+        }
+      }
     }
 
-    .billing-info {
-      margin-bottom: 15px;
+    .row {
+      display: flex;
+      flex-wrap: wrap;
 
-      label {
-        display: block;
-        margin-bottom: 5px;
+      .col-lg-6 {
+        width: 50%; // Adjust for different screen sizes
+        padding: 0 10px; // Adjust spacing between columns
       }
 
-      input, select {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
+      .billing-info {
+        margin-bottom: 15px;
+
+        label {
+          display: block;
+          margin-bottom: 5px;
+          font-weight: bold;
+          i {
+            margin-right: 5px;
+          }
+        }
+
+        input, select {
+          width: 100%;
+          padding: 8px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          font-size: 14px; // Adjust font size as needed
+        }
       }
     }
 

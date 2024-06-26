@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import '../../Scss/payment.scss'; // Import your scoped SCSS file here
+import '../../Scss/payment.scss';
 import { API_URL } from "../../Config/config";
 
 const PaymentVnPay = () => {

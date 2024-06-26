@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import styles from '../../Scss/editUser.scss';
+import styles from '../../Scss/createAccount.scss';
 
 const EditUser = ({ user, onSave, onCancel }) => {
     const [editedUser, setEditedUser] = useState({

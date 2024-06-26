@@ -57,8 +57,10 @@ const ProductDetail = () => {
             setMainImage(fetchedProduct.image1);
             fetchSizesForCategory(fetchedProduct.categoryId);
             fetchSimilarProducts(fetchedProduct.categoryId)
-            fetchDiamondDetail(fetchedProduct.productId);
-            fetchShellDetail(fetchedProduct.shellId);
+            if (fetchedProduct.stockQuantity > 0) {
+                fetchDiamondDetail(fetchedProduct.productId);
+                fetchShellDetail(fetchedProduct.shellId);
+            }
         } catch (error) {
             console.error('Error fetching product details:', error);
             setError('Error fetching product details. Please try again later.');
