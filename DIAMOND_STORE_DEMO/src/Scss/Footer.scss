@@ -1,68 +1,52 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+// footer.scss
 
-.footer {
-  background: linear-gradient(135deg, #3a6186, #89253e);
-  color: #fff;
+footer {
+  background-color: #f8fafa;
   padding: 3rem 0;
-  margin-top: 2rem;
-  font-family: 'Poppins', sans-serif;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 
-  a {
-    color: #fff;
-    text-decoration: none;
-    transition: color 0.3s ease, transform 0.3s ease;
-    display: inline-block;
-    margin-bottom: 1rem;
+  h2, h3 {
+    margin-bottom: 1.5rem;
+    font-weight: bold;
+  }
 
+  p, li {
+    margin-bottom: 0.5rem;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .text-primary {
+    color: #007bff;
     &:hover {
-      color: #f9c74f;
-      transform: scale(1.1);
+      text-decoration: underline;
     }
   }
 
-  .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    @media (max-width: 767px) {
-      flex-direction: column;
-      text-align: center;
-
-      .row {
-        margin-bottom: 1rem;
-      }
+  .form-control {
+    border-radius: 0;
+    &:focus {
+      box-shadow: none;
+      border-color: #343a40;
     }
   }
 
-  .row {
-    width: 100%;
-  }
-
-  .text-md-right {
-    text-align: right;
-
-    @media (max-width: 767px) {
-      text-align: center;
-    }
-  }
-
-  .text-center {
-    margin-top: 1rem;
-  }
-
-  .social-icons a {
-    margin: 0 10px;
-    transition: all 0.3s ease;
-
+  .btn-dark {
+    border-radius: 0;
+    background-color: #343a40;
+    border-color: #343a40;
     &:hover {
-      transform: scale(1.2);
-      color: #f9c74f;
+      background-color: #23272b;
+      border-color: #1d2124;
     }
   }
 
-  p {
-    margin: 0;
+  .fa-facebook, .fa-instagram, .fa-youtube {
+    color: #343a40;
+    &:hover {
+      color: #007bff;
+    }
   }
 }

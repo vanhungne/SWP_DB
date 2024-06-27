@@ -2,8 +2,8 @@ import { useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
 import Swal from 'sweetalert2';
-import '../Scss/Login.scss';
-import {API_URL} from "../Config/config";
+import '../../Scss/Login.scss';
+import {API_URL} from "../../Config/config";
 
 function Resetpassword() {
     const { email } = useParams();

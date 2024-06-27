@@ -17,12 +17,21 @@ import '../../Scss/AllOrder.scss';
 import { API_URL } from "../../Config/config";
 
 const statusIcons = {
-    PENDING: faClock,
-    CONFIRMED: faCheckCircle,
-    PAYMENT: faCreditCard,
-    DELIVERED: faTruck,
-    CANCELED: faTimesCircle,
-    RECEIVED: faBoxOpen
+    PENDING: { icon: faClock, color: '#655e50' },
+    CONFIRMED: { icon: faCheckCircle, color: '#4CAF50' },
+    PAYMENT: { icon: faCreditCard, color: '#2196F3' },
+    DELIVERED: { icon: faTruck, color: '#fbcb09' },
+    CANCELED: { icon: faTimesCircle, color: '#F44336' },
+    RECEIVED: { icon: faBoxOpen, color: '#795548' }
+};
+
+const statusLabels = {
+    PENDING: 'PENDING',
+    CONFIRMED: 'CONFIRMED',
+    PAYMENT: 'PAYMENT',
+    DELIVERED: 'DELIVERING',
+    CANCELED: 'CANCELED',
+    RECEIVED: 'RECEIVED'
 };
 
 const OrderDashboard = ({ onOrderClick }) => {
@@ -46,7 +55,11 @@ const OrderDashboard = ({ onOrderClick }) => {
                 headers: { 'Authorization': `Bearer ${token}` },
                 params: { page: page, size: ordersPerPage }
             });
-            setOrders(response.data.content);
+            const sortedOrders = response.data.content.sort((a, b) =>
+                new Date(b.orderDate) - new Date(a.orderDate)
+            );
+
+            setOrders(sortedOrders);
             setTotalPages(response.data.totalPages);
             setLoading(false);
         } catch (err) {
@@ -110,8 +123,11 @@ const OrderDashboard = ({ onOrderClick }) => {
                             <td>{order.orderDeliveryAddress}</td>
                             <td>
                                 <span className={`status-badge ${order.status.toLowerCase()}`}>
-                                    <FontAwesomeIcon icon={statusIcons[order.status]}/>
-                                    {order.status}
+                                      <FontAwesomeIcon
+                                          icon={statusIcons[order.status].icon}
+                                          style={{color: statusIcons[order.status].color}}
+                                      />
+                                    {statusLabels[order.status]}
                                 </span>
                             </td>
                             <td>{order.customerId}</td>

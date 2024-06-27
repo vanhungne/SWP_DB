@@ -83,49 +83,59 @@ const Header = () => {
                     <span>Ethers Diamonds</span>
                 </Navbar.Brand>
 
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Toggle aria-controls="basic-navbar-nav"/>
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mx-auto custom-nav">
                         <Nav.Link as={Link} to="/" className="custom-nav-link">Home</Nav.Link>
                         {renderNavDropdown("Products", "products-dropdown", [
-                            { text: "Category", link: "/category" },
-                            { text: "Featured Products", link: "/featured-products" },
-                            { text: "New Arrivals", link: "/new-arrivals" }
+                            {text: "Category", link: "/category"},
+                            {text: "Featured Products", link: "/featured-products"},
+                            {text: "New Arrivals", link: "/new-arrivals"}
                         ])}
+                        <Nav.Link as={Link} to="/diamonds-price" className="custom-nav-link">Diamonds</Nav.Link>
                         {renderNavDropdown("About", "about-dropdown", [
-                            { text: "Our Story", link: "/story" },
-                            { text: "Our Team", link: "/team" }
+                            {text: "Our Story", link: "/story"},
+                            {text: "Our Team", link: "/team"}
                         ])}
                         {renderNavDropdown("Contact", "contact-dropdown", [
-                            { text: "Contact Us", link: "/contact" },
-                            { text: "FAQ", link: "/faq" }
+                            {text: "Contact Us", link: "/contact"},
+                            {text: "FAQ", link: "/faq"}
                         ])}
                     </Nav>
                     <Nav className="nav-right">
                         <div className="nav-right-items">
                             <Nav.Link onClick={toggleSearch} className="custom-nav-link-icon">
-                                <FontAwesomeIcon icon={faSearch} />
+                                <FontAwesomeIcon icon={faSearch}/>
                             </Nav.Link>
                             <Nav.Link as={Link} to="/cart" className="custom-nav-link-icon">
-                                <FontAwesomeIcon icon={faShoppingCart} />
+                                <FontAwesomeIcon icon={faShoppingCart}/>
                             </Nav.Link>
                             <div className="nav-account">
                                 {currentUser ? (
                                     <NavDropdown
-                                        title={<FontAwesomeIcon icon={faUser} />}
+                                        title={<FontAwesomeIcon icon={faUser}/>}
                                         id="account-dropdown"
                                         className={`custom-nav-link ${isMobile ? '' : 'hover-dropdown'}`}
                                     >
                                         <NavDropdown.Item as={Link} to="/myAccount">My Account</NavDropdown.Item>
+                                        {currentUser.roles === 'DELIVERY_STAFF' && (
+                                            <NavDropdown.Item as={Link} to="/delivery-dashboard">Delivery
+                                                Dashboard</NavDropdown.Item>
+                                        )}
+                                        {currentUser.roles === 'SALE_STAFF' && (
+                                            <NavDropdown.Item as={Link} to="/sale-dashboard">Sale
+                                                Dashboard</NavDropdown.Item>
+                                        )}
                                         <NavDropdown.Item as={Link} to="/history">Purchase Order</NavDropdown.Item>
                                         {currentUser.roles === 'ADMIN' && (
-                                            <NavDropdown.Item as={Link} to="/dashboard-account">Dashboard</NavDropdown.Item>
+                                            <NavDropdown.Item as={Link} to="/dashboard-account">Admin
+                                                Dashboard</NavDropdown.Item>
                                         )}
                                         <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>
                                     </NavDropdown>
                                 ) : (
                                     <NavDropdown
-                                        title={<FontAwesomeIcon icon={faUser} />}
+                                        title={<FontAwesomeIcon icon={faUser}/>}
                                         id="account-dropdown"
                                         className={`custom-nav-link ${isMobile ? '' : 'hover-dropdown'}`}
                                     >

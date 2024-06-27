@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+    faCreditCard,
+    faInfo,
+    faCode,
     faBox,
     faCalendar,
     faMoneyBillWave,
@@ -12,28 +15,13 @@ import {
     faPercent,
     faPhone,
     faEnvelope,
-    faCreditCard, faInfo, faCode, faClock, faCheckCircle, faTimesCircle, faBoxOpen
+    faEdit,
+    faArrowLeft
 } from '@fortawesome/free-solid-svg-icons';
 import { API_URL } from "../../Config/config";
 import '../../Scss/OrderDetails.scss';
 
-const statusIcons = {
-    PENDING: { icon: faClock, color: '#655e50' },
-    CONFIRMED: { icon: faCheckCircle, color: '#4CAF50' },
-    PAYMENT: { icon: faCreditCard, color: '#2196F3' },
-    DELIVERED: { icon: faTruck, color: '#fbcb09' },
-    CANCELED: { icon: faTimesCircle, color: '#F44336' },
-    RECEIVED: { icon: faBoxOpen, color: '#795548' }
-};
 
-const statusLabels = {
-    PENDING: 'PENDING',
-    CONFIRMED: 'CONFIRMED',
-    PAYMENT: 'PAYMENT',
-    DELIVERED: 'DELIVERING',
-    CANCELED: 'CANCELED',
-    RECEIVED: 'RECEIVED'
-};
 
 const OrderDetails = ({ orderData }) => {
     const [customerInfo, setCustomerInfo] = useState(null);
@@ -43,16 +31,18 @@ const OrderDetails = ({ orderData }) => {
     const [paymentInfo, setPaymentInfo] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [newStatus, setNewStatus] = useState('');
+    const [statusUpdateMessage, setStatusUpdateMessage] = useState('');
 
     useEffect(() => {
         const fetchAdditionalData = async () => {
-            if (!orderData) return;
-
+            if (!orderData || !orderData.orderId) return;
             setLoading(true);
             setError(null);
 
             try {
                 const token = localStorage.getItem('token');
+
                 const [customerResponse, saleResponse, deliveryResponse, ...productResponses] = await Promise.all([
                     axios.get(`${API_URL}manage/accounts/${orderData.customerId}`, {
                         headers: { 'Authorization': `Bearer ${token}` }
@@ -67,11 +57,15 @@ const OrderDetails = ({ orderData }) => {
                         axios.get(`${API_URL}product/${detail.productId}`)
                     )
                 ]);
-                const paymentResponse = await axios.get(`${API_URL}payment/getPaymentByOrderId/${orderData.orderId}`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                setPaymentInfo(paymentResponse.data.data);
-
+                try {
+                    const paymentResponse = await axios.get(`${API_URL}payment/getPaymentByOrderId/${orderData.orderId}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    setPaymentInfo(paymentResponse.data.data);
+                } catch (paymentError) {
+                    console.warn('Not found payment:', paymentError);
+                    setPaymentInfo(null);
+                }
 
                 setCustomerInfo(customerResponse.data);
                 setSaleInfo(saleResponse.data);
@@ -93,6 +87,25 @@ const OrderDetails = ({ orderData }) => {
 
         fetchAdditionalData();
     }, [orderData]);
+    const handleStatusChange = async () => {
+        if (!newStatus) {
+            setStatusUpdateMessage('Please select a new status.');
+            return;
+        }
+
+        try {
+            const token = localStorage.getItem('token');
+            await axios.post(`${API_URL}sale/setOrderStatus/${orderData.orderId}?newStatus=${newStatus}`, {}, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            setStatusUpdateMessage('Order status updated successfully.');
+            // Update the local state to reflect the change
+            orderData.status = newStatus;
+        } catch (error) {
+            console.error('Error updating order status:', error);
+            setStatusUpdateMessage('Failed to update order status. Please try again.');
+        }
+    };
 
     if (!orderData || loading) {
         return <div className="order-details__loading">Loading order details...</div>;
@@ -107,9 +120,6 @@ const OrderDetails = ({ orderData }) => {
         status, discountCode, saleId, deliveryId, orderDetails
     } = orderData;
 
-    const currentStatus = status; // Assuming `status` holds the current status value
-    const { icon, color } = statusIcons[currentStatus] || {};
-
     return (
         <div className="order-details">
             <div className="order-details__id" style={{fontSize:'30px',color:'black',textAlign:'center'}}>
@@ -117,7 +127,7 @@ const OrderDetails = ({ orderData }) => {
 
             <div className="order-details__grid">
                 <div className="order-details__main-info order-details__card">
-                    <h3>Order Information</h3>
+                    <h3 style={{textAlign:'center'}}>Order Information</h3>
                     <div className="order-details__info-item">
                         <FontAwesomeIcon icon={faCalendar}/>
                         <span>Order Date: {new Date(orderDate).toLocaleString()}</span>
@@ -130,16 +140,43 @@ const OrderDetails = ({ orderData }) => {
                         <FontAwesomeIcon icon={faMapMarkerAlt}/>
                         <span>Delivery Address: {orderDeliveryAddress}</span>
                     </div>
-                    <div className="order-details__info-item order-details__status" style={{color}}>
-                        <FontAwesomeIcon icon={icon}/>
-                        <span>Status: {statusLabels[currentStatus]}</span>
-                    </div>
                     {discountCode && (
                         <div className="order-details__info-item">
                             <FontAwesomeIcon icon={faPercent}/>
                             <span>Discount Code: {discountCode}</span>
                         </div>
                     )}
+                    <div className="order-details__status-container">
+                        <div className="order-details__info-item order-details__status">
+                            <FontAwesomeIcon icon={faTag} className="order-details__status-icon"/>
+                            <span style={{backgroundColor:'white',color:'black'}}>Current Status:</span>
+                            <span className="order-details__status-value">{status}</span>
+                        </div>
+                        <div className="order-details__status-update">
+                            <select
+                                value={newStatus}
+                                onChange={(e) => setNewStatus(e.target.value)}
+                                className="order-details__status-select"
+                            >
+                                <option value="">Select new status</option>
+                                <option value="DELIVERED">Delivery</option>
+                                <option value="CANCELED">Canceled</option>
+                            </select>
+                            <button
+                                onClick={handleStatusChange}
+                                className="order-details__status-update-btn"
+                                disabled={!newStatus}
+                            >
+                                <FontAwesomeIcon icon={faEdit} className="order-details__update-icon"/>
+                                Update
+                            </button>
+                        </div>
+                        {statusUpdateMessage && (
+                            <div className="order-details__status-message">
+                                {statusUpdateMessage}
+                            </div>
+                        )}
+                    </div>
                     {/*<div className="order-details__info-item">*/}
                     {/*    <FontAwesomeIcon icon={faTruck}/>*/}
                     {/*    /!*<span>Sale ID: {saleId}, Delivery ID: {deliveryId}</span>*!/*/}
@@ -150,7 +187,7 @@ const OrderDetails = ({ orderData }) => {
                 </div>
 
                 <div className="order-details__customer-info order-details__card">
-                    <h3>Customer Information</h3>
+                    <h3 style={{textAlign:'center'}}>Customer Information</h3>
                     {customerInfo && (
                         <>
                             <div className="order-details__info-item">
@@ -168,13 +205,12 @@ const OrderDetails = ({ orderData }) => {
                         </>
                     )}
                 </div>
-                <div className="order-details__payment-info order-details__card">
-                    <h3>Payment Information</h3>
-                    {paymentInfo && (
-                        <>
+                    {paymentInfo ? (
+                        <div className="order-details__payment-info order-details__card">
+                            <h3 style={{textAlign:'center'}}>Payment information</h3>
                             <div className="order-details__info-item">
                                 <FontAwesomeIcon icon={faMoneyBillWave}/>
-                                <span style={{fontWeight:'bold'}}>Payment Amount: ${paymentInfo.paymentAmount.toFixed(2)/100}</span>
+                                <span style={{fontWeight:'bold'}}>Payment Amount: ${(paymentInfo.paymentAmount / 100).toFixed(2)}</span>
                             </div>
                             <div className="order-details__info-item">
                                 <FontAwesomeIcon icon={faCreditCard}/>
@@ -192,10 +228,39 @@ const OrderDetails = ({ orderData }) => {
                                 <FontAwesomeIcon icon={faCode}/>
                                 <span>Payment Code: {paymentInfo.paymentCode}</span>
                             </div>
-                        </>
+                        </div>
+                    ) : (
+                        <div className="order-details__payment-info order-details__card">
+                            <p>No payment</p>
+                        </div>
                     )}
+
+                    {/*{paymentInfo && (*/}
+                    {/*    <>*/}
+                    {/*        <div className="order-details__info-item">*/}
+                    {/*            <FontAwesomeIcon icon={faMoneyBillWave}/>*/}
+                    {/*            <span style={{fontWeight:'bold'}}>: ${paymentInfo.paymentAmount.toFixed(2)/100}</span>*/}
+                    {/*        </div>*/}
+                    {/*        <div className="order-details__info-item">*/}
+                    {/*            <FontAwesomeIcon icon={faCreditCard}/>*/}
+                    {/*            <span>Payment Mode: {paymentInfo.paymentMode}</span>*/}
+                    {/*        </div>*/}
+                    {/*        <div className="order-details__info-item">*/}
+                    {/*            <FontAwesomeIcon icon={faCalendar}/>*/}
+                    {/*            <span>Payment Time: {new Date(paymentInfo.paymentTime).toLocaleString()}</span>*/}
+                    {/*        </div>*/}
+                    {/*        <div className="order-details__info-item">*/}
+                    {/*            <FontAwesomeIcon icon={faInfo}/>*/}
+                    {/*            <span>Description: {paymentInfo.description}</span>*/}
+                    {/*        </div>*/}
+                    {/*        <div className="order-details__info-item">*/}
+                    {/*            <FontAwesomeIcon icon={faCode}/>*/}
+                    {/*            <span>Payment Code: {paymentInfo.paymentCode}</span>*/}
+                    {/*        </div>*/}
+                    {/*    </>*/}
+                    {/*)}*/}
                 </div>
-            </div>
+
             <div className="order-details__items order-details__card">
                 <div className="order-details__product-list">
                     {orderDetails.map((item, index) => (

@@ -2,9 +2,9 @@ import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Swal from 'sweetalert2';
-import '../Scss/Login.scss';
+import '../../Scss/Login.scss';
 import { FcGoogle } from 'react-icons/fc'; // Import Google icon from react-icons
-import {API_URL} from "../Config/config";
+import {API_URL} from "../../Config/config";
 
 function Login() {
     const [email, setEmail] = useState("");

@@ -9,6 +9,7 @@ import ProductCard from "../Product/ProductCard";
 import { useNavigate } from 'react-router-dom';
 import {API_URL} from "../../Config/config";
 import ImageCarousel from "../../Layouttest/SliderHome";
+import SnowEffect from "./SnowEffect";
 
 const Home = () => {
     const [featuredProducts, setFeaturedProducts] = useState([]);
@@ -76,6 +77,7 @@ const Home = () => {
                 <title>Home - Featured & Collection Products</title>
                 <meta name="description" content="Check out our featured and collection products!" />
             </MetaTags>
+            <SnowEffect />
             <VideoBanner />
 
             <div className="container">
@@ -134,7 +136,7 @@ const Home = () => {
                     ))}
                 </div>
             </div>
-            <div style={{padding:'0 5%'}}> <ImageCarousel/></div>
+            <div style={{padding:'5%'}}> <ImageCarousel/></div>
         </>
     );
 };

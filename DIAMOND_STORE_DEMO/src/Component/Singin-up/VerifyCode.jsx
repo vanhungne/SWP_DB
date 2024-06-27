@@ -3,7 +3,7 @@ import axios from 'axios';
 import Swal from 'sweetalert2';
 import { useNavigate, useParams } from 'react-router-dom';
 import MetaTags from "react-meta-tags";
-import {API_URL} from "../Config/config";
+import {API_URL} from "../../Config/config";
 
 const VerifyCodeForm = () => {
     const { email } = useParams();

@@ -92,7 +92,7 @@ const Cart = () => {
     };
 
     const navigateToCheckout = () => {
-        navigate('/checkout'); // Navigate to checkout page
+        navigate('/checkout');
     };
 
     return (

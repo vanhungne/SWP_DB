@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -16,63 +15,50 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import '../../Scss/AllOrder.scss';
 import { API_URL } from "../../Config/config";
-import { jwtDecode } from "jwt-decode";
 
 const statusIcons = {
-    PENDING: faClock,
-    CONFIRMED: faCheckCircle,
-    PAYMENT: faCreditCard,
-    DELIVERED: faTruck,
-    CANCELED: faTimesCircle,
-    RECEIVED: faBoxOpen
+    PENDING: { icon: faClock, color: '#655e50' },
+    CONFIRMED: { icon: faCheckCircle, color: '#4CAF50' },
+    PAYMENT: { icon: faCreditCard, color: '#2196F3' },
+    DELIVERED: { icon: faTruck, color: '#fbcb09' },
+    CANCELED: { icon: faTimesCircle, color: '#F44336' },
+    RECEIVED: { icon: faBoxOpen, color: '#795548' }
 };
 
-const OrderDashboard = () => {
-    const navigate = useNavigate();
+const statusLabels = {
+    PENDING: 'PENDING',
+    CONFIRMED: 'CONFIRMED',
+    PAYMENT: 'PAYMENT',
+    DELIVERED: 'DELIVERING',
+    CANCELED: 'CANCELED',
+    RECEIVED: 'RECEIVED'
+};
+
+const OrderDashboard = ({ onOrderClick }) => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
-    const [userId, setUserId] = useState(null);
     const ordersPerPage = 5;
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            try {
-                const decodedToken = jwtDecode(token);
-                if (decodedToken && decodedToken.id) {
-                    setUserId(decodedToken.id);
-                } else {
-                    setError('User ID not found in the token');
-                }
-            } catch (err) {
-                setError('Invalid token');
-            }
-        } else {
-            setError('User is not logged in or token is missing');
-        }
-    }, []);
-
-    useEffect(() => {
-        if (userId) {
-            fetchOrders(currentPage);
-        }
-    }, [userId, currentPage]);
+        fetchOrders(currentPage);
+    }, [currentPage]);
 
     const fetchOrders = async (page) => {
         try {
             const token = localStorage.getItem('token');
             if (!token) throw new Error('No authentication token found');
 
-            const response = await axios.get(`${API_URL}order/OrderByCustomer/${userId}`, {
+            const response = await axios.get(`${API_URL}sale/ViewOrderPaymentAndPending`,{
                 headers: { 'Authorization': `Bearer ${token}` },
                 params: { page: page, size: ordersPerPage }
             });
-            const sortedOrders = response.data.content.sort((a, b) =>
+            const sortedOrders = response.data.sort((a, b) =>
                 new Date(b.orderDate) - new Date(a.orderDate)
             );
+
             setOrders(sortedOrders);
             setTotalPages(response.data.totalPages);
             setLoading(false);
@@ -84,13 +70,10 @@ const OrderDashboard = () => {
         }
     };
 
-    const handlePayNowClick = (orderId) => {
-        navigate(`/payment/${orderId}`);
+    const handleOrderDetailsClick = (orderId) => {
+        onOrderClick(orderId);
     };
 
-    const handleDetailsClick = (orderId) => {
-        navigate(`/order-details/${orderId}`);
-    };
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     if (loading) {
@@ -114,22 +97,25 @@ const OrderDashboard = () => {
         <div className="order-dashboard">
             <h1 className="dashboard-title">
                 <FontAwesomeIcon icon={faShoppingCart} />
-                Purchase Order
+                Order Dashboard
             </h1>
             <div className="order-table-container">
                 <table className="order-table">
                     <thead>
                     <tr>
+                        <th>Order ID</th>
                         <th>Date</th>
                         <th>Total Amount</th>
                         <th>Delivery Address</th>
                         <th>Status</th>
+                        <th>Customer ID</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
                     {orders.map((order) => (
                         <tr key={order.orderId} className="order-row">
+                            <td>{order.orderId}</td>
                             <td style={{color: 'blue', fontSize: '15px'}}>
                                 {new Date(order.orderDate).toLocaleString()}
                             </td>
@@ -137,25 +123,21 @@ const OrderDashboard = () => {
                             <td>{order.orderDeliveryAddress}</td>
                             <td>
                                 <span className={`status-badge ${order.status.toLowerCase()}`}>
-                                    <FontAwesomeIcon icon={statusIcons[order.status]}/>
-                                    {order.status}
+                                      <FontAwesomeIcon
+                                          icon={statusIcons[order.status].icon}
+                                          style={{color: statusIcons[order.status].color}}
+                                      />
+                                           {statusLabels[order.status]}
                                 </span>
                             </td>
+                            <td>{order.customerId}</td>
                             <td>
-                                {order.status === 'PENDING' && (
-                                    <button
-                                        onClick={() => handlePayNowClick(order.orderId)}
-                                        className="details-button"
-                                        style={{backgroundColor: "green", width: '102px', textAlign: 'center'}}
-                                    >
-                                        Pay
-                                    </button>
-                                )}
                                 <button
-                                    onClick={() => handleDetailsClick(order.orderId)}
+                                    onClick={() => handleOrderDetailsClick(order.orderId)}
                                     className="details-button"
                                 >
                                     Details
+                                    <FontAwesomeIcon icon={faChevronRight}/>
                                 </button>
                             </td>
                         </tr>
@@ -184,6 +166,7 @@ const OrderDashboard = () => {
                     </button>
                 ))}
             </div>
+
         </div>
     );
 };

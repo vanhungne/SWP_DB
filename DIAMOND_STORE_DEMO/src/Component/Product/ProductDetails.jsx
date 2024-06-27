@@ -42,10 +42,12 @@ const ProductDetail = () => {
     const [showShell, setShowShell] = useState(false);
     const [similarProducts, setSimilarProducts] = useState([]);
     const [showSizeGuide, setShowSizeGuide] = useState(false);
+    const [addedToCart, setAddedToCart] = useState(false);
 
     useEffect(() => {
         if (productId) {
             fetchProductDetail();
+            setAddedToCart(isProductInCart(parseInt(productId)));
         }
     }, [productId]);
 
@@ -137,6 +139,7 @@ const ProductDetail = () => {
             cart.push(cartItem);
 
             setCookie('cart', btoa(JSON.stringify(cart)), 7);
+            setAddedToCart(true);
             Swal.fire({
                 title: 'Added to Cart',
                 text: `Add to cart successfully`,
@@ -202,6 +205,17 @@ const ProductDetail = () => {
     const toggleDiamondDetails = () => {
         setShowDiamond(!showDiamond);
         setShowShell(false);
+    };
+
+    //check nêếu có product đó trong card thì disable
+    const isProductInCart = (productId) => {
+        const currentCart = getCookie('cart');
+        if (currentCart) {
+            const decodedCart = atob(currentCart);
+            const cart = JSON.parse(decodedCart);
+            return cart.some((item) => item.productId === productId);
+        }
+        return false;
     };
 
 
@@ -280,11 +294,13 @@ const ProductDetail = () => {
                                 </div>
                             </div>
                         )}
-                        <div style={{textAlign: "center"}}>
-                            <button className="btn btn-info" style={{width: '40%',backgroundColor:'#2e3338'}} onClick={toggleDiamondDetails}>
-                               <span style={{color:'white'}}>Product Information</span>
-                            </button>
-                        </div>
+                        {product.stockQuantity > 0 && (
+                            <div style={{textAlign: "center"}}>
+                                <button className="btn btn-info" style={{width: '40%',backgroundColor:'#2e3338'}} onClick={toggleDiamondDetails}>
+                                    <span style={{color:'white'}}>Product Information</span>
+                                </button>
+                            </div>
+                        )}
 
                         {showDiamond && (
                             <div className="product-details-card">
@@ -338,8 +354,10 @@ const ProductDetail = () => {
                         )}
                         <h5 className="text-success">Price: ${product.price.toFixed(2)}</h5>
                         <div className="action-buttons">
-                            {product.stockQuantity > 0 ? (
+                            {product.stockQuantity > 0 && !addedToCart ? (
                                 <button className="btn btn-primary" onClick={handleAddToCart}>Add to Cart</button>
+                            ) : product.stockQuantity > 0 && addedToCart ? (
+                                <button className="btn btn-secondary" disabled>Added to Cart</button>
                             ) : (
                                 <button className="btn btn-secondary" disabled>Sold Out</button>
                             )}

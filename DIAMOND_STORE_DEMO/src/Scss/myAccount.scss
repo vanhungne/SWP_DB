@@ -1,6 +1,6 @@
 /* MyAccount.css */
 .my-account-container {
-  max-width: 70%;
+  max-width: 800px;
   margin: 2rem auto;
   padding: 0 1rem;
 }
@@ -17,43 +17,50 @@
   font-size: 1.5rem;
   font-weight: 600;
   margin-bottom: 1.5rem;
-  text-align: center;
+  text-align: left;
 }
 
-.my-account-form .form-group {
+.section {
+  margin-bottom: 2rem;
+}
+
+.section h3 {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.form-group {
+  flex: 1;
   margin-bottom: 1rem;
 }
 
 .my-account-form label {
   display: block;
   margin-bottom: 0.5rem;
-  font-weight: 500;
-  color: #555;
+  font-weight: bold;
+  color: black;
+  font-size: 1.2rem;
 }
 
-.my-account-form input,
-.my-account-form textarea {
+.my-account-form input {
   width: 100%;
   padding: 0.5rem;
   border: 1px solid #ddd;
   border-radius: 4px;
-  font-size: 1rem;
+  font-size: 1.1rem;
 }
 
-.my-account-form input:disabled,
-.my-account-form textarea:disabled {
+.my-account-form input:disabled {
   background-color: #f8f9fa;
-  color: #6c757d;
-}
-
-.my-account-form .icon {
-  margin-right: 0.5rem;
-  color: #007bff;
-}
-
-.my-account-form .accumulated-points {
-  font-weight: bold;
-  color: #28a745;
+  color: #143a4a;
 }
 
 .button-group {

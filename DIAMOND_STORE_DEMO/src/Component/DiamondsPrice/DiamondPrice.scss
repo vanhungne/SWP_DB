@@ -1,0 +1,88 @@
+.diamond-search {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  .MuiTabs-root {
+    margin-bottom: 2rem;
+  }
+
+  .MuiTab-root {
+    text-transform: none;
+    font-size: 1rem;
+    font-weight: 500;
+    min-width: 120px;
+  }
+
+  .MuiCard-root {
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .MuiCardContent-root {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .MuiSelect-root,
+  .MuiTextField-root {
+    width: 100%;
+  }
+
+  .MuiButton-root {
+    align-self: flex-start;
+    margin-top: 1rem;
+  }
+
+  .MuiTableContainer-root {
+    border-radius: 8px;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .MuiTable-root {
+    min-width: 650px;
+  }
+
+  .MuiTableHead-root {
+    background-color: #f5f5f5;
+  }
+
+  .MuiTableCell-head {
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.875rem;
+    padding: 1rem;
+  }
+
+  .MuiTableCell-body {
+    font-size: 0.875rem;
+    padding: 1rem;
+  }
+
+  .MuiTableRow-root:nth-of-type(even) {
+    background-color: #f9f9f9;
+  }
+
+  .MuiTableRow-root:hover {
+    background-color: #f1f1f1;
+  }
+
+  .pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 2rem;
+
+    .MuiButton-root {
+      min-width: 100px;
+    }
+
+    span {
+      font-size: 0.875rem;
+    }
+  }
+}

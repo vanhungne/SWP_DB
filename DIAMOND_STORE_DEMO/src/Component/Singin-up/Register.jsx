@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Swal from 'sweetalert2';
-import '../Scss/Register.css';
-import {API_URL} from "../Config/config";
+import '../../Scss/Register.css';
+import {API_URL} from "../../Config/config";
 
 
 function Register() {

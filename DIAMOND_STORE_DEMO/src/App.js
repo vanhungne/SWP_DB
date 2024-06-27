@@ -1,27 +1,30 @@
 import {BrowserRouter, Routes, Route} from "react-router-dom";
 import {AuthProvider} from "./Authentication/AuthContext";
 import ProtectedRoute from "./Component/ProtectedRoute/ProtectedRoute";
-import Register from "./Component/Register";
-import Login from "./Component/Login";
+import Register from "./Component/Singin-up/Register";
+import Login from "./Component/Singin-up/Login";
 import Home from "./Component/Home/Home";
 import Layout from "./Layouttest/Layout";
-import VerifyCode from "./Component/VerifyCode";
+import VerifyCode from "./Component/Singin-up/VerifyCode";
 import ProductDetail from "./Component/Product/ProductDetails"; // Correct import
 import Cart from "./Component/Cart/Cart";
 import Checkout from "./Component/Cart/CheckOut";
-import ForgotPassword from "./Component/ForgotPassword";
-import ResetPassword from "./Component/ResetPassword";
+import ForgotPassword from "./Component/Singin-up/ForgotPassword";
+import ResetPassword from "./Component/Singin-up/ResetPassword";
 import ProductCategory from "./Component/Product/ProductCategory";
 import Products from "./Component/Product/AllProduct";
 import PaymentVnPayment from "./Component/Payment/PaymentVnPay";
 import PaymentResult from "./Component/Payment/PaymentResult";
-import OAuth2RedirectHandler from "./Component/O/OAuth2RedirectHandler";
-import MyAccount from "./Component/MyAccount";
+import OAuth2RedirectHandler from "./Authentication/OAuthe2Redirect/OAuth2RedirectHandler";
+import MyAccount from "./Component/Customer/MyAccount";
 import ManagerDashBoard from "./Component/Manager/ManagerDashBoard";
 import AdminDashBoard from "./Component/DashboardAdmin/AdminDashBoard";
 import OurStory from "./Component/About/Our Story";
 import HistoryOrder from "./Component/OrderCustomer/HistoryOrder";
 import OrderDetailsCustomer from "./Component/OrderCustomer/OrderDetailsCustomer";
+import DiamondsPrice from "./Component/DiamondsPrice/DiamondsPrice";
+import SaleDasboard from "./Component/Sale/SaleDasboard";
+import DeliveryDasboard from "./Component/Delivery/DeliveryDasboard";
 function App() {
     return (
         <AuthProvider>
@@ -46,8 +49,12 @@ function App() {
                         <Route path="manager" element={<ManagerDashBoard />} />
                         <Route path="story" element={<OurStory />} />
                         <Route path="history" element={<HistoryOrder />} />
+                        <Route path="diamonds-price" element={<DiamondsPrice />} />
                         <Route path="order-details/:orderId" element={<OrderDetailsCustomer />} />
+
                         {/* Protected router*/}
+
+                        //ADMIN
                         <Route
                             path="dashboard-account"
                             element={
@@ -56,8 +63,27 @@ function App() {
                                 </ProtectedRoute>
                             }
                         />
-                    </Route>
 
+                        //SALE
+                        <Route
+                            path="sale-dashboard"
+                            element={
+                                <ProtectedRoute requiredRoles={['SALE_STAFF']}>
+                                    <SaleDasboard />
+                                </ProtectedRoute>
+                            }
+                        />
+
+                        //DELIVERY
+                        <Route
+                            path="delivery-dashboard"
+                            element={
+                                <ProtectedRoute requiredRoles={['DELIVERY_STAFF']}>
+                                    <DeliveryDasboard />
+                                </ProtectedRoute>
+                            }
+                        />
+                    </Route>
                 </Routes>
             </BrowserRouter>
         </AuthProvider>

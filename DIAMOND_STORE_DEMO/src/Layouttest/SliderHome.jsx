@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import './ImageCarousel.scss';
 
 const ImageCarousel = () => {
@@ -15,10 +17,22 @@ const ImageCarousel = () => {
     useEffect(() => {
         const timer = setInterval(() => {
             setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-        }, 3000);
+        }, 5000); // Increased to 5 seconds for better viewing
 
         return () => clearInterval(timer);
     }, [images.length]);
+
+    const goToSlide = (index) => {
+        setCurrentIndex(index);
+    };
+
+    const goToPrevious = () => {
+        setCurrentIndex((prevIndex) => (prevIndex - 1 + images.length) % images.length);
+    };
+
+    const goToNext = () => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+    };
 
     return (
         <div className="image-carousel-container">
@@ -30,6 +44,21 @@ const ImageCarousel = () => {
                     >
                         <img src={image} alt={`Slide ${index + 1}`} />
                     </div>
+                ))}
+                <button className="nav-button prev" onClick={goToPrevious}>
+                    <FontAwesomeIcon icon={faChevronLeft} />
+                </button>
+                <button className="nav-button next" onClick={goToNext}>
+                    <FontAwesomeIcon icon={faChevronRight} />
+                </button>
+            </div>
+            <div className="carousel-dots">
+                {images.map((_, index) => (
+                    <span
+                        key={index}
+                        className={`dot ${index === currentIndex ? 'active' : ''}`}
+                        onClick={() => goToSlide(index)}
+                    ></span>
                 ))}
             </div>
         </div>
