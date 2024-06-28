@@ -47,7 +47,6 @@ function App() {
                         <Route path="verifycode/:email" element={<VerifyCode />} />
                         <Route path="category" element={<ProductCategory />} />
                         <Route path="myAccount" element={<MyAccount />} />
-                        <Route path="manager" element={<ManagerDashBoard />} />
                         <Route path="history" element={<HistoryOrder />} />
                         <Route path="diamonds-price" element={<DiamondsPrice />} />
                         <Route path="order-details/:orderId" element={<OrderDetailsCustomer />} />
@@ -68,6 +67,15 @@ function App() {
                             }
                         />
 
+                        //Manager
+                        <Route
+                            path="manager"
+                            element={
+                                <ProtectedRoute requiredRoles={['MANAGER']}>
+                                    <ManagerDashBoard />
+                                </ProtectedRoute>
+                            }
+                        />
                         //SALE
                         <Route
                             path="sale-dashboard"
