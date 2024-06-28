@@ -25,6 +25,7 @@ import OrderDetailsCustomer from "./Component/OrderCustomer/OrderDetailsCustomer
 import DiamondsPrice from "./Component/DiamondsPrice/DiamondsPrice";
 import SaleDasboard from "./Component/Sale/SaleDasboard";
 import DeliveryDasboard from "./Component/Delivery/DeliveryDasboard";
+import Policy from "./Component/About/Policy"
 function App() {
     return (
         <AuthProvider>
@@ -47,10 +48,13 @@ function App() {
                         <Route path="category" element={<ProductCategory />} />
                         <Route path="myAccount" element={<MyAccount />} />
                         <Route path="manager" element={<ManagerDashBoard />} />
-                        <Route path="story" element={<OurStory />} />
                         <Route path="history" element={<HistoryOrder />} />
                         <Route path="diamonds-price" element={<DiamondsPrice />} />
                         <Route path="order-details/:orderId" element={<OrderDetailsCustomer />} />
+
+                        //
+                        <Route path="story" element={<OurStory />} />
+                        <Route path="policy" element={<Policy />} />
 
                         {/* Protected router*/}
 

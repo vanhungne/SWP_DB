@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from "prop-types";
 import styles from '../../Scss/createAccount.scss';
 
-const CreateUser = ({ onCancel, onCreate }) => {
+const CreateUser = ({ onCancel, onSave }) => {
     const [newUser, setNewUser] = useState({ name: '', email: '', phoneNumber: '', address: '', password: '', role: '', status: '' });
 
     const handleInputChange = (e) => {
@@ -11,8 +11,7 @@ const CreateUser = ({ onCancel, onCreate }) => {
     };
 
     const handleCreateUser = () => {
-        // Call onCreate function to handle user creation logic
-        onCreate(newUser);
+        onSave(newUser);
     };
 
     return (
@@ -94,7 +93,7 @@ const CreateUser = ({ onCancel, onCreate }) => {
 
 CreateUser.propTypes = {
     onCancel: PropTypes.func.isRequired,
-    onCreate: PropTypes.func.isRequired,
+    onSave: PropTypes.func.isRequired,
 };
 
 export default CreateUser;

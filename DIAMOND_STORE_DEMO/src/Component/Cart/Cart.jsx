@@ -96,7 +96,7 @@ const Cart = () => {
     };
 
     return (
-        <div className="cart-container mt-5">
+        <div className="cart-container mt-5" style={{marginBottom:'18%'}}>
             <div className="cart-header">
                 <h2><FontAwesomeIcon icon={faShoppingCart} /> Cart</h2>
             </div>

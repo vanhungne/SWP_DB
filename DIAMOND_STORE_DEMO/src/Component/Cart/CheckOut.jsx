@@ -108,7 +108,7 @@ const Checkout = () => {
     };
 
     return (
-        <div className="container mt-5 checkout-container">
+        <div className="container mt-5 checkout-container" style={{marginBottom:'5%'}}>
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}

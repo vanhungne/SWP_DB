@@ -99,7 +99,7 @@ const Header = () => {
                         ])}
                         {renderNavDropdown("Contact", "contact-dropdown", [
                             {text: "Contact Us", link: "/contact"},
-                            {text: "FAQ", link: "/faq"}
+                            {text: "FAQ", link: "/policy"}
                         ])}
                     </Nav>
                     <Nav className="nav-right">

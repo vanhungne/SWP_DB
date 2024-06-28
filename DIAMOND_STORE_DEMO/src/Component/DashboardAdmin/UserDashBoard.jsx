@@ -307,7 +307,8 @@ const UserDashboard = () => {
                                 </button>
                             </div>
                             <div className="modal-body">
-                                <CreateUser user={newUser} onSave={handleCreateUser}
+                                <CreateUser
+                                    user={newUser} onSave={handleCreateUser}
                                             onCancel={() => setShowCreateUser(false)}/>
                             </div>
                         </div>

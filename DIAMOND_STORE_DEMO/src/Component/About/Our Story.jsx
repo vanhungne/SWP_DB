@@ -1,10 +1,12 @@
 import React from 'react';
 import './OurStory.scss';
+import SnowEffect from "../Home/SnowEffect";
 
 const OurStory = () => {
     return (
         <section className="our-story">
             <div className="our-story-header">
+                <SnowEffect />
                 <img src="https://www.michaeltrio.com/pub/media/0story/01.jpg" alt="Our Story" />
                 <img src="https://www.michaeltrio.com/pub/media/0story/02.jpg" alt="Our Story" />
                 <h1>THREE SONS, THREE GENERATIONS, THREE VALUES.</h1>

@@ -69,7 +69,7 @@ const PaymentVnPay = () => {
     };
 
     return (
-        <div className="payment-vnpay-container mt-5">
+        <div className="payment-vnpay-container mt-5" style={{width:'50%',marginBottom:'10%'}}>
             <h1 className="payment-vnpay-header">PAYMENT ONLINE VNPAY</h1>
             <div className="payment-vnpay-card">
                 <div className="payment-vnpay-card-body">

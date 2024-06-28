@@ -14,7 +14,7 @@ const VideoBanner = () => {
     }, []);
 
     const handleBuyNowClick = () => {
-        navigate('/products');
+        navigate('/category');
     };
 
     return (

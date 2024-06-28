@@ -16,7 +16,7 @@ import {
     faPhone,
     faEnvelope,
     faEdit,
-    faArrowLeft
+    faArrowLeft, faGem
 } from '@fortawesome/free-solid-svg-icons';
 import { API_URL } from "../../Config/config";
 import '../../Scss/OrderDetails.scss';
@@ -29,6 +29,7 @@ const OrderDetails = ({ orderData }) => {
     const [saleInfo, setSaleInfo] = useState(null);
     const [deliveryInfo, setDeliveryInfo] = useState(null);
     const [paymentInfo, setPaymentInfo] = useState(null);
+    const [diamondInfo, setDiamondInfo] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [newStatus, setNewStatus] = useState('');
@@ -39,11 +40,10 @@ const OrderDetails = ({ orderData }) => {
             if (!orderData || !orderData.orderId) return;
             setLoading(true);
             setError(null);
-
             try {
                 const token = localStorage.getItem('token');
 
-                const [customerResponse, saleResponse, deliveryResponse, ...productResponses] = await Promise.all([
+                const [customerResponse, saleResponse, deliveryResponse, ...productAndDiamondResponses] = await Promise.all([
                     axios.get(`${API_URL}manage/accounts/${orderData.customerId}`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     }),
@@ -53,10 +53,14 @@ const OrderDetails = ({ orderData }) => {
                     orderData.deliveryId ? axios.get(`${API_URL}delivery/${orderData.deliveryId}`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     }) : Promise.resolve({ data: null }),
-                    ...orderData.orderDetails.map(detail =>
-                        axios.get(`${API_URL}product/${detail.productId}`)
-                    )
+                    ...orderData.orderDetails.flatMap(detail => [
+                        axios.get(`${API_URL}product/${detail.productId}`),
+                        detail.diamondId ? axios.get(`${API_URL}manage/diamond/${detail.diamondId}`, {
+                            headers: { 'Authorization': `Bearer ${token}` }
+                        }) : Promise.resolve({ data: null })
+                    ])
                 ]);
+
                 try {
                     const paymentResponse = await axios.get(`${API_URL}payment/getPaymentByOrderId/${orderData.orderId}`, {
                         headers: { 'Authorization': `Bearer ${token}` }
@@ -72,10 +76,15 @@ const OrderDetails = ({ orderData }) => {
                 setDeliveryInfo(deliveryResponse.data);
 
                 const productInfoMap = {};
-                productResponses.forEach((response, index) => {
-                    productInfoMap[orderData.orderDetails[index].productId] = response.data;
+                const diamondInfoMap = {};
+                orderData.orderDetails.forEach((detail, index) => {
+                    productInfoMap[detail.productId] = productAndDiamondResponses[index * 2].data;
+                    if (detail.diamondId) {
+                        diamondInfoMap[detail.productId] = productAndDiamondResponses[index * 2 + 1].data;
+                    }
                 });
                 setProductInfo(productInfoMap);
+                setDiamondInfo(diamondInfoMap);
 
                 setLoading(false);
             } catch (err) {
@@ -84,7 +93,6 @@ const OrderDetails = ({ orderData }) => {
                 setLoading(false);
             }
         };
-
         fetchAdditionalData();
     }, [orderData]);
     const handleStatusChange = async () => {
@@ -122,12 +130,12 @@ const OrderDetails = ({ orderData }) => {
 
     return (
         <div className="order-details">
-            <div className="order-details__id" style={{fontSize:'30px',color:'black',textAlign:'center'}}>
-                <FontAwesomeIcon icon={faBox} />Order ID:<span style={{fontWeight:'bold'}}> {orderId}</span> </div>
+            <div className="order-details__id" style={{fontSize: '30px', color: 'black', textAlign: 'center'}}>
+                <FontAwesomeIcon icon={faBox}/>Order ID:<span style={{fontWeight: 'bold'}}> {orderId}</span></div>
 
             <div className="order-details__grid">
                 <div className="order-details__main-info order-details__card">
-                    <h3 style={{textAlign:'center'}}>Order Information</h3>
+                    <h3 style={{textAlign: 'center'}}>Order Information</h3>
                     <div className="order-details__info-item">
                         <FontAwesomeIcon icon={faCalendar}/>
                         <span>Order Date: {new Date(orderDate).toLocaleString()}</span>
@@ -149,7 +157,7 @@ const OrderDetails = ({ orderData }) => {
                     <div className="order-details__status-container">
                         <div className="order-details__info-item order-details__status">
                             <FontAwesomeIcon icon={faTag} className="order-details__status-icon"/>
-                            <span style={{backgroundColor:'white',color:'black'}}>Current Status:</span>
+                            <span style={{backgroundColor: 'white', color: 'black'}}>Current Status:</span>
                             <span className="order-details__status-value">{status}</span>
                         </div>
                         <div className="order-details__status-update">
@@ -187,7 +195,7 @@ const OrderDetails = ({ orderData }) => {
                 </div>
 
                 <div className="order-details__customer-info order-details__card">
-                    <h3 style={{textAlign:'center'}}>Customer Information</h3>
+                    <h3 style={{textAlign: 'center'}}>Customer Information</h3>
                     {customerInfo && (
                         <>
                             <div className="order-details__info-item">
@@ -205,61 +213,62 @@ const OrderDetails = ({ orderData }) => {
                         </>
                     )}
                 </div>
-                    {paymentInfo ? (
-                        <div className="order-details__payment-info order-details__card">
-                            <h3 style={{textAlign:'center'}}>Payment information</h3>
-                            <div className="order-details__info-item">
-                                <FontAwesomeIcon icon={faMoneyBillWave}/>
-                                <span style={{fontWeight:'bold'}}>Payment Amount: ${(paymentInfo.paymentAmount / 100).toFixed(2)}</span>
-                            </div>
-                            <div className="order-details__info-item">
-                                <FontAwesomeIcon icon={faCreditCard}/>
-                                <span>Payment Mode: {paymentInfo.paymentMode}</span>
-                            </div>
-                            <div className="order-details__info-item">
-                                <FontAwesomeIcon icon={faCalendar}/>
-                                <span>Payment Time: {new Date(paymentInfo.paymentTime).toLocaleString()}</span>
-                            </div>
-                            <div className="order-details__info-item">
-                                <FontAwesomeIcon icon={faInfo}/>
-                                <span>Description: {paymentInfo.description}</span>
-                            </div>
-                            <div className="order-details__info-item">
-                                <FontAwesomeIcon icon={faCode}/>
-                                <span>Payment Code: {paymentInfo.paymentCode}</span>
-                            </div>
+                {paymentInfo ? (
+                    <div className="order-details__payment-info order-details__card">
+                        <h3 style={{textAlign: 'center'}}>Payment information</h3>
+                        <div className="order-details__info-item">
+                            <FontAwesomeIcon icon={faMoneyBillWave}/>
+                            <span
+                                style={{fontWeight: 'bold'}}>Payment Amount: ${(paymentInfo.paymentAmount / 100).toFixed(2)}</span>
                         </div>
-                    ) : (
-                        <div className="order-details__payment-info order-details__card">
-                            <p>No payment</p>
+                        <div className="order-details__info-item">
+                            <FontAwesomeIcon icon={faCreditCard}/>
+                            <span>Payment Mode: {paymentInfo.paymentMode}</span>
                         </div>
-                    )}
+                        <div className="order-details__info-item">
+                            <FontAwesomeIcon icon={faCalendar}/>
+                            <span>Payment Time: {new Date(paymentInfo.paymentTime).toLocaleString()}</span>
+                        </div>
+                        <div className="order-details__info-item">
+                            <FontAwesomeIcon icon={faInfo}/>
+                            <span>Description: {paymentInfo.description}</span>
+                        </div>
+                        <div className="order-details__info-item">
+                            <FontAwesomeIcon icon={faCode}/>
+                            <span>Payment Code: {paymentInfo.paymentCode}</span>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="order-details__payment-info order-details__card">
+                        <p>No payment</p>
+                    </div>
+                )}
 
-                    {/*{paymentInfo && (*/}
-                    {/*    <>*/}
-                    {/*        <div className="order-details__info-item">*/}
-                    {/*            <FontAwesomeIcon icon={faMoneyBillWave}/>*/}
-                    {/*            <span style={{fontWeight:'bold'}}>: ${paymentInfo.paymentAmount.toFixed(2)/100}</span>*/}
-                    {/*        </div>*/}
-                    {/*        <div className="order-details__info-item">*/}
-                    {/*            <FontAwesomeIcon icon={faCreditCard}/>*/}
-                    {/*            <span>Payment Mode: {paymentInfo.paymentMode}</span>*/}
-                    {/*        </div>*/}
-                    {/*        <div className="order-details__info-item">*/}
-                    {/*            <FontAwesomeIcon icon={faCalendar}/>*/}
-                    {/*            <span>Payment Time: {new Date(paymentInfo.paymentTime).toLocaleString()}</span>*/}
-                    {/*        </div>*/}
-                    {/*        <div className="order-details__info-item">*/}
-                    {/*            <FontAwesomeIcon icon={faInfo}/>*/}
-                    {/*            <span>Description: {paymentInfo.description}</span>*/}
-                    {/*        </div>*/}
-                    {/*        <div className="order-details__info-item">*/}
-                    {/*            <FontAwesomeIcon icon={faCode}/>*/}
-                    {/*            <span>Payment Code: {paymentInfo.paymentCode}</span>*/}
-                    {/*        </div>*/}
-                    {/*    </>*/}
-                    {/*)}*/}
-                </div>
+                {/*{paymentInfo && (*/}
+                {/*    <>*/}
+                {/*        <div className="order-details__info-item">*/}
+                {/*            <FontAwesomeIcon icon={faMoneyBillWave}/>*/}
+                {/*            <span style={{fontWeight:'bold'}}>: ${paymentInfo.paymentAmount.toFixed(2)/100}</span>*/}
+                {/*        </div>*/}
+                {/*        <div className="order-details__info-item">*/}
+                {/*            <FontAwesomeIcon icon={faCreditCard}/>*/}
+                {/*            <span>Payment Mode: {paymentInfo.paymentMode}</span>*/}
+                {/*        </div>*/}
+                {/*        <div className="order-details__info-item">*/}
+                {/*            <FontAwesomeIcon icon={faCalendar}/>*/}
+                {/*            <span>Payment Time: {new Date(paymentInfo.paymentTime).toLocaleString()}</span>*/}
+                {/*        </div>*/}
+                {/*        <div className="order-details__info-item">*/}
+                {/*            <FontAwesomeIcon icon={faInfo}/>*/}
+                {/*            <span>Description: {paymentInfo.description}</span>*/}
+                {/*        </div>*/}
+                {/*        <div className="order-details__info-item">*/}
+                {/*            <FontAwesomeIcon icon={faCode}/>*/}
+                {/*            <span>Payment Code: {paymentInfo.paymentCode}</span>*/}
+                {/*        </div>*/}
+                {/*    </>*/}
+                {/*)}*/}
+            </div>
 
             <div className="order-details__items order-details__card">
                 <div className="order-details__product-list">
@@ -271,12 +280,39 @@ const OrderDetails = ({ orderData }) => {
                                      className="order-details__product-image"/>
                             </div>
                             <div className="order-details__product-info">
-                                <h4>{productInfo[item.productId]?.productName || 'Loading...'}</h4>
-                                <p>Quantity: {item.quantity}</p>
-                                <p>Price: ${productInfo[item.productId]?.price.toFixed(2) || item.price.toFixed(2)}</p>
-                                {item.size > 0 && (
-                                    <p>Size: {item.size}</p>
-                                )}
+                                <div className="row">
+                                    <div className="col-md-9">
+                                        <h4>{productInfo[item.productId]?.productName || 'Loading...'}</h4>
+                                        <p>Quantity: {item.quantity}</p>
+                                        <p>Price:
+                                            ${productInfo[item.productId]?.price.toFixed(2) || item.price.toFixed(2)}</p>
+                                        {item.size > 0 && (
+                                            <p>Size: {item.size}</p>
+                                        )}
+                                    </div>
+                                    <div className="col-md-3">
+                                        {diamondInfo[item.productId] && (
+                                            <div className="order-details__diamond-info">
+                                                <h5 style={{textAlign: 'center'}}><FontAwesomeIcon
+                                                    icon={faGem}/> Diamond</h5>
+                                                <p>Carat: {diamondInfo[item.productId].carat}</p>
+                                                <p>Cut: {diamondInfo[item.productId].cut}</p>
+                                                <p>Color: {diamondInfo[item.productId].color}</p>
+                                                <p>Clarity: {diamondInfo[item.productId].clarity}</p>
+                                                {diamondInfo[item.productId].certification && (
+                                                    <p>
+                                                        Certificate:
+                                                        <a href={diamondInfo[item.productId].certification}
+                                                           target="_blank"
+                                                           rel="noopener noreferrer">
+                                                            View Certificate
+                                                        </a>
+                                                    </p>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     ))}
