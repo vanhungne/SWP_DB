@@ -149,14 +149,14 @@ th {
   border-radius: 4px;
 }
 
-.product-images {
+.manager-product-images {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
   margin-top: 20px;
 }
 
-.product-images img {
+.manager-product-images img {
   width: 400px;
   height: 400px;
   object-fit: cover;
@@ -165,7 +165,7 @@ th {
   transition: opacity 0.3s ease;
 }
 
-.product-images img:hover {
+.manager-product-images img:hover {
   opacity: 0.8;
 }
 

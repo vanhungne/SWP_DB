@@ -5,7 +5,6 @@ import '../../Scss/ManagerDashBoard.scss';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '../../Config/config';
-import ProductView from "./ProductView";
 import OrderTable from '../Manager/OrderTable';
 import ShellTable from '../Manager/ShellTable';
 import EditProduct from "../Manager/EditProduct";
@@ -14,6 +13,7 @@ import EditShell from '../Manager/EditShell';
 import DiamondTable from "./DiamondTable";
 import ViewDiamond from "./ViewDiamond";
 import EditDiamond from "./EditDiamond";
+import ViewProduct from "./ViewProduct";
 
 const Dashboard = () => {
     const [productsPage, setProductsPage] = useState({
@@ -301,7 +301,7 @@ const Dashboard = () => {
                         )}
                         {currentView === 'productDetail' && (
                             <>
-                                <ProductView productId={selectedProductId} goBack={navigateToDashboard} />
+                                <ViewProduct productId={selectedProductId} goBack={navigateToDashboard} />
                             </>
                         )}
                         {currentView === 'editProduct' && (
