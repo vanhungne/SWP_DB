@@ -34,7 +34,9 @@ const ProductView = ({ productId, goBack }) => {
 
     return (
         <div className="product-details">
-            <button onClick={goBack}>Back</button>
+            <div className="button-container">
+                <button onClick={goBack}>Back</button>
+            </div>
             <h1>Product Details</h1>
             <div>
                 <label>Product ID:</label>
@@ -68,48 +70,49 @@ const ProductView = ({ productId, goBack }) => {
                 <label>Shell ID:</label>
                 <span>{product.shellId}</span>
             </div>
-            <div>
+            <div className="diamonds">
                 <label>Diamonds:</label>
                 <ul>
-                    {diamonds && diamonds.map((diamond, index) => (
-                        <li key={index}>
-                            <div>
-                                <label>Diamond ID:</label>
-                                <span>{diamond.diamondId}</span>
-                            </div>
-                            <div>
-                                <label>Carat:</label>
-                                <span>{diamond.carat}</span>
-                            </div>
-                            <div>
-                                <label>Color:</label>
-                                <span>{diamond.color}</span>
-                            </div>
-                            <div>
-                                <label>Clarity:</label>
-                                <span>{diamond.clarity}</span>
-                            </div>
-                            <div>
-                                <label>Cut:</label>
-                                <span>{diamond.cut}</span>
-                            </div>
-                        </li>
-                    ))}
+                    {diamonds.length > 0 ? (
+                        diamonds.map((diamond, index) => (
+                            <li key={index}>
+                                <div>
+                                    <label>Diamond ID:</label>
+                                    <span>{diamond.diamondId}</span>
+                                </div>
+                                <div>
+                                    <label>Carat:</label>
+                                    <span>{diamond.carat}</span>
+                                </div>
+                                <div>
+                                    <label>Color:</label>
+                                    <span>{diamond.color}</span>
+                                </div>
+                                <div>
+                                    <label>Clarity:</label>
+                                    <span>{diamond.clarity}</span>
+                                </div>
+                                <div>
+                                    <label>Cut:</label>
+                                    <span>{diamond.cut}</span>
+                                </div>
+                            </li>
+                        ))
+                    ) : (
+                        <p>No diamond</p>
+                    )}
                 </ul>
             </div>
-            <div>
-                <label>Image 1:</label>
+            <div className="product-images">
+                <label>Main Image:</label>
                 <img src={product.image1} alt="Product Image 1"/>
-            </div>
-            <div>
+
                 <label>Image 2:</label>
                 <img src={product.image2} alt="Product Image 2"/>
-            </div>
-            <div>
+
                 <label>Image 3:</label>
                 <img src={product.image3} alt="Product Image 3"/>
-            </div>
-            <div>
+
                 <label>Image 4:</label>
                 <img src={product.image4} alt="Product Image 4"/>
             </div>

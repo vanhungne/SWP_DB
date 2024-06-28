@@ -24,7 +24,7 @@ const ProductTable = ({ products, editProduct, deleteProduct, viewProductDetails
                     <td>{product.collection}</td>
                     <td>{product.categoryId}</td>
                     <td>
-                        <button onClick={() => editProduct(product)}>Edit</button>
+                        <button onClick={() => editProduct(product.productId)}>Edit</button>
                         <button onClick={() => deleteProduct(product.productId)}>Delete</button>
                         <button onClick={() => viewProductDetails(product.productId)}>View</button>
                     </td>

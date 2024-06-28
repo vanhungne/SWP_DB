@@ -12,7 +12,7 @@ body {
 
 .sidebar {
   width: 250px;
-  background-color: #252f40;
+  background-color: #2e3138;
   color: #fff;
   padding: 20px;
 }
@@ -33,6 +33,18 @@ body {
 
 .sidebar li:hover {
   background-color: #2e3650;
+}
+
+.active-side {
+  background-color: #2e3650;
+  padding-left: 25px;
+  font-size: 15px;
+  font-weight: bold;
+  color: #00ff79;
+
+  &:before {
+    opacity: 1;
+  }
 }
 
 .main-content {
@@ -56,10 +68,11 @@ table {
   width: 100%;
   border-collapse: collapse;
   background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-th, td {
+th,
+td {
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid #e9ecef;
@@ -74,7 +87,7 @@ th {
   background-color: #fff;
   padding: 20px;
   border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
 }
 
@@ -97,4 +110,92 @@ th {
 
 .form-container button:hover {
   background-color: #0b5ed7;
+}
+
+.product-details {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.product-details h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.product-details div {
+  margin-bottom: 10px;
+}
+
+.product-details label {
+  font-weight: bold;
+}
+
+.product-details span {
+  margin-left: 10px;
+}
+
+.diamonds ul {
+  list-style: none;
+  padding: 0;
+}
+
+.diamonds li {
+  background-color: #f8f9fa;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+}
+
+.product-images {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.product-images img {
+  width: 400px;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+.product-images img:hover {
+  opacity: 0.8;
+}
+
+.button-container {
+  margin-top: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.button-container button {
+  padding: 10px 20px;
+  background-color: #0d6efd;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.button-container button:hover {
+  background-color: #0b5ed7;
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 600px) {
+  .product-images {
+    grid-template-columns: 1fr;
+  }
+
+  .product-images img {
+    height: auto;
+  }
 }
