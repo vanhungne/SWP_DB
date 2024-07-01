@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { API_URL } from '../../Config/config';
+import '../../Scss/EditProduct.scss';
 
 const EditShell = ({ shellId, goBack, viewShell}) => {
     const [shell, setShell] = useState({
@@ -48,10 +49,16 @@ const EditShell = ({ shellId, goBack, viewShell}) => {
                         Authorization: `Bearer ${token}`,
                     },
                 });
+                viewShell(shell.shellId);
             } else {
-                await axios.post(`${API_URL}manage/shell/create`, shell);
+                const response = await axios.post(`${API_URL}manage/shell/create`, shell, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+                viewShell(response.data.shellId);
             }
-            viewShell(shellId);
+
         } catch (error) {
             console.error('Error saving shell:', error);
             setError('Error saving shell. Please try again later.');
@@ -59,8 +66,11 @@ const EditShell = ({ shellId, goBack, viewShell}) => {
     };
 
     return (
-        <div className="edit-shell">
-            <h2>{shell.shellId ? 'Edit Shell' : 'Add Shell'}</h2>
+        <div className="edit-product">
+            <div className="button-container">
+                <button onClick={goBack}>Back</button>
+            </div>
+            <h1>{shell.shellId ? 'Edit Shell' : 'Add Shell'}</h1>
             {error && <p className="error">{error}</p>}
             <form onSubmit={handleFormSubmit}>
                 <div className="form-group">
@@ -113,8 +123,10 @@ const EditShell = ({ shellId, goBack, viewShell}) => {
                         required
                     />
                 </div>
-                <button type="submit">Save</button>
-                <button type="button" onClick={goBack}>Cancel</button>
+                <div className="button-container">
+                    <button type="submit">Save</button>
+                    <button type="button" onClick={goBack}>Cancel</button>
+                </div>
             </form>
         </div>
     );

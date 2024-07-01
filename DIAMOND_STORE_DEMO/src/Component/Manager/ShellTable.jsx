@@ -1,36 +1,172 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
+import axios from "axios";
+import {API_URL} from "../../Config/config";
+import {Link} from "react-router-dom";
 
-const ShellTable = ({ shells, editShell, deleteShell, viewShellDetails }) => {
+const ShellTable = ({ setSelectedShellId, setCurrentView }) => {
+    const [productsPage, setProductsPage] = useState({
+        content: [],
+        totalPages: 0,
+        pageNumber: 0,
+        totalElements: 0
+    });
+    const [currentPage, setCurrentPage] = useState(0);
+    const [pageSize] = useState(10);
+    const [error, setError] = useState('');
+    const [searchKeyword, setSearchKeyword] = useState('');
+    const token = localStorage.getItem('token');
+    useEffect(() => {
+        if (searchKeyword) {
+            fetchShellsByKeyword(currentPage, pageSize, searchKeyword);
+        } else {
+            fetchShells(currentPage, pageSize);
+        }
+    }, [currentPage, pageSize, searchKeyword]);
+
+    const fetchShells = async (page, size) => {
+        try {
+            const response = await axios.get(`${API_URL}manage/shell/get-all?page=${page}&size=${size}`);
+            setProductsPage(response.data);
+        } catch (error) {
+            console.error('Error fetching shells:', error);
+            setError('Error fetching shells. Please try again later.');
+        }
+    };
+
+    const fetchShellsByKeyword = async (page, size, keyword) => {
+        try {
+            const response = await axios.get(`${API_URL}manage/shell/search-by-name?name=${keyword}&page=${page}&size=${size}`);
+            setProductsPage(response.data);
+        } catch (error) {
+            console.error('Error fetching shells:', error);
+            setError('Error fetching shells. Please try again later.');
+        }
+    };
+
+    const deleteShell = async (id) => {
+        try {
+            await axios.delete(`${API_URL}manage/shell/delete/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
+            fetchShells(currentPage, pageSize);
+        } catch (error) {
+            console.error('Error deleting shell:', error);
+            setError('Error deleting shell. Please try again later.');
+        }
+    };
+
+    const handleSearchChange = (event) => {
+        setSearchKeyword(event.target.value);
+    };
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
+
+    const getPaginationRange = (currentPage, totalPages) => {
+        const delta = 2;
+        const range = [];
+
+        for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
+            range.push(i);
+        }
+
+        if (currentPage - delta > 2) {
+            range.unshift('...');
+        }
+
+        if (currentPage + delta < totalPages - 1) {
+            range.push('...');
+        }
+
+        range.unshift(1);
+        if (totalPages > 1) {
+            range.push(totalPages);
+        }
+
+        return range;
+    };
+
+    const paginationRange = getPaginationRange(currentPage, productsPage.totalPages);
+
+    const navigateToEditShell = (shellId) => {
+        setCurrentView('editShell');
+        setSelectedShellId(shellId);
+    };
+
+    const navigateToShellDetail = (shellId) => {
+        setCurrentView('shellDetail');
+        setSelectedShellId(shellId);
+    };
+
     return (
-        <div className="shell-table">
-            <table className="table">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Weight</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {shells.map(shell => (
-                    <tr key={shell.shellId}>
-                        <td>{shell.shellId}</td>
-                        <td>{shell.shellName}</td>
-                        <td>{shell.shellPrice}</td>
-                        <td>{shell.shellWeight}</td>
-                        <td>
-                            <button onClick={() => viewShellDetails(shell.shellId)}>View</button>
-                            <button onClick={() => editShell(shell.shellId)}>Edit</button>
-                            <button onClick={() => deleteShell(shell.shellId)}>Delete</button>
-                        </td>
+        <>
+            <h1>Shell tables</h1>
+            <div className="search-bar">
+                <input
+                    type="text"
+                    placeholder="Search"
+                    value={searchKeyword}
+                    onChange={handleSearchChange}
+                />
+                <button onClick={() => navigateToEditShell(null)} className="manager-float-end">Add new shell
+                </button>
+            </div>
+            <div className="shell-table">
+                <table className="table">
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Weight</th>
+                        <th>Actions</th>
                     </tr>
-                ))}
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                    {productsPage.content.map(shell => (
+                        <tr key={shell.shellId}>
+                            <td>{shell.shellId}</td>
+                            <td>{shell.shellName}</td>
+                            <td>{shell.shellPrice}</td>
+                            <td>{shell.shellWeight}</td>
+                            <td>
+                                <button onClick={() => navigateToShellDetail(shell.shellId)}>View</button>
+                                <button onClick={() => navigateToEditShell(shell.shellId)}>Edit</button>
+                                <button onClick={() => deleteShell(shell.shellId)}>Delete</button>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
+            <div className="row mt-4">
+                <div className="col-md-6">
+                    <nav aria-label="Page navigation example">
+                        <ul className="pagination justify-content-end">
+                            {paginationRange.map((pageNumber, index) => (
+                                <li
+                                    key={index}
+                                    className={`page-item ${pageNumber === currentPage + 1 ? 'active' : ''}`}
+                                >
+                                    <Link
+                                        to="#"
+                                        className="page-link"
+                                        onClick={() => handlePageChange(pageNumber - 1)}
+                                    >
+                                        {pageNumber}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </>
+
     );
 };
 

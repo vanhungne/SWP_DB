@@ -3,7 +3,7 @@ import axios from 'axios';
 import { API_URL } from '../../Config/config';
 import '../../Scss/EditProduct.scss';
 
-const EditProduct = ({ productId, goBack }) => {
+const EditProduct = ({ productId, goBack, viewProduct }) => {
     const [product, setProduct] = useState(null);
     const [error, setError] = useState('');
     const [diamonds, setDiamonds] = useState([]);
@@ -71,7 +71,7 @@ const EditProduct = ({ productId, goBack }) => {
     const fetchShells = async () => {
         try {
             const response = await axios.get(`${API_URL}manage/shell/get-all`);
-            setShells(response.data.content);
+            setShells(response.data);
         } catch (error) {
             console.error('Error fetching shells:', error);
         }
@@ -96,6 +96,7 @@ const EditProduct = ({ productId, goBack }) => {
             ...updatedProduct,
             [name]: value,
         });
+        console.log(name+": "+value);
     };
 
     const handleImageUpload = (e, imageField) => {
@@ -130,17 +131,27 @@ const EditProduct = ({ productId, goBack }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.put(
-                `${API_URL}product/update/${productId}`,
-                updatedProduct,
-                {
+            if(productId) {
+                await axios.put(
+                    `${API_URL}product/update/${productId}`,
+                    updatedProduct,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    }
+                );
+                viewProduct(productId);
+            } else {
+                const respone = await  axios.post(`${API_URL}product/add`, updatedProduct, {
                     headers: {
                         Authorization: `Bearer ${token}`,
-                        'Content-Type': 'application/json'
-                    }
-                }
-            );
-            goBack();
+                    },
+                });
+                viewProduct(respone.data.productId);
+            }
+
         } catch (error) {
             console.error('Error updating product:', error);
             setError('Error updating product. Please try again later.');
@@ -312,7 +323,7 @@ const EditProduct = ({ productId, goBack }) => {
                         </select>
                     </div>
                 </div>
-                <div className="image-uploads product-images">
+                <div className="image-uploads manager-product-images">
                     <label>Main Image:</label>
                     <input type="file" onChange={(e) => handleImageUpload(e, 'image1')} />
                     <img src={product.image1} alt="Product Image 1" />

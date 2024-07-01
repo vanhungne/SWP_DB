@@ -1,4 +1,5 @@
 import React from 'react';
+import '../../Scss/sidebar.scss'
 
 const Sidebar = ({ activePage, setActivePage, setCurrentView }) => {
     const handleClick = (page) => {
@@ -6,13 +7,25 @@ const Sidebar = ({ activePage, setActivePage, setCurrentView }) => {
         setActivePage(page);
     }
     return (
-        <div className="sidebar">
-            <h3>Manager Dashboard</h3>
-            <ul>
-                <li className={activePage === 'products' ? 'active' : ''} onClick={() => handleClick('products')}>Products</li>
-                <li className={activePage === 'orders' ? 'active' : ''} onClick={() => handleClick('orders')}>Orders</li>
-                <li className={activePage === 'shells' ? 'active' : ''} onClick={() => handleClick('shells')}>Shells</li>
-                <li className={activePage === 'diamonds' ? 'active' : ''} onClick={() => handleClick('diamonds')}>Diamonds</li>
+        <div className="custom-sidebar">
+            <h3 className="custom-sidebar__title" style={{textAlign:'center'}}>Manager Dashboard</h3>
+            <ul className="custom-sidebar__menu">
+                <li className={`custom-sidebar__item ${activePage === 'products' ? 'active' : ''}`}
+                onClick={() => handleClick('products')}>
+                <span className="custom-sidebar__text">Products</span>
+                </li>
+                <li className={`custom-sidebar__item ${activePage === 'orders' ? 'active' : ''}`}
+                    onClick={() => handleClick('orders')}>
+                    <span className="custom-sidebar__text">Orders</span>
+                </li>
+                <li className={`custom-sidebar__item ${activePage === 'shells' ? 'active' : ''}`}
+                    onClick={() => handleClick('shells')}>
+                    <span className="custom-sidebar__text">Shells</span>
+                </li>
+                <li className={`custom-sidebar__item ${activePage === 'diamonds' ? 'active' : ''}`}
+                    onClick={() => handleClick('diamonds')}>
+                    <span className="custom-sidebar__text">Diamonds</span>
+                </li>
             </ul>
         </div>
     );

@@ -1,0 +1,131 @@
+.search-bar {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  label {
+    font-weight: bold;
+  }
+
+  input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .add-diamond-btn {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:hover {
+      background-color: #218838;
+    }
+  }
+}
+
+.manager-float-end {
+  display: block;
+
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  text-align: right;
+
+  &:hover {
+    background-color: #218838;
+  }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #f2f2f2;
+  }
+
+  tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  button {
+    margin-right: 5px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+
+    &:nth-child(1) {
+      background-color: #007bff;
+      color: #fff;
+
+      &:hover {
+        background-color: #0056b3;
+      }
+    }
+
+    &:nth-child(3) {
+      background-color: #dc3545;
+      color: #fff;
+
+      &:hover {
+        background-color: #c82333;
+      }
+    }
+
+    &:nth-child(2) {
+      background-color: #ffc107;
+      color: #212529;
+
+      &:hover {
+        background-color: #e0a800;
+      }
+    }
+  }
+}
+
+.pagination {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0;
+  list-style: none;
+
+  .page-item {
+    margin: 0 5px;
+
+    &.active .page-link {
+      background-color: #007bff;
+      border-color: #007bff;
+      color: #fff;
+    }
+
+    .page-link {
+      padding: 5px 10px;
+      border: 1px solid #dee2e6;
+      border-radius: 4px;
+      color: #007bff;
+      text-decoration: none;
+
+      &:hover {
+        background-color: #e9ecef;
+      }
+    }
+  }
+}
