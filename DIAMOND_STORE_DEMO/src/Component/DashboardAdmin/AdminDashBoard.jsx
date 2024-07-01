@@ -4,6 +4,7 @@ import Sidebar from './Siderbar';
 import UserDashboard from './UserDashBoard';
 import OrderDashboard from './OrderDashboard';
 import OrderDetailsDash from "./OrderDetailsDash";
+import StatisticsDashboard from './StatisticsDashboard';
 import '../../Scss/aDashboard.scss';
 import { API_URL } from "../../Config/config";
 
@@ -54,6 +55,10 @@ const AdminDashboard = () => {
                 return <OrderDetailsDash orderData={orderDetailsData} />;
             }
             return <OrderDashboard onOrderClick={handleOrderClick} />;
+        }
+
+        if (selectedComponent === 'Statistics') {
+            return <StatisticsDashboard />;
         }
     };
 

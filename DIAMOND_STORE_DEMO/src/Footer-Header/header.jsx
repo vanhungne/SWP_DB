@@ -132,7 +132,7 @@ const Header = () => {
                                                 Dashboard</NavDropdown.Item>
                                         )}
                                         {currentUser.roles === 'MANAGER' && (
-                                            <NavDropdown.Item as={Link} to="/manager">Admin
+                                            <NavDropdown.Item as={Link} to="/manager">
                                                 Dashboard manager</NavDropdown.Item>
                                         )}
                                         <NavDropdown.Item onClick={handleLogout}>Logout</NavDropdown.Item>

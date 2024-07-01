@@ -37,7 +37,7 @@ function ForgotPass() {
             Swal.fire({
                 icon: 'error',
                 title: 'ERROR',
-                text: err.message,
+                text: 'Email is not exist or not register yet!',
             });
         }
     }

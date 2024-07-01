@@ -1,0 +1,71 @@
+.custom-dashboard-container {
+  padding: 1.5rem;
+
+  .custom-dashboard-title {
+    margin-bottom: 1.5rem;
+    font-size: 2rem;
+    font-weight: bold;
+  }
+
+  .custom-dashboard-form {
+    margin-bottom: 2rem;
+
+    .custom-dashboard-form-group {
+      margin-bottom: 1rem;
+    }
+
+    .custom-dashboard-button {
+      margin-top: 1rem;
+    }
+  }
+
+  .custom-dashboard-loading,
+  .custom-dashboard-error {
+    margin-top: 2rem;
+  }
+
+  .custom-dashboard-content {
+    .custom-dashboard-card {
+      background-color: #fff;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      border-radius: 0.5rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+
+      .custom-dashboard-card-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
+
+      .custom-dashboard-card-text {
+        font-size: 2rem;
+        font-weight: bold;
+      }
+    }
+  }
+
+  @media (max-width: 767px) {
+    .custom-dashboard-title {
+      font-size: 1.75rem;
+    }
+
+    .custom-dashboard-form {
+      .custom-dashboard-form-group {
+        margin-bottom: 1.5rem;
+      }
+    }
+
+    .custom-dashboard-content {
+      .custom-dashboard-card {
+        .custom-dashboard-card-title {
+          font-size: 1.1rem;
+        }
+
+        .custom-dashboard-card-text {
+          font-size: 1.75rem;
+        }
+      }
+    }
+  }
+}
