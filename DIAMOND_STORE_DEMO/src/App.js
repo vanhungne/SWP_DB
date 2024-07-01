@@ -26,6 +26,9 @@ import DiamondsPrice from "./Component/DiamondsPrice/DiamondsPrice";
 import SaleDasboard from "./Component/Sale/SaleDasboard";
 import DeliveryDasboard from "./Component/Delivery/DeliveryDasboard";
 import Policy from "./Component/About/Policy"
+import Contact from "./Component/About/Contact";
+import AboutUs from "./Component/About/AboutUs";
+import DiamondKnow from "./Component/About/DiamondKnowledge/diamondKnow";
 function App() {
     return (
         <AuthProvider>
@@ -51,9 +54,11 @@ function App() {
                         <Route path="diamonds-price" element={<DiamondsPrice />} />
                         <Route path="order-details/:orderId" element={<OrderDetailsCustomer />} />
 
-                        //
+                        <Route path="contact" element={<Contact />} />
                         <Route path="story" element={<OurStory />} />
                         <Route path="policy" element={<Policy />} />
+                        <Route path="about" element={<AboutUs />} />
+                        <Route path="knowledge" element={<DiamondKnow />} />
 
                         {/* Protected router*/}
 
