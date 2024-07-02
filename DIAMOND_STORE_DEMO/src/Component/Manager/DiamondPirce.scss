@@ -1,0 +1,66 @@
+.diamond-price {
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 30px;
+  max-width: 1000px;
+  margin: 20px auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+  .mb-4 {
+    margin-bottom: 20px;
+  }
+
+  .p-4 {
+    padding: 20px;
+  }
+
+  .error {
+    color: #ff4d4f;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .grid {
+    display: flex;
+    gap: 15px;
+  }
+
+  .flex {
+    display: flex;
+  }
+
+  .justify-between {
+    justify-content: space-between;
+  }
+
+  .items-center {
+    align-items: center;
+  }
+  .action-butt {
+    button {
+      margin-right: 5px;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+
+      &:nth-child(1) {
+        background-color: #007bff;
+        color: #fff;
+
+        &:hover {
+          background-color: #0056b3;
+        }
+      }
+
+      &:nth-child(2) {
+        background-color: #dc3545;
+        color: #fff;
+
+        &:hover {
+          background-color: #c82333;
+        }
+      }
+    }
+  }
+}

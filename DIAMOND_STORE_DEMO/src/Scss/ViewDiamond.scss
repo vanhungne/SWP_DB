@@ -1,14 +1,64 @@
+/* Đặt tên cho SCSS để chắc chắn rằng nó chỉ ảnh hưởng đến component này */
 .view-diamond {
-  padding: 20px;
-  max-width: 600px;
-  margin: auto;
-}
+  background: #f8f9fa;
+  border-radius: 10px;
+  padding: 30px;
+  max-width: 1000px;
+  margin: 20px auto;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
-.diamond-details p {
-  margin: 5px 0;
-}
+  h2 {
+    text-align: center;
+    color: #343a40;
+    margin-bottom: 20px;
+  }
 
-.diamond-details img {
-  display: block;
-  margin-top: 10px;
+  .error {
+    color: #ff4d4f;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .diamond-details {
+    background: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+
+    p {
+      margin: 10px 0;
+      color: #495057;
+
+      strong {
+        color: #343a40;
+      }
+    }
+
+    img {
+      display: block;
+      margin: 10px auto;
+      max-width: 100%;
+      height: auto;
+      border: 1px solid #dee2e6;
+      border-radius: 5px;
+    }
+  }
+
+  button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+      background-color: #0056b3;
+    }
+  }
 }

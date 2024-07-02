@@ -32,7 +32,6 @@ const DiamondTable = ({ setSelectedDiamondId, setCurrentView}) => {
 
     const fetchDiamonds = async (page, size) => {
         try {
-            const token = localStorage.getItem('token');
             const response = await axios.get(`${API_URL}manage/diamond/get-all?page=${page}&size=${size}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -47,7 +46,6 @@ const DiamondTable = ({ setSelectedDiamondId, setCurrentView}) => {
 
     const fetchDiamondsByCriteria = async (page, size, criteria) => {
         try {
-            const token = localStorage.getItem('token');
             const { cut, carat, color, clarity } = criteria;
 
             // Create params object and only add non-null parameters
@@ -74,6 +72,7 @@ const DiamondTable = ({ setSelectedDiamondId, setCurrentView}) => {
             setError('Error fetching diamonds. Please try again later.');
         }
     };
+
     const deleteDiamond = async (id) => {
         try {
             await axios.delete(`${API_URL}manage/diamond/delete/${id}`);

@@ -46,7 +46,7 @@ const ViewDiamond = ({ diamondId, goBack }) => {
                     <strong>Certification:</strong>
                     {diamond.certification ? (
                         <div>
-                            <img src={diamond.certification} alt="Certification" style={{ maxWidth: '200px', maxHeight: '200px' }} />
+                            <img src={diamond.certification} alt="Certification" />
                         </div>
                     ) : (
                         <p>No certification available</p>

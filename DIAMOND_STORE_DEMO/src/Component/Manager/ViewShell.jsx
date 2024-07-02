@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import axios from 'axios';
 import { API_URL } from '../../Config/config';
+import'../../Scss/ViewDiamond.scss'
 
 const ViewShell = ({ shellId, goBack }) => {
     const [shell, setShell] = useState({});
@@ -24,10 +25,10 @@ const ViewShell = ({ shellId, goBack }) => {
     };
 
     return (
-        <div className="view-shell">
+        <div className="view-diamond">
             <h2>View Shell</h2>
             {error && <p className="error">{error}</p>}
-            <div className="shell-details">
+            <div className="diamond-details">
                 <p><strong>ID:</strong> {shell.shellId}</p>
                 <p><strong>Name:</strong> {shell.shellName}</p>
                 <p><strong>Price:</strong> {shell.shellPrice}</p>

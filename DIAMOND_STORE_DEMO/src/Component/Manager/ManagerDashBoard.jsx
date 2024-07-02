@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Sidebar from '../Manager/Sidebar';
 import ProductTable from '../Manager/ProductTable';
 import '../../Scss/ManagerDashBoard.scss';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '../../Config/config';
 import ShellTable from '../Manager/ShellTable';
@@ -15,15 +14,10 @@ import EditDiamond from "./EditDiamond";
 import ViewProduct from "./ViewProduct";
 import OrderDashboard from "../DashboardAdmin/OrderDashboard";
 import OrderDetailsDash from "../DashboardAdmin/OrderDetailsDash";
-import orderDetailsDash from "../DashboardAdmin/OrderDetailsDash";
+import Category from "./Category";
+import DiamondPrice from "./DiamondPrice";
 
 const Dashboard = () => {
-    const [productsPage, setProductsPage] = useState({
-        content: [],
-        totalPages: 0,
-        pageNumber: 0,
-        totalElements: 0
-    });
     const [activePage, setActivePage] = useState('products');
     const [currentView, setCurrentView] = useState('dashboard');
     const [selectedProductId, setSelectedProductId] = useState(null);
@@ -35,17 +29,6 @@ const Dashboard = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const token = localStorage.getItem('token');
-
-
-    const clearData = () => {
-        setProductsPage({
-            content: [],
-            totalPages: 0,
-            pageNumber: 0,
-            totalElements: 0
-        });
-    };
 
     const navigateToDashboard = () => {
         setCurrentView('dashboard');
@@ -86,19 +69,13 @@ const Dashboard = () => {
                 {activePage === 'products' && (
                     <>
                         {currentView === 'dashboard' && (
-                            <>
-                                <ProductTable setSelectedProductId={setSelectedProductId} setCurrentView={setCurrentView}/>
-                            </>
+                            <ProductTable setSelectedProductId={setSelectedProductId} setCurrentView={setCurrentView}/>
                         )}
                         {currentView === 'productDetail' && (
-                            <>
-                                <ViewProduct productId={selectedProductId} goBack={navigateToDashboard} />
-                            </>
+                            <ViewProduct productId={selectedProductId} goBack={navigateToDashboard} />
                         )}
                         {currentView === 'editProduct' && (
-                            <>
-                                <EditProduct productId={selectedProductId} goBack={navigateToDashboard} viewProduct={navigateToProductDetail}/>
-                            </>
+                            <EditProduct productId={selectedProductId} goBack={navigateToDashboard} viewProduct={navigateToProductDetail}/>
                         )}
                     </>
                 )}
@@ -115,28 +92,20 @@ const Dashboard = () => {
                 {activePage === 'shells' && (
                     <>
                         {currentView === 'dashboard' && (
-                            <>
-                                <ShellTable setSelectedShellId={setSelectedShellId} setCurrentView={setCurrentView}/>
-                            </>
+                            <ShellTable setSelectedShellId={setSelectedShellId} setCurrentView={setCurrentView}/>
                         )}
                         {currentView === 'shellDetail' && (
-                            <>
-                                <ViewShell shellId={selectedShellId} goBack={navigateToDashboard} />
-                            </>
+                            <ViewShell shellId={selectedShellId} goBack={navigateToDashboard} />
                         )}
                         {currentView === 'editShell' && (
-                            <>
-                                <EditShell shellId={selectedShellId} goBack={navigateToDashboard} viewShell={navigateToShellDetail} />
-                            </>
+                            <EditShell shellId={selectedShellId} goBack={navigateToDashboard} viewShell={navigateToShellDetail} />
                         )}
                     </>
                 )}
                 {activePage === 'diamonds' && (
                     <>
                         {currentView === 'dashboard' && (
-                            <>
-                                <DiamondTable setSelectedDiamondId={setSelectedDiamondId} setCurrentView={setCurrentView}/>
-                            </>
+                            <DiamondTable setSelectedDiamondId={setSelectedDiamondId} setCurrentView={setCurrentView}/>
                         )}
                         {currentView === 'diamondDetail' && (
                             <ViewDiamond diamondId={selectedDiamondId} goBack={navigateToDashboard} />
@@ -147,12 +116,11 @@ const Dashboard = () => {
                     </>
                 )}
                 {activePage === 'category' && (
+                    <Category/>
+                )}
+                {activePage == 'diamondPrice' && (
                     <>
-                        {currentView === 'dashboard' && (
-                            <>
-                            
-                            </>
-                        )}
+                        <DiamondPrice />
                     </>
                 )}
             </div>
