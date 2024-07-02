@@ -26,6 +26,7 @@ const Dashboard = () => {
 
     const [selectedOrderId, setSelectedOrderId] = useState(null);
     const [orderDetailsData, setOrderDetailsData] = useState(null);
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
@@ -54,6 +55,7 @@ const Dashboard = () => {
             });
             setOrderDetailsData(response.data.data);
             setSelectedOrderId(orderId);
+            setCurrentView('orderDetails'); // Add this line to change the view
         } catch (err) {
             setError('Failed to fetch order details. Please try again.');
             console.error('Error fetching order details:', err);
@@ -61,6 +63,7 @@ const Dashboard = () => {
             setLoading(false);
         }
     };
+
 
     return (
         <div className="dashboard">
@@ -84,7 +87,7 @@ const Dashboard = () => {
                         {currentView === 'dashboard' && (
                             <OrderDashboard onOrderClick={handleOrderClick} />
                         )}
-                        {selectedOrderId && (
+                        {currentView === 'orderDetails' && selectedOrderId && (
                             <OrderDetailsDash orderData={orderDetailsData} />
                         )}
                     </>
