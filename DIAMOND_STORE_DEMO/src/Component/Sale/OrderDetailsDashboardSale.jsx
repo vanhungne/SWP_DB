@@ -16,10 +16,11 @@ import {
     faPhone,
     faEnvelope,
     faEdit,
-    faArrowLeft, faGem
+    faArrowLeft, faGem, faShieldAlt
 } from '@fortawesome/free-solid-svg-icons';
 import { API_URL } from "../../Config/config";
 import '../../Scss/OrderDetails.scss';
+import AddWarranty from "./AddWarranty";
 
 
 
@@ -33,7 +34,10 @@ const OrderDetails = ({ orderData }) => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [newStatus, setNewStatus] = useState('');
+    const [selectedCertificate, setSelectedCertificate] = useState(null);
     const [statusUpdateMessage, setStatusUpdateMessage] = useState('');
+    const [isWarrantyModalOpen, setIsWarrantyModalOpen] = useState(false);
+    const [selectedProductForWarranty, setSelectedProductForWarranty] = useState(null);
 
     useEffect(() => {
         const fetchAdditionalData = async () => {
@@ -128,8 +132,20 @@ const OrderDetails = ({ orderData }) => {
         status, discountCode, saleId, deliveryId, orderDetails
     } = orderData;
 
+    const toggleCertificate = (certificateUrl) => {
+        setSelectedCertificate(certificateUrl);
+    };
+
+    //warranty
+    const handleManageWarranty = (productId) => {
+        setSelectedProductForWarranty(productId);
+        setIsWarrantyModalOpen(true);
+    };
+    const handleWarrantyUpdated = (updatedWarranty) => {
+        console.log('Warranty updated:', updatedWarranty);
+    };
     return (
-        <div className="order-details">
+        <div className="order-details" style={{paddingBottom:'10%'}}>
             <div className="order-details__id" style={{fontSize: '30px', color: 'black', textAlign: 'center'}}>
                 <FontAwesomeIcon icon={faBox}/>Order ID:<span style={{fontWeight: 'bold'}}> {orderId}</span></div>
 
@@ -185,13 +201,6 @@ const OrderDetails = ({ orderData }) => {
                             </div>
                         )}
                     </div>
-                    {/*<div className="order-details__info-item">*/}
-                    {/*    <FontAwesomeIcon icon={faTruck}/>*/}
-                    {/*    /!*<span>Sale ID: {saleId}, Delivery ID: {deliveryId}</span>*!/*/}
-                    {/*    {saleInfo?.name && <span> - Sale: {saleInfo.name}</span>}*/}
-                    {/*    {deliveryInfo?.name && <span> - Delivery: {deliveryInfo.name}</span>}*/}
-                    {/*    {(!saleInfo?.name && !deliveryInfo?.name) && <span> - Sale: null, Delivery: null</span>}*/}
-                    {/*</div>*/}
                 </div>
 
                 <div className="order-details__customer-info order-details__card">
@@ -289,6 +298,9 @@ const OrderDetails = ({ orderData }) => {
                                         {item.size > 0 && (
                                             <p>Size: {item.size}</p>
                                         )}
+                                        <button onClick={() => handleManageWarranty(item.productId)}>
+                                            Manage Warranty
+                                        </button>
                                     </div>
                                     <div className="col-md-3">
                                         {diamondInfo[item.productId] && (
@@ -300,14 +312,9 @@ const OrderDetails = ({ orderData }) => {
                                                 <p>Color: {diamondInfo[item.productId].color}</p>
                                                 <p>Clarity: {diamondInfo[item.productId].clarity}</p>
                                                 {diamondInfo[item.productId].certification && (
-                                                    <p>
-                                                        Certificate:
-                                                        <a href={diamondInfo[item.productId].certification}
-                                                           target="_blank"
-                                                           rel="noopener noreferrer">
-                                                            View Certificate
-                                                        </a>
-                                                    </p>
+                                                    <div onClick={() => toggleCertificate(diamondInfo[item.productId].certification)}>
+                                                        <p style={{fontWeight:'bold',color:'blue'}}>Certificate</p>
+                                                    </div>
                                                 )}
                                             </div>
                                         )}
@@ -318,6 +325,20 @@ const OrderDetails = ({ orderData }) => {
                     ))}
                 </div>
             </div>
+            {selectedCertificate && (
+                <div className="certificate-modal" onClick={() => setSelectedCertificate(null)}>
+                    <div className="certificate-modal-content" onClick={(e) => e.stopPropagation()}>
+                        <img src={selectedCertificate} alt="Certificate" style={{width: '100%', height: 'auto'}} />
+                    </div>
+                </div>
+            )}
+            <AddWarranty
+                isOpen={isWarrantyModalOpen}
+                onClose={() => setIsWarrantyModalOpen(false)}
+                productId={selectedProductForWarranty}
+                orderId={orderData.orderId}
+                onWarrantyUpdated={handleWarrantyUpdated}
+            />
         </div>
     );
 };

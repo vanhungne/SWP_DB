@@ -242,6 +242,7 @@ const OrderDetails = ({ orderData }) => {
             </div>
 
             <div className="order-details__items order-details__card">
+                <h3>Ordered Items</h3>
                 <div className="order-details__product-list">
                     {orderDetails.map((item, index) => (
                         <div key={index} className="order-details__product-item">
@@ -251,37 +252,35 @@ const OrderDetails = ({ orderData }) => {
                                      className="order-details__product-image"/>
                             </div>
                             <div className="order-details__product-info">
-                                <div className="row">
-                                    <div className="col-md-9">
-                                        <h4>{productInfo[item.productId]?.productName || 'Loading...'}</h4>
-                                        <p>Quantity: {item.quantity}</p>
-                                        <p>Price:
-                                            ${productInfo[item.productId]?.price.toFixed(2) || item.price.toFixed(2)}</p>
+                                <div className="order-details__product-main">
+                                    <h4>{productInfo[item.productId]?.productName || 'Loading...'}</h4>
+                                    <div className="order-details__product-details">
+                                        <p><strong>Quantity:</strong> {item.quantity}</p>
+                                        <p><strong>Price:</strong> ${productInfo[item.productId]?.price.toFixed(2) || item.price.toFixed(2)}</p>
                                         {item.size > 0 && (
-                                            <p>Size: {item.size}</p>
-                                        )}
-                                    </div>
-                                    <div className="col-md-3">
-                                    {diamondInfo[item.productId] && (
-                                            <div className="order-details__diamond-info">
-                                                <h5  style={{textAlign:'center'}}><FontAwesomeIcon icon={faGem}/> Diamond</h5>
-                                                <p>Carat: {diamondInfo[item.productId].carat}</p>
-                                                <p>Cut: {diamondInfo[item.productId].cut}</p>
-                                                <p>Color: {diamondInfo[item.productId].color}</p>
-                                                <p>Clarity: {diamondInfo[item.productId].clarity}</p>
-                                                {diamondInfo[item.productId].certification && (
-                                                    <p>
-                                                        Certificate:
-                                                        <a href={diamondInfo[item.productId].certification} target="_blank"
-                                                           rel="noopener noreferrer">
-                                                            View Certificate
-                                                        </a>
-                                                    </p>
-                                                )}
-                                            </div>
+                                            <p><strong>Size:</strong> {item.size}</p>
                                         )}
                                     </div>
                                 </div>
+                                {diamondInfo[item.productId] && (
+                                    <div className="order-details__diamond-info">
+                                        <h5><FontAwesomeIcon icon={faGem}/> Diamond Details</h5>
+                                        <div className="order-details__diamond-details">
+                                            <p><strong>Carat:</strong> {diamondInfo[item.productId].carat}</p>
+                                            <p><strong>Cut:</strong> {diamondInfo[item.productId].cut}</p>
+                                            <p><strong>Color:</strong> {diamondInfo[item.productId].color}</p>
+                                            <p><strong>Clarity:</strong> {diamondInfo[item.productId].clarity}</p>
+                                        </div>
+                                        {diamondInfo[item.productId].certification && (
+                                            <a href={diamondInfo[item.productId].certification}
+                                               target="_blank"
+                                               rel="noopener noreferrer"
+                                               className="order-details__certificate-link">
+                                                View Certificate
+                                            </a>
+                                        )}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))}
