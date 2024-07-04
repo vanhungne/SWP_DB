@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
 import axios from "axios";
 import {API_URL} from "../../Config/config";
 import {Link} from "react-router-dom";

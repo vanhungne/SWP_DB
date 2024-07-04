@@ -34,6 +34,14 @@ const Sidebar = ({ activePage, setActivePage, setCurrentView }) => {
                     onClick={() => handleClick('diamondPrice')}>
                     <span className="custom-sidebar__text">Diamond Price</span>
                 </li>
+                <li className={`custom-sidebar__item ${activePage === 'promotion' ? 'active' : ''}`}
+                    onClick={() => handleClick('promotion')}>
+                    <span className="custom-sidebar__text">Promotion</span>
+                </li>
+                <li className={`custom-sidebar__item ${activePage === 'discountCode' ? 'active' : ''}`}
+                    onClick={() => handleClick('discountCode')}>
+                    <span className="custom-sidebar__text">Discount code</span>
+                </li>
             </ul>
         </div>
     );

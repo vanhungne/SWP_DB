@@ -16,6 +16,9 @@ import OrderDashboard from "../DashboardAdmin/OrderDashboard";
 import OrderDetailsDash from "../DashboardAdmin/OrderDetailsDash";
 import Category from "./Category";
 import DiamondPrice from "./DiamondPrice";
+import Promotion from "./Promotion";
+import DiscountCode from "./DiscountCode";
+
 
 const Dashboard = () => {
     const [activePage, setActivePage] = useState('products');
@@ -121,9 +124,19 @@ const Dashboard = () => {
                 {activePage === 'category' && (
                     <Category/>
                 )}
-                {activePage == 'diamondPrice' && (
+                {activePage === 'diamondPrice' && (
                     <>
                         <DiamondPrice />
+                    </>
+                )}
+                {activePage === 'promotion' && (
+                    <>
+                        <Promotion/>
+                    </>
+                )}
+                {activePage === 'discountCode' && (
+                    <>
+                        <DiscountCode/>
                     </>
                 )}
             </div>

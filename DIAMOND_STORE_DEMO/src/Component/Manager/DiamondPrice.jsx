@@ -10,8 +10,6 @@ import {
     TableRow,
     Paper,
     TextField,
-    Select,
-    MenuItem,
     Card,
     CardContent,
     Button,
@@ -188,9 +186,10 @@ const DiamondPrice = () => {
 
     return (
         <div className="diamond-price">
+            <h1>Diamond Price</h1>
             <Card className="mb-4 p-4">
                 <CardContent>
-                    <div className="grid grid-cols-2 gap-4 mb-4" style={{ display: 'flex', gap: '15px' }}>
+                    <div className="grid grid-cols-2 gap-4 mb-4" style={{display: 'flex', gap: '15px'}}>
                         <TextField
                             name="cut"
                             label="Cut"
@@ -237,7 +236,7 @@ const DiamondPrice = () => {
                             <TableCell>Color</TableCell>
                             <TableCell>Clarity</TableCell>
                             <TableCell>Price</TableCell>
-                            <TableCell style={{textAlign:'center'}}>Actions</TableCell>
+                            <TableCell style={{textAlign: 'center'}}>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -250,7 +249,7 @@ const DiamondPrice = () => {
                                 <TableCell>{diamond.clarity}</TableCell>
                                 <TableCell>${diamond.price.toFixed(2)}</TableCell>
                                 <TableCell>
-                                    <div className="action-butt" style={{textAlign:'center'}}>
+                                    <div className="action-butt" style={{textAlign: 'center'}}>
                                         <Button
                                             variant="contained"
                                             color="secondary"
@@ -279,7 +278,7 @@ const DiamondPrice = () => {
                 >
                     Previous
                 </Button>
-                <span>Page {currentPage + 1} of {totalPages}</span>
+                <span style={{color:'black'}}>Page {currentPage + 1} of {totalPages}</span>
                 <Button
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages - 1}
@@ -298,7 +297,7 @@ const DiamondPrice = () => {
                                 label="Price"
                                 type="number"
                                 value={form.price}
-                                onChange={(e) => setForm({ ...form, price: e.target.value })}
+                                onChange={(e) => setForm({...form, price: e.target.value})}
                                 fullWidth
                             />
                             <DialogActions>
