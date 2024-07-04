@@ -202,6 +202,7 @@ const OrderDetails = () => {
                 <ViewFeedback
                     orderId={orderData.orderId}
                     userId={orderData.customerId}
+                    orderStatus={orderData.status}
                 />
             </div>
             {selectedCertificate && (

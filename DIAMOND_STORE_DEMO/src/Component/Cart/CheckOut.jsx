@@ -16,6 +16,7 @@ const Checkout = () => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [code, setCode] = useState('');
+    const [useAllPoints, setUseAllPoints] = useState(false);
     const navigate = useNavigate();
     const [userInfo, setUserInfo] = useState({
         name: '',
@@ -30,6 +31,7 @@ const Checkout = () => {
         setCartItems(cartFromCookie);
         fetchUserInfo();
     }, []);
+
 
     const getCartFromCookie = () => {
         const cartCookie = Cookies.get('cart');
@@ -68,6 +70,9 @@ const Checkout = () => {
     const calculateTotal = () => {
         return cartItems.reduce((acc, item) => acc + item.totalPrice * item.quantity, 0).toFixed(2);
     };
+    const handleUseAllPointsChange = (e) => {
+        setUseAllPoints(e.target.checked);
+    };
 
     const handleCheckout = async () => {
         if (!deliveryAddress) {
@@ -80,9 +85,10 @@ const Checkout = () => {
 
         try {
             const token = localStorage.getItem('token');
+            const pointsToUse = useAllPoints ? userInfo.accumulatedPoints : 0;
             const response = await axios.post(
                 `${API_URL}cart/checkout`,
-                { deliveryAddress, code },
+                { deliveryAddress, code, point: pointsToUse },
                 {
                     headers: {
                         Authorization: `Bearer ${token}`,
@@ -110,15 +116,15 @@ const Checkout = () => {
     return (
         <div className="container mt-5 checkout-container" style={{marginBottom:'5%'}}>
             <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
+                initial={{opacity: 0, y: 20}}
+                animate={{opacity: 1, y: 0}}
+                transition={{duration: 0.5}}
                 className="row"
             >
                 <div className="col-md-6">
                     <div className="card mb-4 shadow-sm">
                         <div className="card-header bg-primary text-white">
-                            <h3><FontAwesomeIcon icon={faGift} className="me-2" />Express Checkout</h3>
+                            <h3><FontAwesomeIcon icon={faGift} className="me-2"/>Express Checkout</h3>
                         </div>
                         <div className="card-body">
                             <div className="mb-3">
@@ -135,7 +141,7 @@ const Checkout = () => {
                                             readOnly
                                         />
                                         <label className="form-check-label" htmlFor="shipItems">
-                                            <FontAwesomeIcon icon={faTruck} className="me-2" />Ship My Items
+                                            <FontAwesomeIcon icon={faTruck} className="me-2"/>Ship My Items
                                         </label>
                                     </div>
                                 </div>
@@ -170,34 +176,57 @@ const Checkout = () => {
                                     onChange={(e) => setDeliveryAddress(e.target.value)}
                                 />
                             </div>
-                            <div className="mb-3">
-                                <label htmlFor="code" className="form-label">Discount Code:</label>
-                                <input
-                                    type="text"
-                                    className="form-control"
-                                    id="code"
-                                    value={code}
-                                    onChange={(e) => setCode(e.target.value)}
-                                />
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <div className="mb-3">
+                                        <label htmlFor="code" className="form-label">Discount Code:</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="code"
+                                            value={code}
+                                            onChange={(e) => setCode(e.target.value)}
+                                        />
+                                    </div>
+                                </div>
+                                <div className="col-md-6">
+                                    <div className="mb-3">
+                                        <label htmlFor="accumulatedPoints" className="form-label">Accumulated
+                                            Points:</label>
+                                        <input
+                                            type="text"
+                                            className="form-control"
+                                            id="accumulatedPoints"
+                                            value={userInfo.accumulatedPoints}
+                                            disabled
+                                        />
+                                    </div>
+                                </div>
                             </div>
-                            <div className="mb-3">
-                                <label htmlFor="accumulatedPoints" className="form-label">Accumulated Points:</label>
+                            <div className="mb-3 form-check">
                                 <input
-                                    type="text"
-                                    className="form-control"
-                                    id="accumulatedPoints"
-                                    value={userInfo.accumulatedPoints}
-                                    disabled
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    id="useAllPoints"
+                                    checked={useAllPoints}
+                                    onChange={handleUseAllPointsChange}
                                 />
+                                <label className="form-check-label" htmlFor="useAllPoints">
+                                    Use all accumulated points
+                                </label>
                             </div>
                             {error && <div className="alert alert-danger" role="alert">{error}</div>}
-                            <button
-                                className="btn btn-primary w-100"
-                                onClick={handleCheckout}
-                                disabled={loading}
-                            >
-                                {loading ? 'Processing...' : <><FontAwesomeIcon icon={faCreditCard} className="me-2" />Place Order</>}
-                            </button>
+                            <div style={{textAlign:'center'}}>
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={handleCheckout}
+                                    disabled={loading}
+                                    style={{maxWidth: '35%'}}>
+                                    {loading ? 'Processing...' : <><FontAwesomeIcon icon={faCreditCard}
+                                                                                    className="me-2"/>Place
+                                        Order</>}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -214,11 +243,12 @@ const Checkout = () => {
                                             src={item.image1}
                                             alt={item.productName}
                                             className="img-fluid me-2"
-                                            style={{ maxWidth: '100px' }}
+                                            style={{maxWidth: '100px'}}
                                         />
                                         <div>
                                             <h6 className="mb-0">{item.productName}</h6>
-                                            <small className="text-muted">Size: {item.size}, Quantity: {item.quantity}</small>
+                                            <small className="text-muted">Size: {item.size},
+                                                Quantity: {item.quantity}</small>
                                         </div>
                                     </div>
                                     <span>${(item.totalPrice * item.quantity).toFixed(2)}</span>

@@ -4,7 +4,7 @@ export function useAuthorization(requiredRoles) {
     const { currentUser, loading } = useAuth();
 
     if (loading) {
-        return null; // Still loading, authorization undetermined
+        return null;
     }
 
     if (!currentUser) {
