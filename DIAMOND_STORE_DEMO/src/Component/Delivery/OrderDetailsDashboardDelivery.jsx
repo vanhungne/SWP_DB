@@ -16,10 +16,12 @@ import {
     faPhone,
     faEnvelope,
     faEdit,
-    faGem
+    faGem, faShieldAlt
 } from '@fortawesome/free-solid-svg-icons';
 import { API_URL } from "../../Config/config";
 import '../../Scss/OrderDetails.scss';
+import WarrantyCustomer from "../OrderCustomer/WarrantyCustomer";
+import ViewFeedbackStaff from "./ViewFeedbackStaff";
 
 const OrderDetails = ({ orderData }) => {
     const [customerInfo, setCustomerInfo] = useState(null);
@@ -32,6 +34,9 @@ const OrderDetails = ({ orderData }) => {
     const [error, setError] = useState(null);
     const [newStatus, setNewStatus] = useState('');
     const [statusUpdateMessage, setStatusUpdateMessage] = useState('');
+    const [selectedCertificate, setSelectedCertificate] = useState(null);
+    const [selectedProductForWarranty, setSelectedProductForWarranty] = useState(null);
+    const [isWarrantyModalOpen, setIsWarrantyModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchAdditionalData = async () => {
@@ -129,8 +134,16 @@ const OrderDetails = ({ orderData }) => {
         status, discountCode, orderDetails
     } = orderData;
 
+    const toggleCertificate = (certificateUrl) => {
+        setSelectedCertificate(certificateUrl);
+    };
+    const handleManageWarranty = (productId) => {
+        setSelectedProductForWarranty(productId);
+        setIsWarrantyModalOpen(true);
+    };
+
     return (
-        <div className="order-details">
+        <div className="order-details" style={{paddingBottom:'10%'}}>
             <div className="order-details__id" style={{fontSize: '30px', color: 'black', textAlign: 'center'}}>
                 <FontAwesomeIcon icon={faBox} /> Order ID: <span style={{fontWeight: 'bold'}}>{orderId}</span>
             </div>
@@ -241,7 +254,7 @@ const OrderDetails = ({ orderData }) => {
                 )}
             </div>
 
-            <div className="order-details__items order-details__card">
+            <div className="order-details__items order-details__card" style={{marginBottom:'20px'}}>
                 <h3>Ordered Items</h3>
                 <div className="order-details__product-list">
                     {orderDetails.map((item, index) => (
@@ -252,40 +265,65 @@ const OrderDetails = ({ orderData }) => {
                                      className="order-details__product-image"/>
                             </div>
                             <div className="order-details__product-info">
-                                <div className="order-details__product-main">
-                                    <h4>{productInfo[item.productId]?.productName || 'Loading...'}</h4>
-                                    <div className="order-details__product-details">
-                                        <p><strong>Quantity:</strong> {item.quantity}</p>
-                                        <p><strong>Price:</strong> ${productInfo[item.productId]?.price.toFixed(2) || item.price.toFixed(2)}</p>
+                                <div className="row">
+                                    <div className="col-md-9">
+                                        <h4>{productInfo[item.productId]?.productName || 'Loading...'}</h4>
+                                        <p>Quantity: {item.quantity}</p>
+                                        <p>Price:
+                                            ${productInfo[item.productId]?.price.toFixed(2) || item.price.toFixed(2)}</p>
                                         {item.size > 0 && (
-                                            <p><strong>Size:</strong> {item.size}</p>
+                                            <p>Size: {item.size}</p>
+                                        )}
+                                        <button
+                                            onClick={() => handleManageWarranty(item.productId)}
+                                            className="order-details-c__warranty-btn"
+                                        >
+                                            <FontAwesomeIcon icon={faShieldAlt}/> View Warranty
+                                        </button>
+                                    </div>
+                                    <div className="col-md-3">
+                                        {diamondInfo[item.productId] && (
+                                            <div className="order-details__diamond-info">
+                                                <h5 style={{textAlign: 'center'}}><FontAwesomeIcon
+                                                    icon={faGem}/> Diamond</h5>
+                                                <p>Carat: {diamondInfo[item.productId].carat}</p>
+                                                <p>Cut: {diamondInfo[item.productId].cut}</p>
+                                                <p>Color: {diamondInfo[item.productId].color}</p>
+                                                <p>Clarity: {diamondInfo[item.productId].clarity}</p>
+                                                {diamondInfo[item.productId].certification && (
+                                                    <div
+                                                        onClick={() => toggleCertificate(diamondInfo[item.productId].certification)}>
+                                                        <p style={{fontWeight: 'bold', color: 'blue'}}>Certificate</p>
+                                                    </div>
+                                                )}
+                                            </div>
                                         )}
                                     </div>
                                 </div>
-                                {diamondInfo[item.productId] && (
-                                    <div className="order-details__diamond-info">
-                                        <h5><FontAwesomeIcon icon={faGem}/> Diamond Details</h5>
-                                        <div className="order-details__diamond-details">
-                                            <p><strong>Carat:</strong> {diamondInfo[item.productId].carat}</p>
-                                            <p><strong>Cut:</strong> {diamondInfo[item.productId].cut}</p>
-                                            <p><strong>Color:</strong> {diamondInfo[item.productId].color}</p>
-                                            <p><strong>Clarity:</strong> {diamondInfo[item.productId].clarity}</p>
-                                        </div>
-                                        {diamondInfo[item.productId].certification && (
-                                            <a href={diamondInfo[item.productId].certification}
-                                               target="_blank"
-                                               rel="noopener noreferrer"
-                                               className="order-details__certificate-link">
-                                                View Certificate
-                                            </a>
-                                        )}
-                                    </div>
-                                )}
                             </div>
                         </div>
                     ))}
                 </div>
             </div>
+            {selectedCertificate && (
+                <div className="certificate-modal" onClick={() => setSelectedCertificate(null)}>
+                    <div className="certificate-modal-content" onClick={(e) => e.stopPropagation()}>
+                        <img src={selectedCertificate} alt="Certificate" style={{width: '100%', height: 'auto'}}/>
+                    </div>
+                </div>
+            )}
+
+            <ViewFeedbackStaff
+                orderId={orderData.orderId}
+                userId={orderData.customerId}
+            />
+
+            <WarrantyCustomer
+                isOpen={isWarrantyModalOpen}
+                onClose={() => setIsWarrantyModalOpen(false)}
+                productId={selectedProductForWarranty}
+                orderId={orderId}
+            />
         </div>
     );
 };

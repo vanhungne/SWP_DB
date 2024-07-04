@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
 import axios from "axios";
 import {API_URL} from "../../Config/config";
 import {Link} from "react-router-dom";
 import '../../Scss/DiamondTable.scss'
+import {Edit, Eye, Trash2} from "lucide-react";
 
 const DiamondTable = ({ setSelectedDiamondId, setCurrentView}) => {
     const [productsPage, setProductsPage] = useState({
@@ -180,7 +180,7 @@ const DiamondTable = ({ setSelectedDiamondId, setCurrentView}) => {
                         <th>Clarity</th>
                         <th>Price</th>
                         <th>Status</th>
-                        <th>Actions</th>
+                        <th style={{textAlign:'center'}}>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -193,10 +193,28 @@ const DiamondTable = ({ setSelectedDiamondId, setCurrentView}) => {
                             <td>{diamond.clarity}</td>
                             <td>{diamond.price}</td>
                             <td>{diamond.status ? 'Active' : 'Inactive'}</td>
-                            <td>
-                                <button onClick={() => navigateToDiamondDetail(diamond.diamondId)}>View</button>
-                                <button onClick={() => navigateToEditDiamond(diamond.diamondId)}>Edit</button>
-                                <button onClick={() => deleteDiamond(diamond.diamondId)}>Delete</button>
+                            <td className="space-x-2" style={{textAlign:'center'}}>
+                                <button
+                                    onClick={() => navigateToDiamondDetail(diamond.diamondId)}
+                                    className="p-2 text-blue-600 hover:bg-blue-100 rounded-full transition-colors"
+                                    title="View"
+                                >
+                                    <Eye size={20}/>
+                                </button>
+                                <button
+                                    onClick={() => navigateToEditDiamond(diamond.diamondId)}
+                                    className="p-2 text-green-600 hover:bg-green-100 rounded-full transition-colors"
+                                    title="Edit"
+                                >
+                                    <Edit size={20}/>
+                                </button>
+                                <button
+                                    onClick={() => deleteDiamond(diamond.diamondId)}
+                                    className="p-2 text-red-600 hover:bg-red-100 rounded-full transition-colors"
+                                    title="Delete"
+                                >
+                                    <Trash2 size={20}/>
+                                </button>
                             </td>
                         </tr>
                     ))}

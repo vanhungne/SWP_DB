@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import axios from "axios";
 import {API_URL} from "../../Config/config";
 import {Link} from "react-router-dom";
+import { Eye, Edit, Trash2 } from 'lucide-react';
 
 const ProductTable = ({setSelectedProductId, setCurrentView} ) => {
     const [productsPage, setProductsPage] = useState({
@@ -123,27 +124,45 @@ const ProductTable = ({setSelectedProductId, setCurrentView} ) => {
                 <thead>
                 <tr>
                     <th>Product ID</th>
-                    <th>Name</th>
+                    <th style={{textAlign:'center'}}>Name</th>
                     <th>Price</th>
                     <th>Stock Quantity</th>
                     <th>Collection</th>
                     <th>Category ID</th>
-                    <th>Actions</th>
+                    <th style={{textAlign:'center'}}>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 {productsPage.content.map((product, index) => (
                     <tr key={product.productId}>
-                        <td>{product.productId}</td>
+                        <td style={{textAlign:'center'}}>{product.productId}</td>
                         <td>{product.productName}</td>
-                        <td>${product.price}</td>
-                        <td>{product.stockQuantity}</td>
-                        <td>{product.collection}</td>
-                        <td>{product.categoryId}</td>
-                        <td>
-                            <button onClick={() => navigateToProductDetail(product.productId)}>View</button>
-                            <button onClick={() => navigateToEditProduct(product.productId)}>Edit</button>
-                            <button onClick={() => deleteProduct(product.productId)}>Delete</button>
+                        <td style={{textAlign:'center'}}>${product.price}</td>
+                        <td style={{textAlign:'center'}}>{product.stockQuantity}</td>
+                        <td style={{textAlign:'center'}}>{product.collection}</td>
+                        <td style={{textAlign:'center'}}>{product.categoryId}</td>
+                        <td className="space-x-2">
+                            <button
+                                onClick={() => navigateToProductDetail(product.productId)}
+                                className="p-2 text-blue-600 hover:bg-blue-100 rounded-full transition-colors"
+                                title="View"
+                            >
+                                <Eye size={20}/>
+                            </button>
+                            <button
+                                onClick={() => navigateToEditProduct(product.productId)}
+                                className="p-2 text-green-600 hover:bg-green-100 rounded-full transition-colors"
+                                title="Edit"
+                            >
+                                <Edit size={20}/>
+                            </button>
+                            <button
+                                onClick={() => deleteProduct(product.productId)}
+                                className="p-2 text-red-600 hover:bg-red-100 rounded-full transition-colors"
+                                title="Delete"
+                            >
+                                <Trash2 size={20}/>
+                            </button>
                         </td>
                     </tr>
                 ))}

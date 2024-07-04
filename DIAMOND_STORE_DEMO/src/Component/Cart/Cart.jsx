@@ -123,7 +123,7 @@ const Cart = () => {
                         <FontAwesomeIcon icon={faTrashAlt} /> Clear Cart
                     </button>
                 </div>
-                <div className="col-lg-3 text-center">
+                <div className="col-lg-3 text-center" style={{width:'25%'}}>
                     <button className="btn btn-primary" onClick={navigateToCheckout}>
                         Go to Checkout
                     </button>

@@ -33,7 +33,7 @@ const ViewProduct = ({ productId, goBack }) => {
     }
 
     return (
-        <div className="product-details">
+        <div className="product-details" >
             <div className="button-container">
                 <button onClick={goBack}>Back</button>
             </div>
@@ -52,7 +52,7 @@ const ViewProduct = ({ productId, goBack }) => {
             </div>
             <div>
                 <label>Stock Quantity:</label>
-                <span>{product.stockQuantity}</span>
+                <span >{product.stockQuantity}</span>
             </div>
             <div>
                 <label>Collection:</label>

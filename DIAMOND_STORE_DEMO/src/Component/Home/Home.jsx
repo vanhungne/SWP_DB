@@ -60,7 +60,7 @@ const Home = () => {
                 params: {
                     page: 0,
                     size: 4,
-                    collection: 'Tiffany Lock'
+                    collection: 'Esther Lock'
                 }
             });
             setCollection(response.data.collection);
@@ -71,14 +71,33 @@ const Home = () => {
         }
     };
 
+    const faqItems = [
+        {
+            question: "How can I distinguish between natural and lab-grown diamonds?",
+            answer: "Natural and lab-grown diamonds have identical physical properties, making them indistinguishable to the naked eye. However, they can be differentiated using specialized equipment. At Diamonds Ethers, we use advanced spectroscopic tools to identify the origin of each diamond. Natural diamonds often have tiny inclusions, while lab-grown diamonds may have specific growth patterns. We provide a detailed certificate for each diamond, clearly stating its origin and characteristics."
+        },
+        {
+            question: "What are the 4Cs in diamond grading?",
+            answer: "The 4Cs stand for Cut, Color, Clarity, and Carat weight. Cut refers to the diamond's proportions, symmetry, and polish. Color grades the absence of color, with D being colorless and Z having a light yellow or brown tint. Clarity measures the absence of inclusions and blemishes. Carat is the standard unit of weight for diamonds, with one carat equaling 0.2 grams. At Diamonds Ethers, we provide a comprehensive explanation of each diamond's 4C grades to help you make an informed decision."
+        },
+        {
+            question: "How should I care for and clean my diamond jewelry?",
+            answer: "To maintain your diamond's brilliance, clean it regularly using a soft-bristled brush and a mixture of warm water and mild dish soap. Gently scrub the diamond, paying attention to the underside where dirt can accumulate. Rinse thoroughly and dry with a lint-free cloth. Avoid using harsh chemicals or ultrasonic cleaners at home. For professional cleaning, visit any Diamonds Ethers store twice a year. We also recommend storing your diamond jewelry separately to prevent scratching, and removing it before engaging in strenuous activities or applying lotions and perfumes."
+        },
+        {
+            question: "Does Diamonds Ethers offer custom design services for diamond jewelry?",
+            answer: "Yes, Diamonds Ethers provides custom design services to create unique diamond jewelry pieces. Our process involves: 1) An initial consultation to discuss your vision and budget. 2) Creation of detailed sketches or 3D renderings for your approval. 3) Selection of the perfect diamond and other materials. 4) Crafting of the piece by our expert artisans. 5) Quality control and final adjustments. 6) Presentation of your custom piece, complete with a certificate of authenticity. This service allows you to create a one-of-a-kind piece that perfectly matches your style and preferences."
+        }
+    ];
+
     return (
         <>
             <MetaTags>
                 <title>Home - Featured & Collection Products</title>
-                <meta name="description" content="Check out our featured and collection products!" />
+                <meta name="description" content="Check out our featured and collection products!"/>
             </MetaTags>
-            <SnowEffect />
-            <VideoBanner />
+            <SnowEffect/>
+            <VideoBanner/>
 
             <div className="container">
                 <div className="row">
@@ -86,7 +105,7 @@ const Home = () => {
                         <h1>SPECIAL PRODUCT</h1>
                     </div>
                     {featuredProducts.map((product) => (
-                        <ProductCard key={product.productId} product={product} />
+                        <ProductCard key={product.productId} product={product}/>
                     ))}
                     {error && <div className="col-12">
                         <div className="alert alert-danger" role="alert">{error}</div>
@@ -99,7 +118,7 @@ const Home = () => {
                     </div>
                     <div className="col-md-4 mb-4">
                         <img
-                            style={{ height: '100%', objectFit: 'cover', borderRadius: '15px' }}
+                            style={{height: '100%', objectFit: 'cover', borderRadius: '15px'}}
                             src="/images/beau1.webp"
                             alt="Beautiful Image 1"
                             className="img-fluid"
@@ -107,7 +126,7 @@ const Home = () => {
                     </div>
                     <div className="col-md-4 mb-4">
                         <img
-                            style={{ height: '100%', objectFit: 'cover', borderRadius: '15px' }}
+                            style={{height: '100%', objectFit: 'cover', borderRadius: '15px'}}
                             src="/images/beau2.webp"
                             alt="Beautiful Image 2"
                             className="img-fluid"
@@ -115,7 +134,7 @@ const Home = () => {
                     </div>
                     <div className="col-md-4 mb-4">
                         <img
-                            style={{ height: '100%', objectFit: 'cover', borderRadius: '15px' }}
+                            style={{height: '100%', objectFit: 'cover', borderRadius: '15px'}}
                             src="/images/beau3.webp"
                             alt="Beautiful Image 3"
                             className="img-fluid"
@@ -125,18 +144,29 @@ const Home = () => {
 
                 <div className="row mt-5">
                     <div className="col-12 mb-4">
-                        <h1>Esther Lock collection</h1>
+                        <h1>Esther Lock Collection</h1>
                     </div>
                     {collectionProducts.length === 0 && !collectionError && <div className="col-12">Loading...</div>}
                     {collectionError && <div className="col-12">
                         <div className="alert alert-danger" role="alert">{collectionError}</div>
                     </div>}
                     {collectionProducts.map((product) => (
-                        <ProductCard key={product.productId} product={product} />
+                        <ProductCard key={product.productId} product={product}/>
                     ))}
                 </div>
+                <div><ImageCarousel/></div>
+                <section className="faq">
+                    <h2>Frequently Asked Questions</h2>
+                    <div className="faq-list">
+                        {faqItems.map((item, index) => (
+                            <details key={index} className="faq-item">
+                                <summary>{item.question}</summary>
+                                <p>{item.answer}</p>
+                            </details>
+                        ))}
+                    </div>
+                </section>
             </div>
-            <div style={{padding:'5%'}}> <ImageCarousel/></div>
         </>
     );
 };

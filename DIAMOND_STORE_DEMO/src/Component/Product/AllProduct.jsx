@@ -5,7 +5,6 @@ import MetaTags from 'react-meta-tags';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import '../../Scss/home.scss';
-import VideoBanner from "../../Layouttest/VideoBanner";
 import ProductCard from './ProductCard'; // Import the ProductCard component
 import {API_URL} from "../../Config/config";
 const Products = () => {
@@ -16,7 +15,7 @@ const Products = () => {
         totalElements: 0
     });
     const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize] = useState(8);
+    const [pageSize] = useState(16);
     const [error, setError] = useState('');
     const navigate = useNavigate();
 

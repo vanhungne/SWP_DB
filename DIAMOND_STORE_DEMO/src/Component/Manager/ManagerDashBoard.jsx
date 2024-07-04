@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import Sidebar from '../Manager/Sidebar';
 import ProductTable from '../Manager/ProductTable';
 import '../../Scss/ManagerDashBoard.scss';

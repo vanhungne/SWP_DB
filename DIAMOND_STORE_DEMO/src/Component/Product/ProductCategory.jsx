@@ -3,6 +3,7 @@ import axios from 'axios';
 import { API_URL } from '../../Config/config';
 import Sidebar from './SidebarP';
 import ProductCard from './ProductCard';
+import Products from './AllProduct';
 
 const ProductCategoryPage = () => {
     const [products, setProducts] = useState([]);
@@ -14,14 +15,17 @@ const ProductCategoryPage = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [collection, setCollection] = useState('');
+    const [viewMode, setViewMode] = useState('categorized'); // 'categorized' or 'all'
 
     useEffect(() => {
         fetchCategories();
     }, []);
 
     useEffect(() => {
-        fetchProducts();
-    }, [currentPage, selectedCategory, sortBy, searchQuery, priceRange, collection]);
+        if (viewMode === 'categorized') {
+            fetchProducts();
+        }
+    }, [currentPage, selectedCategory, sortBy, searchQuery, priceRange, collection, viewMode]);
 
     const fetchCategories = async () => {
         try {
@@ -34,26 +38,26 @@ const ProductCategoryPage = () => {
 
     const fetchProducts = async () => {
         try {
-            let url = `${API_URL}home?page=${currentPage}&size=8`;
+            let url = `${API_URL}home?page=${currentPage}&size=12`;
 
             if (selectedCategory) {
-                url = `${API_URL}home/getProductByCategory?categoryName=${selectedCategory}&page=${currentPage}&size=8`;
+                url = `${API_URL}home/getProductByCategory?categoryName=${selectedCategory}&page=${currentPage}&size=12`;
             }
 
             if (sortBy !== 'default') {
-                url = `${API_URL}home/sortByPrice?order=${sortBy}&page=${currentPage}&size=8`;
+                url = `${API_URL}home/sortByPrice?order=${sortBy}&page=${currentPage}&size=12`;
             }
 
             if (searchQuery) {
-                url = `${API_URL}home/search-by-name?keyword=${searchQuery}&page=${currentPage}&size=8`;
+                url = `${API_URL}home/search-by-name?keyword=${searchQuery}&page=${currentPage}&size=12`;
             }
 
             if (priceRange[0] !== 500 || priceRange[1] !== 50000) {
-                url = `${API_URL}home/by-price-range?minPrice=${priceRange[0]}&maxPrice=${priceRange[1]}&page=${currentPage}&size=8`;
+                url = `${API_URL}home/by-price-range?minPrice=${priceRange[0]}&maxPrice=${priceRange[1]}&page=${currentPage}&size=12`;
             }
 
             if (collection) {
-                url = `${API_URL}home/collection?collection=${collection}&page=${currentPage}&size=8`;
+                url = `${API_URL}home/collection?collection=${collection}&page=${currentPage}&size=12`;
             }
 
             const response = await axios.get(url);
@@ -94,62 +98,87 @@ const ProductCategoryPage = () => {
         setCurrentPage(0);
     };
 
+    const handleViewModeChange = (mode) => {
+        setViewMode(mode);
+        setCurrentPage(0);
+    };
+
     return (
         <div className="container-fluid">
             <div style={{marginTop:'50px'}}></div>
             <div style={{marginTop:'3%'}}></div>
-            <div className="row">
-                <div className="col-md-3">
-                    <Sidebar
-                        categories={categories}
-                        selectedCategory={selectedCategory}
-                        priceRange={priceRange}
-                        onCategoryChange={handleCategoryChange}
-                        onPriceRangeChange={handlePriceRangeChange}
-                        onCollectionChange={handleCollectionChange}
-                    />
-                </div>
-                <div className="col-md-9">
-                    <div className="row mb-3">
-                        <div className="col-md-6">
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Search products..."
-                                value={searchQuery}
-                                onChange={handleSearchChange}
-                            />
-                        </div>
-                        <div className="col-md-6">
-                            <select className="form-select" value={sortBy} onChange={handleSortChange}>
-                                <option value="default">Default sorting</option>
-                                <option value="price-asc">Price: Low to High</option>
-                                <option value="price-desc">Price: High to Low</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div className="row">
-                        {products.map((product) => (
-                            <ProductCard key={product.productId} product={product} />
-                        ))}
-                    </div>
-                    <div className="row mt-4">
-                        <div className="col-md-12">
-                            <nav aria-label="Page navigation">
-                                <ul className="pagination justify-content-center">
-                                    {[...Array(totalPages).keys()].map((page) => (
-                                        <li key={page} className={`page-item ${currentPage === page ? 'active' : ''}`}>
-                                            <button className="page-link" onClick={() => handlePageChange(page)}>
-                                                {page + 1}
-                                            </button>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </nav>
-                        </div>
-                    </div>
+            <div className="row mb-4" style={{textAlign:'center'}}>
+                <div className="col-md-12">
+                    <button style={{width:'9%',fontWeight:'bolder',color:'ActiveBorder'}}
+                        className={`btn ${viewMode === 'categorized' ? 'btn-primary' : 'btn-outline-primary'} me-2`}
+                        onClick={() => handleViewModeChange('categorized')}
+                    >
+                        Categorized
+                    </button>
+                    <button style={{width:'9%',fontWeight:'bolder',color:'ActiveBorder'}}
+                        className={`btn ${viewMode === 'all' ? 'btn-primary' : 'btn-outline-primary'}`}
+                        onClick={() => handleViewModeChange('all')}
+                    >
+                        All
+                    </button>
                 </div>
             </div>
+            {viewMode === 'categorized' ? (
+                <div className="row">
+                    <div className="col-md-3">
+                        <Sidebar
+                            categories={categories}
+                            selectedCategory={selectedCategory}
+                            priceRange={priceRange}
+                            onCategoryChange={handleCategoryChange}
+                            onPriceRangeChange={handlePriceRangeChange}
+                            onCollectionChange={handleCollectionChange}
+                        />
+                    </div>
+                    <div className="col-md-9">
+                        <div className="row mb-3">
+                            <div className="col-md-6">
+                                <input
+                                    type="text"
+                                    className="form-control"
+                                    placeholder="Search products..."
+                                    value={searchQuery}
+                                    onChange={handleSearchChange}
+                                />
+                            </div>
+                            <div className="col-md-6">
+                                <select className="form-select" value={sortBy} onChange={handleSortChange}>
+                                    <option value="default">Default sorting</option>
+                                    <option value="price-asc">Price: Low to High</option>
+                                    <option value="price-desc">Price: High to Low</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div className="row">
+                            {products.map((product) => (
+                                <ProductCard key={product.productId} product={product} />
+                            ))}
+                        </div>
+                        <div className="row mt-4">
+                            <div className="col-md-12">
+                                <nav aria-label="Page navigation">
+                                    <ul className="pagination justify-content-center">
+                                        {[...Array(totalPages).keys()].map((page) => (
+                                            <li key={page} className={`page-item ${currentPage === page ? 'active' : ''}`}>
+                                                <button className="page-link" onClick={() => handlePageChange(page)}>
+                                                    {page + 1}
+                                                </button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <Products />
+            )}
         </div>
     );
 };

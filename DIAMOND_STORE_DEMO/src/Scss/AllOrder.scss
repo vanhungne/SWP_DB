@@ -26,11 +26,6 @@
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
     overflow: hidden;
     transition: all 0.3s ease;
-
-    &:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
-    }
   }
 
   .order-table {
@@ -40,7 +35,7 @@
 
     th, td {
       padding: 1rem;
-      text-align: left;
+      text-align: center;
     }
 
     th {

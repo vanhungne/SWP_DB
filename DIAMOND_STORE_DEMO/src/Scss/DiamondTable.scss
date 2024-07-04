@@ -73,7 +73,7 @@ table {
     cursor: pointer;
 
     &:nth-child(1) {
-      background-color: #007bff;
+      background-color: #2a3055;
       color: #fff;
 
       &:hover {
@@ -82,7 +82,7 @@ table {
     }
 
     &:nth-child(3) {
-      background-color: #dc3545;
+      background-color: #f12c2c;
       color: #fff;
 
       &:hover {
@@ -91,7 +91,7 @@ table {
     }
 
     &:nth-child(2) {
-      background-color: #ffc107;
+      background-color: rgba(43, 24, 24, 0.1);
       color: #212529;
 
       &:hover {

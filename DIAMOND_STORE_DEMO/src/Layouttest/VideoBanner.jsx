@@ -51,21 +51,56 @@ const VideoBanner = () => {
                 alignItems: 'center',
                 backgroundColor: 'rgba(0, 0, 0, 0.3)',
             }}>
-                <div className="video-content" style={{ textAlign: 'center', color: 'white' }}>
-                    <h2>Welcome to Esther Diamonds</h2>
-                    <p>Discover our exquisite collection of diamonds and jewelry.</p>
-                    <button className="btn btn-primary" onClick={handleBuyNowClick} style={{
-                        width:'30%',
-                        padding: '8px 15px',
-                        fontSize: '16px',
-                        cursor: 'pointer',
-                        backgroundColor: 'transparent',
-                        border: '2px solid white',
-                        color: 'white',
-                        borderRadius: '5px',
-                        transition: 'background-color 0.3s, color 0.3s',
+                <div className="video-content" style={{
+                    textAlign: 'center',
+                    color: 'white',
+                    padding: '40px',
+                    borderRadius: '10px',
+                }}>
+                    <h2 style={{
+                        fontSize: '3rem',
+                        fontWeight: '300',
+                        letterSpacing: '4px',
+                        marginBottom: '20px',
+                        fontFamily: "'Playfair Display', serif"
                     }}>
-                        Buy Now
+                        ESTHER DIAMONDS
+                    </h2>
+                    <p style={{
+                        fontSize: '1.2rem',
+                        fontWeight: '300',
+                        letterSpacing: '2px',
+                        marginBottom: '30px',
+                        fontFamily: "'Montserrat', sans-serif"
+                    }}>
+                        Discover our exquisite collection of timeless elegance
+                    </p>
+                    <button
+                        className="btn"
+                        onClick={handleBuyNowClick}
+                        style={{
+                            padding: '12px 30px',
+                            fontSize: '1rem',
+                            cursor: 'pointer',
+                            backgroundColor: 'transparent',
+                            border: '1px solid white',
+                            color: 'white',
+                            borderRadius: '0',
+                            transition: 'all 0.3s ease',
+                            letterSpacing: '2px',
+                            fontFamily: "'Montserrat', sans-serif",
+                            fontWeight: '300'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.target.style.backgroundColor = 'white';
+                            e.target.style.color = 'black';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.backgroundColor = 'transparent';
+                            e.target.style.color = 'white';
+                        }}
+                    >
+                        EXPLORE COLLECTION
                     </button>
                 </div>
             </div>

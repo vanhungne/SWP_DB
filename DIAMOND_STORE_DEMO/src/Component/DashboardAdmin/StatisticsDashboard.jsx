@@ -6,10 +6,10 @@ import { Form, Input, Button, Row, Col } from 'react-bootstrap';
 import '../../Scss/statisticsDashboard.scss';
 
 const StatisticsDashboard = () => {
-    const [dailyRevenue, setDailyRevenue] = useState(0);
-    const [dailyOrderCount, setDailyOrderCount] = useState(0);
-    const [monthlyRevenue, setMonthlyRevenue] = useState(0);
-    const [monthlyOrderCount, setMonthlyOrderCount] = useState(0);
+    const [dailyRevenue, setDailyRevenue] = useState(null);
+    const [dailyOrderCount, setDailyOrderCount] = useState(null);
+    const [monthlyRevenue, setMonthlyRevenue] = useState(null);
+    const [monthlyOrderCount, setMonthlyOrderCount] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
@@ -66,8 +66,18 @@ const StatisticsDashboard = () => {
         setYear(e.target.value);
     };
 
-    return (
+    const renderStatistic = (value, title, prefix = '') => (
+        <div className="custom-dashboard-card h-100">
+            <div className="custom-dashboard-card-body d-flex flex-column justify-content-center align-items-center">
+                <h5 className="custom-dashboard-card-title mb-3">{title}</h5>
+                <p className="custom-dashboard-card-text text-4xl font-bold">
+                    {value !== null ? `${prefix}${typeof value === 'number' ? value.toFixed(2) : value}` : 'No information available'}
+                </p>
+            </div>
+        </div>
+    );
 
+    return (
         <div className="custom-dashboard-container" style={{marginBottom:'10%'}}>
             <h2 className="custom-dashboard-title" style={{textAlign:'center'}}>Statistics Dashboard</h2>
 
@@ -86,9 +96,9 @@ const StatisticsDashboard = () => {
                         <Form.Control type="number" value={year} onChange={handleYearChange} />
                     </Col>
                 </Row>
-                <Button variant="primary" type="button" onClick={fetchStatistics} className="custom-dashboard-button" style={{width:'25%'}}>
-                    Fetch Statistics
-                </Button>
+                {/*<Button variant="primary" type="button" onClick={fetchStatistics} className="custom-dashboard-button" style={{width:'25%'}}>*/}
+                {/*    Fetch Statistics*/}
+                {/*</Button>*/}
             </Form>
 
             {loading ? (
@@ -98,54 +108,30 @@ const StatisticsDashboard = () => {
             ) : (
                 <div className="custom-dashboard-content">
                     <Row className="mb-4">
-                        <Col>
-                            <div className="custom-dashboard-card h-100">
-                                <div className="custom-dashboard-card-body d-flex flex-column justify-content-center align-items-center">
-                                    <h5 className="custom-dashboard-card-title mb-3">Daily Revenue</h5>
-                                    <p className="custom-dashboard-card-text text-4xl font-bold">${dailyRevenue.toFixed(2)}</p>
-                                </div>
-                            </div>
-                        </Col>
-                        <Col >
-                            <div className="custom-dashboard-card h-100">
-                                <div className="custom-dashboard-card-body d-flex flex-column justify-content-center align-items-center">
-                                    <h5 className="custom-dashboard-card-title mb-3">Daily Order Count</h5>
-                                    <p className="custom-dashboard-card-text text-4xl font-bold">{dailyOrderCount}</p>
-                                </div>
-                            </div>
-                        </Col>
-                        <Col>
-                            <div className="custom-dashboard-card h-100">
-                                <div className="custom-dashboard-card-body d-flex flex-column justify-content-center align-items-center">
-                                    <h5 className="custom-dashboard-card-title mb-3">Monthly Revenue</h5>
-                                    <p className="custom-dashboard-card-text text-4xl font-bold">${monthlyRevenue.toFixed(2)}</p>
-                                </div>
-                            </div>
-                        </Col>
-                        <Col >
-                            <div className="custom-dashboard-card h-100">
-                                <div className="custom-dashboard-card-body d-flex flex-column justify-content-center align-items-center">
-                                    <h5 className="custom-dashboard-card-title mb-3">Monthly Order Count</h5>
-                                    <p className="custom-dashboard-card-text text-4xl font-bold">{monthlyOrderCount}</p>
-                                </div>
-                            </div>
-                        </Col>
+                        <Col>{renderStatistic(dailyRevenue, 'Daily Revenue', '$')}</Col>
+                        <Col>{renderStatistic(dailyOrderCount, 'Daily Order Count')}</Col>
+                        <Col>{renderStatistic(monthlyRevenue, 'Monthly Revenue', '$')}</Col>
+                        <Col>{renderStatistic(monthlyOrderCount, 'Monthly Order Count')}</Col>
                     </Row>
                     <Row>
                         <Col xs={12}>
                             <div className="custom-dashboard-card">
                                 <div className="custom-dashboard-card-body">
                                     <h5 className="custom-dashboard-card-title">Revenue Trend</h5>
-                                    <ResponsiveContainer width="100%" height={400}>
-                                        <LineChart data={[{name: 'Revenue', value: monthlyRevenue}]}>
-                                            <XAxis dataKey="name"/>
-                                            <YAxis/>
-                                            <CartesianGrid strokeDasharray="3 3"/>
-                                            <Tooltip/>
-                                            <Legend/>
-                                            <Line type="monotone" dataKey="value" stroke="#8884d8"/>
-                                        </LineChart>
-                                    </ResponsiveContainer>
+                                    {monthlyRevenue !== null ? (
+                                        <ResponsiveContainer width="100%" height={400}>
+                                            <LineChart data={[{name: 'Revenue', value: monthlyRevenue}]}>
+                                                <XAxis dataKey="name"/>
+                                                <YAxis/>
+                                                <CartesianGrid strokeDasharray="3 3"/>
+                                                <Tooltip/>
+                                                <Legend/>
+                                                <Line type="monotone" dataKey="value" stroke="#8884d8"/>
+                                            </LineChart>
+                                        </ResponsiveContainer>
+                                    ) : (
+                                        <p>No revenue data available for the selected period.</p>
+                                    )}
                                 </div>
                             </div>
                         </Col>

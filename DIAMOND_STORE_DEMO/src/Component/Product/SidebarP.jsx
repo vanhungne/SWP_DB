@@ -1,14 +1,15 @@
 import React from 'react';
+import './SidebarP.scss';
 
 const SidebarP = ({ categories, selectedCategory, onCategoryChange, onCollectionChange }) => {
     return (
-        <div className="sidebarP bg-white rounded-3 shadow-sm p-4">
-            <h3 className="mb-3 text-center">Category</h3>
-            <ul className="list-group">
+        <div className="sidebarP__container">
+            <h3 className="sidebarP__title">Categories</h3>
+            <ul className="sidebarP__category-list">
                 {categories.map((category) => (
                     <li
                         key={category.categoryId}
-                        className={`list-group-item list-group-item-action ${selectedCategory === category.categoryName ? 'active' : ''}`}
+                        className={`sidebarP__category-item ${selectedCategory === category.categoryName ? 'sidebarP__category-item--active' : ''}`}
                         onClick={() => onCategoryChange(category.categoryName)}
                     >
                         {category.categoryName}
@@ -16,11 +17,21 @@ const SidebarP = ({ categories, selectedCategory, onCategoryChange, onCollection
                 ))}
             </ul>
 
-            <h3 className="mb-3 mt-4">Collections</h3>
-            <select className="form-select mb-3" onChange={(e) => onCollectionChange(e.target.value)}>
-                <option value="">All Collections</option>
-                {/* Add more collection options as needed */}
-            </select>
+            <div className="sidebarP__collection-wrapper">
+                <h3 className="sidebarP__title">Collections</h3>
+                <div className="sidebarP__collection-select">
+                    <select
+                        onChange={(e) => onCollectionChange(e.target.value)}
+                        defaultValue=""
+                    >
+                        <option value="" disabled>Select a collection</option>
+                        <option value="Esther Lock">Esther Collection</option>
+                        <option value="esther vip">VIP Collection</option>
+                        <option value="luckyfull">Lucky Collection</option>
+                        <option value="esther diamonds">Esther diamonds lucky</option>
+                    </select>
+                </div>
+            </div>
         </div>
     );
 };

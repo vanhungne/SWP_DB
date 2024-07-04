@@ -11,16 +11,16 @@ import {
     faMapMarkerAlt,
     faTag,
     faUser,
-    faTruck,
+
     faPercent,
     faPhone,
     faEnvelope,
     faEdit,
-    faArrowLeft, faGem, faShieldAlt
+     faGem,
 } from '@fortawesome/free-solid-svg-icons';
 import { API_URL } from "../../Config/config";
 import '../../Scss/OrderDetails.scss';
-import AddWarranty from "./AddWarranty";
+import WarrantyManager from "./AddWarranty";
 
 
 
@@ -138,12 +138,17 @@ const OrderDetails = ({ orderData }) => {
 
     //warranty
     const handleManageWarranty = (productId) => {
+        console.log('handleManageWarranty called with productId:', productId);
         setSelectedProductForWarranty(productId);
         setIsWarrantyModalOpen(true);
+        console.log('isWarrantyModalOpen set to:', true);
     };
+
     const handleWarrantyUpdated = (updatedWarranty) => {
         console.log('Warranty updated:', updatedWarranty);
     };
+
+    console.log('Rendering OrderDetails, isWarrantyModalOpen:', isWarrantyModalOpen);
     return (
         <div className="order-details" style={{paddingBottom:'10%'}}>
             <div className="order-details__id" style={{fontSize: '30px', color: 'black', textAlign: 'center'}}>
@@ -252,31 +257,6 @@ const OrderDetails = ({ orderData }) => {
                         <p>No payment</p>
                     </div>
                 )}
-
-                {/*{paymentInfo && (*/}
-                {/*    <>*/}
-                {/*        <div className="order-details__info-item">*/}
-                {/*            <FontAwesomeIcon icon={faMoneyBillWave}/>*/}
-                {/*            <span style={{fontWeight:'bold'}}>: ${paymentInfo.paymentAmount.toFixed(2)/100}</span>*/}
-                {/*        </div>*/}
-                {/*        <div className="order-details__info-item">*/}
-                {/*            <FontAwesomeIcon icon={faCreditCard}/>*/}
-                {/*            <span>Payment Mode: {paymentInfo.paymentMode}</span>*/}
-                {/*        </div>*/}
-                {/*        <div className="order-details__info-item">*/}
-                {/*            <FontAwesomeIcon icon={faCalendar}/>*/}
-                {/*            <span>Payment Time: {new Date(paymentInfo.paymentTime).toLocaleString()}</span>*/}
-                {/*        </div>*/}
-                {/*        <div className="order-details__info-item">*/}
-                {/*            <FontAwesomeIcon icon={faInfo}/>*/}
-                {/*            <span>Description: {paymentInfo.description}</span>*/}
-                {/*        </div>*/}
-                {/*        <div className="order-details__info-item">*/}
-                {/*            <FontAwesomeIcon icon={faCode}/>*/}
-                {/*            <span>Payment Code: {paymentInfo.paymentCode}</span>*/}
-                {/*        </div>*/}
-                {/*    </>*/}
-                {/*)}*/}
             </div>
 
             <div className="order-details__items order-details__card">
@@ -298,9 +278,7 @@ const OrderDetails = ({ orderData }) => {
                                         {item.size > 0 && (
                                             <p>Size: {item.size}</p>
                                         )}
-                                        <button onClick={() => handleManageWarranty(item.productId)}>
-                                            Manage Warranty
-                                        </button>
+                                        <WarrantyManager productId={item.productId} orderId={orderData.orderId} />
                                     </div>
                                     <div className="col-md-3">
                                         {diamondInfo[item.productId] && (
@@ -332,13 +310,6 @@ const OrderDetails = ({ orderData }) => {
                     </div>
                 </div>
             )}
-            <AddWarranty
-                isOpen={isWarrantyModalOpen}
-                onClose={() => setIsWarrantyModalOpen(false)}
-                productId={selectedProductForWarranty}
-                orderId={orderData.orderId}
-                onWarrantyUpdated={handleWarrantyUpdated}
-            />
         </div>
     );
 };

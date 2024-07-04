@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import axios from "axios";
 import {API_URL} from "../../Config/config";
 import {Link} from "react-router-dom";
+import {Edit, Eye, Trash2} from "lucide-react";
 
 const ShellTable = ({ setSelectedShellId, setCurrentView }) => {
     const [productsPage, setProductsPage] = useState({
@@ -120,10 +121,10 @@ const ShellTable = ({ setSelectedShellId, setCurrentView }) => {
                     <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Name</th>
+                        <th style={{textAlign:'center'}}>Name</th>
                         <th>Price</th>
-                        <th>Weight</th>
-                        <th>Actions</th>
+                        <th style={{textAlign:'center'}}>Weight</th>
+                        <th style={{textAlign:'center'}}>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -131,12 +132,30 @@ const ShellTable = ({ setSelectedShellId, setCurrentView }) => {
                         <tr key={shell.shellId}>
                             <td>{shell.shellId}</td>
                             <td>{shell.shellName}</td>
-                            <td>{shell.shellPrice}</td>
-                            <td>{shell.shellWeight}</td>
-                            <td>
-                                <button onClick={() => navigateToShellDetail(shell.shellId)}>View</button>
-                                <button onClick={() => navigateToEditShell(shell.shellId)}>Edit</button>
-                                <button onClick={() => deleteShell(shell.shellId)}>Delete</button>
+                            <td >{shell.shellPrice}</td>
+                            <td style={{textAlign:'center'}}>{shell.shellWeight}</td>
+                            <td className="space-x-2" style={{textAlign:'center'}}>
+                                <button
+                                    onClick={() => navigateToShellDetail(shell.shellId)}
+                                    className="p-2 text-blue-600 hover:bg-blue-100 rounded-full transition-colors"
+                                    title="View"
+                                >
+                                    <Eye size={20}/>
+                                </button>
+                                <button
+                                    onClick={() => navigateToEditShell(shell.shellId)}
+                                    className="p-2 text-green-600 hover:bg-green-100 rounded-full transition-colors"
+                                    title="Edit"
+                                >
+                                    <Edit size={20}/>
+                                </button>
+                                <button
+                                    onClick={() => deleteShell(shell.shellId)}
+                                    className="p-2 text-red-600 hover:bg-red-100 rounded-full transition-colors"
+                                    title="Delete"
+                                >
+                                    <Trash2 size={20}/>
+                                </button>
                             </td>
                         </tr>
                     ))}

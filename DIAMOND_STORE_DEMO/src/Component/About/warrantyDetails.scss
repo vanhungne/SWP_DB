@@ -1,0 +1,335 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+
+// Variables
+$primary-color: #1a1a1a;
+$secondary-color: #f8f8f8;
+$accent-color: #c9a050;
+$text-color: #333;
+$card-colors: (#4A90E2, #F5A623, #7ED321);
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin section-padding {
+  padding: 4rem 2rem;
+}
+
+@mixin card-hover {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+  }
+}
+
+// Keyframes
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Styles
+.warranty-page {
+  font-family: 'Roboto', sans-serif;
+  color: $text-color;
+  background-color: $secondary-color;
+  line-height: 1.6;
+
+  * {
+    box-sizing: border-box;
+  }
+
+  .header {
+    background: linear-gradient(135deg, $primary-color, lighten($primary-color, 20%));
+    color: $secondary-color;
+    text-align: center;
+    padding: 5rem 1rem;
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 4.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgb(243, 241, 241);
+    }
+
+    p {
+      font-size: 1.4rem;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+  }
+
+  .warranty-cards {
+    @include section-padding;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 2rem;
+
+    .warranty-card {
+      background-color: white;
+      border-radius: 15px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      padding: 2.5rem;
+      width: calc(33.333% - 2rem);
+      min-width: 300px;
+      @include card-hover;
+      animation: fadeInUp 0.6s ease-out forwards;
+      opacity: 0;
+
+      @for $i from 1 through 3 {
+        &:nth-child(#{$i}) {
+          animation-delay: #{$i * 0.2}s;
+          border-top: 5px solid nth($card-colors, $i);
+        }
+      }
+
+      .card-icon {
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+      }
+
+      h2 {
+        font-family: 'Playfair Display', serif;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+        color: var(--card-color);
+      }
+
+      .duration {
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+        font-size: 1.2rem;
+      }
+
+      .details {
+        h3 {
+          font-size: 1.3rem;
+          margin-top: 1.5rem;
+          margin-bottom: 0.7rem;
+          color: var(--card-color);
+        }
+
+        ul {
+          padding-left: 1.5rem;
+          margin-bottom: 1.2rem;
+          li {
+            margin-bottom: 0.5rem;
+          }
+        }
+
+        .best-for, .price {
+          margin-top: 1.5rem;
+          font-style: italic;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+
+  .comparison {
+    @include section-padding;
+    background-color: darken($secondary-color, 5%);
+
+    h2 {
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      margin-bottom: 3rem;
+      color: $primary-color;
+    }
+
+    .table-container {
+      overflow-x: auto;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      background-color: white;
+
+      th, td {
+        padding: 1.2rem;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+
+      th {
+        background-color: $primary-color;
+        color: $secondary-color;
+        &:first-child {
+          border-top-left-radius: 10px;
+        }
+        &:last-child {
+          border-top-right-radius: 10px;
+        }
+      }
+
+      tr:last-child {
+        td:first-child {
+          border-bottom-left-radius: 10px;
+        }
+        td:last-child {
+          border-bottom-right-radius: 10px;
+        }
+      }
+
+      tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      tr:hover {
+        background-color: #f0f0f0;
+      }
+    }
+  }
+
+  .claim-process {
+    @include section-padding;
+    background: linear-gradient(135deg, $primary-color, lighten($primary-color, 20%));
+    color: $secondary-color;
+
+    h2 {
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      margin-bottom: 3rem;
+    }
+
+    .process-steps {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      max-width: 1200px;
+      margin: 0 auto;
+
+      .step {
+        text-align: center;
+        width: calc(20% - 1rem);
+        min-width: 200px;
+        margin-bottom: 2rem;
+        animation: fadeInUp 0.6s ease-out forwards;
+        opacity: 0;
+
+        @for $i from 1 through 5 {
+          &:nth-child(#{$i}) {
+            animation-delay: #{$i * 0.2}s;
+          }
+        }
+
+        .step-number {
+          @include flex-center;
+          width: 60px;
+          height: 60px;
+          border-radius: 50%;
+          background-color: $accent-color;
+          color: $primary-color;
+          font-size: 1.8rem;
+          font-weight: bold;
+          margin: 0 auto 1.5rem;
+          transition: transform 0.3s ease;
+
+          &:hover {
+            transform: scale(1.1);
+          }
+        }
+
+        p {
+          font-size: 1.1rem;
+        }
+      }
+    }
+  }
+
+  .faq {
+    @include section-padding;
+
+    h2 {
+      text-align: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      margin-bottom: 3rem;
+      color: $primary-color;
+    }
+
+    .faq-list {
+      max-width: 800px;
+      margin: 0 auto;
+
+      .faq-item {
+        background-color: white;
+        border-radius: 10px;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+
+        summary {
+          padding: 1.5rem;
+          font-weight: bold;
+          cursor: pointer;
+          position: relative;
+          outline: none;
+
+          &::after {
+            content: '+';
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+          }
+
+          &::-webkit-details-marker {
+            display: none;
+          }
+        }
+
+        &[open] {
+          summary::after {
+            transform: translateY(-50%) rotate(45deg);
+          }
+        }
+
+        p {
+          padding: 0 1.5rem 1.5rem;
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .warranty-page {
+    .header {
+      h1 {
+        font-size: 2.5rem;
+      }
+      p {
+        font-size: 1.2rem;
+      }
+    }
+
+    .warranty-cards .warranty-card {
+      width: 100%;
+    }
+
+    .claim-process .process-steps .step {
+      width: calc(50% - 1rem);
+    }
+  }
+}

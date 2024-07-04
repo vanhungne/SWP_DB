@@ -1,43 +1,47 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTimes, faCalendar, faShieldAlt, faExclamationTriangle, faTrash, faEdit, faEye } from '@fortawesome/free-solid-svg-icons';
+import {
+    faShield,
+    faEdit,
+    faTrash,
+    faSpinner,
+    faExclamationTriangle,
+    faTag,
+    faClock, faCalendar
+} from '@fortawesome/free-solid-svg-icons';
+
 import { API_URL } from "../../Config/config";
 import '../../Scss/AddWarranty.scss';
 
-const WarrantyModal = ({ isOpen, onClose, productId, orderId, onWarrantyUpdated }) => {
+const WarrantyManager = ({ productId, orderId }) => {
     const [warranty, setWarranty] = useState(null);
-    const [warrantyStartDate, setWarrantyStartDate] = useState('');
-    const [warrantyExpirationDate, setWarrantyExpirationDate] = useState('');
-    const [warrantyType, setWarrantyType] = useState('');
-    const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [mode, setMode] = useState('add'); // 'add', 'edit', 'view'
+    const [error, setError] = useState('');
+    const [mode, setMode] = useState('view');
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     useEffect(() => {
-        if (isOpen) {
-            fetchWarranty();
-        }
-    }, [isOpen, productId, orderId]);
+        fetchWarranty();
+    }, [productId, orderId]);
 
     const fetchWarranty = async () => {
         setIsLoading(true);
         try {
             const token = localStorage.getItem('token');
-            const response = await axios.get(`${API_URL}warranty/warrantyByProduct?orderId=${orderId}&productId=${productId}`, {
+            const response = await axios.get(`${API_URL}warranty/warrantyByProduct`, {
+                params: { orderId, productId },
                 headers: { 'Authorization': `Bearer ${token}` }
             });
             if (response.data) {
                 setWarranty(response.data);
-                setWarrantyStartDate(response.data.warrantyStartDate);
-                setWarrantyExpirationDate(response.data.warrantyExpirationDate);
-                setWarrantyType(response.data.warrantyType);
                 setMode('view');
             } else {
                 setMode('add');
             }
         } catch (err) {
             console.error('Error fetching warranty:', err);
+            setError('Failed to fetch warranty information. Please try again.');
             setMode('add');
         } finally {
             setIsLoading(false);
@@ -49,17 +53,15 @@ const WarrantyModal = ({ isOpen, onClose, productId, orderId, onWarrantyUpdated 
         setError('');
         setIsLoading(true);
 
-        const warrantyData = {
-            warrantyStartDate,
-            warrantyExpirationDate,
-            warrantyType,
-            order_id: orderId,
-            product_id: productId
-        };
-
         try {
             const token = localStorage.getItem('token');
             let response;
+            const warrantyData = {
+                ...warranty,
+                order_id: orderId,
+                product_id: productId
+            };
+
             if (mode === 'add') {
                 response = await axios.post(`${API_URL}warranty/add`, warrantyData, {
                     headers: { 'Authorization': `Bearer ${token}` }
@@ -69,11 +71,11 @@ const WarrantyModal = ({ isOpen, onClose, productId, orderId, onWarrantyUpdated 
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
             }
-            console.log('Warranty operation successful:', response.data);
-            onWarrantyUpdated(response.data);
-            onClose();
+            setWarranty(response.data);
+            setMode('view');
+            setIsDialogOpen(false);
         } catch (err) {
-            console.error('Error with warranty operation:', err.response ? err.response.data : err.message);
+            console.error('Error with warranty operation:', err);
             setError('Operation failed. Please try again.');
         } finally {
             setIsLoading(false);
@@ -89,9 +91,9 @@ const WarrantyModal = ({ isOpen, onClose, productId, orderId, onWarrantyUpdated 
             await axios.delete(`${API_URL}warranty/delete/${warranty.warrantiesId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            console.log('Warranty deleted successfully');
-            onWarrantyUpdated(null);
-            onClose();
+            setWarranty(null);
+            setMode('add');
+            setIsDialogOpen(false);
         } catch (err) {
             console.error('Error deleting warranty:', err);
             setError('Failed to delete warranty. Please try again.');
@@ -100,79 +102,95 @@ const WarrantyModal = ({ isOpen, onClose, productId, orderId, onWarrantyUpdated 
         }
     };
 
-    if (!isOpen) return null;
+    const WarrantyForm = () => (
+        <form onSubmit={handleSubmit} className="warranty-form">
+            <div className="form-group">
+                <label htmlFor="startDate">
+                    <FontAwesomeIcon icon={faCalendar} /> Start Date
+                </label>
+                <input
+                    id="startDate"
+                    type="date"
+                    value={warranty?.warrantyStartDate ? new Date(warranty.warrantyStartDate).toISOString().split('T')[0] : ''}
+                    onChange={(e) => setWarranty({...warranty, warrantyStartDate: e.target.value})}
+                    required
+                    disabled={mode === 'view'}
+                />
+            </div>
+            <div className="form-group">
+                <label htmlFor="expirationDate">
+                    <FontAwesomeIcon icon={faClock} /> Expiration Date
+                </label>
+                <input
+                    id="expirationDate"
+                    type="date"
+                    value={warranty?.warrantyExpirationDate ? new Date(warranty.warrantyExpirationDate).toISOString().split('T')[0] : ''}
+                    onChange={(e) => setWarranty({...warranty, warrantyExpirationDate: e.target.value})}
+                    required
+                    disabled={mode === 'view'}
+                />
+            </div>
+            <div className="form-group">
+                <label htmlFor="warrantyType">
+                    <FontAwesomeIcon icon={faTag} /> Warranty Type
+                </label>
+                <select
+                    id="warrantyType"
+                    value={warranty?.warrantyType || ''}
+                    onChange={(e) => setWarranty({...warranty, warrantyType: e.target.value})}
+                    disabled={mode === 'view'}
+                >
+                    <option value="Standard">Standard</option>
+                    <option value="Extended">Extended</option>
+                    <option value="Lifetime">Lifetime</option>
+                </select>
+            </div>
+            {error && (
+                <div className="error-message">
+                    <FontAwesomeIcon icon={faExclamationTriangle} />
+                    <span>{error}</span>
+                </div>
+            )}
+            {mode !== 'view' && (
+                <button type="submit" className="btn btn-primary" disabled={isLoading}>
+                    {isLoading ? (
+                        <><FontAwesomeIcon icon={faSpinner} spin /> Processing...</>
+                    ) : (
+                        mode === 'add' ? 'Add Warranty' : 'Update Warranty'
+                    )}
+                </button>
+            )}
+        </form>
+    );
 
     return (
-        <div className="warranty-modal">
-            <div className="warranty-modal__content">
-                <button className="warranty-modal__close" onClick={onClose}>
-                    <FontAwesomeIcon icon={faTimes} />
-                </button>
-                <h2>
-                    <FontAwesomeIcon icon={faShieldAlt} />
-                    {mode === 'add' ? ' Add Warranty' : mode === 'edit' ? ' Edit Warranty' : ' View Warranty'}
-                </h2>
-                <form onSubmit={handleSubmit}>
-                    <div className="warranty-modal__input-group">
-                        <label>
-                            <FontAwesomeIcon icon={faCalendar} /> Start Date:
-                        </label>
-                        <input
-                            type="date"
-                            value={warrantyStartDate}
-                            onChange={(e) => setWarrantyStartDate(e.target.value)}
-                            required
-                            disabled={mode === 'view'}
-                        />
-                    </div>
-                    <div className="warranty-modal__input-group">
-                        <label>
-                            <FontAwesomeIcon icon={faCalendar} /> Expiration Date:
-                        </label>
-                        <input
-                            type="date"
-                            value={warrantyExpirationDate}
-                            onChange={(e) => setWarrantyExpirationDate(e.target.value)}
-                            required
-                            disabled={mode === 'view'}
-                        />
-                    </div>
-                    <div className="warranty-modal__input-group">
-                        <label><FontAwesomeIcon icon={faShieldAlt} /> Warranty Type:</label>
-                        <input
-                            type="text"
-                            value={warrantyType}
-                            onChange={(e) => setWarrantyType(e.target.value)}
-                            required
-                            disabled={mode === 'view'}
-                        />
-                    </div>
-                    {error && (
-                        <p className="warranty-modal__error">
-                            <FontAwesomeIcon icon={faExclamationTriangle} /> {error}
-                        </p>
-                    )}
-                    <div className="warranty-modal__actions">
+        <div className="warranty-manager">
+            <button onClick={() => setIsDialogOpen(true)} className="btn btn-outline">
+                <FontAwesomeIcon icon={faShield} />
+                { warranty ? 'View Warranty' : 'Add Warranty'}
+            </button>
+            {isDialogOpen && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <h2 style={{textAlign:'center',fontWeight:'bold'}}>{mode === 'add' ? 'Add Warranty' : mode === 'edit' ? 'Edit Warranty' : 'View Warranty'}</h2>
+                        <p style={{textAlign:'center',fontSize:'small'}}>{mode === 'view' ? 'Warranty details for this product.' : 'Enter the warranty details below.'}</p>
+                        <WarrantyForm />
                         {mode === 'view' && (
-                            <>
-                                <button type="button" onClick={() => setMode('edit')} className="warranty-modal__edit-btn">
+                            <div className="button-group">
+                                <button onClick={() => setMode('edit')} className="btn btn-secondary">
                                     <FontAwesomeIcon icon={faEdit} /> Edit
                                 </button>
-                                <button type="button" onClick={handleDelete} className="warranty-modal__delete-btn">
+                                <button onClick={handleDelete} className="btn btn-danger">
                                     <FontAwesomeIcon icon={faTrash} /> Delete
                                 </button>
-                            </>
+                            </div>
                         )}
-                        {(mode === 'add' || mode === 'edit') && (
-                            <button type="submit" className="warranty-modal__submit" disabled={isLoading}>
-                                {isLoading ? 'Processing...' : (mode === 'add' ? 'Add Warranty' : 'Update Warranty')}
-                            </button>
-                        )}
+                        <button onClick={() => setIsDialogOpen(false)} className="btn btn-close">×</button>
                     </div>
-                </form>
-            </div>
+                </div>
+            )}
         </div>
     );
 };
 
-export default WarrantyModal;
+export default WarrantyManager;

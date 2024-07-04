@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../Scss/ManagerDashBoard.scss';
 import { API_URL } from "../../Config/config";
+import {Edit, Eye, Trash2} from "lucide-react";
 
 const Category = () => {
     const [categories, setCategories] = useState([]);
@@ -114,13 +115,29 @@ const Category = () => {
                         <tr key={category.categoryId}>
                             <td>{category.categoryId}</td>
                             <td>{category.categoryName}</td>
-                            <td>
-                                <button className="btn btn-edit" onClick={() => handleEdit(category)}>
-                                    Edit
+                            {/*<td>*/}
+                            {/*    <button className="btn btn-edit" onClick={() => handleEdit(category)}>*/}
+                            {/*        Edit*/}
+                            {/*    </button>*/}
+                            {/*    <button className="btn btn-delete" style={{backgroundColor: '#dc3545', color: '#fff'}}*/}
+                            {/*            onClick={() => handleDelete(category.categoryId)}>*/}
+                            {/*        Delete*/}
+                            {/*    </button>*/}
+                            {/*</td>*/}
+                            <td className="space-x-2">
+                                <button
+                                    onClick={() => handleEdit(category)}
+                                    className="p-2 text-green-600 hover:bg-green-100 rounded-full transition-colors"
+                                    title="Edit"
+                                >
+                                    <Edit size={20}/>
                                 </button>
-                                <button className="btn btn-delete" style={{backgroundColor: '#dc3545', color: '#fff'}}
-                                        onClick={() => handleDelete(category.categoryId)}>
-                                    Delete
+                                <button
+                                    onClick={() => handleDelete(category.categoryId)}
+                                    className="p-2 text-red-600 hover:bg-red-100 rounded-full transition-colors"
+                                    title="Delete"
+                                >
+                                    <Trash2 size={20}/>
                                 </button>
                             </td>
                         </tr>

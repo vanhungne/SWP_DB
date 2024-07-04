@@ -29,6 +29,7 @@ import Policy from "./Component/About/Policy"
 import Contact from "./Component/About/Contact";
 import AboutUs from "./Component/About/AboutUs";
 import DiamondKnow from "./Component/About/DiamondKnowledge/diamondKnow";
+import WarrantyDetails from "./Component/About/WarrantyDetails";
 function App() {
     return (
         <AuthProvider>
@@ -59,6 +60,7 @@ function App() {
                         <Route path="policy" element={<Policy />} />
                         <Route path="about" element={<AboutUs />} />
                         <Route path="knowledge" element={<DiamondKnow />} />
+                        <Route path="warranty" element={<WarrantyDetails />} />
 
                         {/* Protected router*/}
 

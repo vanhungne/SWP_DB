@@ -148,3 +148,91 @@ body {
         max-width: 25%;
     }
 }
+
+// New FAQ section
+.faq {
+    background-color: #ffffff;
+    padding: 4rem 2rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    margin-top: 4rem;
+    margin-bottom: 4rem;
+
+    h2 {
+        font-family: 'Abril', Abril;
+        font-size: 2rem;
+        font-weight: 2000;
+        color: #000000;
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    &-list {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    &-item {
+        margin-bottom: 1.5rem;
+        border: 2px solid #ddd;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease-in-out;
+
+        &:hover {
+            border-color: #ff9900;
+        }
+
+        summary {
+            font-family: 'Roboto', sans-serif;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #000000;
+            cursor: pointer;
+            padding: 1rem 1.5rem;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease-in-out;
+
+            &::-webkit-details-marker {
+                display: none;
+            }
+
+            &::after {
+                content: '\002B';
+                float: right;
+                font-size: 1.5rem;
+                color: #ff9900;
+                transition: transform 0.3s ease-in-out;
+            }
+
+            &:hover {
+                background-color: #e9ecef;
+            }
+        }
+
+        &[open] summary::after {
+            transform: rotate(45deg);
+        }
+
+        p {
+            padding: 1.5rem;
+            color: #000000;
+            line-height: 1.6;
+            background-color: #ffffff;
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .faq {
+        padding: 3rem 1rem;
+
+        h2 {
+            font-size: 1.8rem;
+        }
+
+        &-item summary {
+            font-size: 1rem;
+        }
+    }
+}

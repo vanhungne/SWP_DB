@@ -237,7 +237,7 @@ const DiamondPrice = () => {
                             <TableCell>Color</TableCell>
                             <TableCell>Clarity</TableCell>
                             <TableCell>Price</TableCell>
-                            <TableCell>Actions</TableCell>
+                            <TableCell style={{textAlign:'center'}}>Actions</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -250,7 +250,7 @@ const DiamondPrice = () => {
                                 <TableCell>{diamond.clarity}</TableCell>
                                 <TableCell>${diamond.price.toFixed(2)}</TableCell>
                                 <TableCell>
-                                    <div className="action-butt">
+                                    <div className="action-butt" style={{textAlign:'center'}}>
                                         <Button
                                             variant="contained"
                                             color="secondary"

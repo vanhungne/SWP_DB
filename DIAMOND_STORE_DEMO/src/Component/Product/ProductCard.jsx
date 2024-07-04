@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Heart } from 'lucide-react';
 import '../../Scss/ProductCard.scss';
-import { API_URL } from "../../Config/config";
-
 const ProductCard = ({ product }) => {
     const navigate = useNavigate();
 

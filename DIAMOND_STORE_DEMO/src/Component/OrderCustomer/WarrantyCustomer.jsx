@@ -1,7 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faTimes, faCalendar, faShieldAlt, faExclamationTriangle, faClock} from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
+import {
+    faTimes,
+    faCalendar,
+    faShieldAlt,
+    faExclamationTriangle,
+    faClock,
+    faChevronRight
+} from '@fortawesome/free-solid-svg-icons';
 import { API_URL } from "../../Config/config";
 import './WarrantyCustomer.scss';
 
@@ -9,6 +17,7 @@ const WarrantyModal = ({ isOpen, onClose, productId, orderId }) => {
     const [warranty, setWarranty] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (isOpen) {
@@ -24,18 +33,21 @@ const WarrantyModal = ({ isOpen, onClose, productId, orderId }) => {
             const response = await axios.get(`${API_URL}warranty/warrantyByProduct?orderId=${orderId}&productId=${productId}`, {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
-            if (response.data) {
-                setWarranty(response.data);
-            } else {
-                setWarranty(null);
-            }
+            setWarranty(response.data || null);
         } catch (err) {
             console.error('Error fetching warranty:', err);
-            setError('No warranty.Please Please contact email:hungse17002@gmail.com for feedback');
+            setError('No warranty. Please contact email: hungse17002@gmail.com for feedback');
         } finally {
             setIsLoading(false);
         }
     };
+    const handleWarrantyClick = () => {
+        if (warranty) {
+            navigate(`/warranty`);
+            onClose();
+        }
+    };
+
 
     if (!isOpen) return null;
 
@@ -57,35 +69,43 @@ const WarrantyModal = ({ isOpen, onClose, productId, orderId }) => {
                     <p className="warranty-modal__error">
                         <FontAwesomeIcon icon={faExclamationTriangle} /> {error}
                     </p>
-                ) : warranty ? (
-                    <div className="warranty-modal__info">
+                ) : warranty && warranty.warrantyStartDate && warranty.warrantyExpirationDate ? (
+                    <div className="warranty-modal__info" onClick={handleWarrantyClick} style={{cursor: 'pointer'}}>
                         <div className="warranty-modal__info-item">
-                            <FontAwesomeIcon icon={faCalendar} />
+                            <FontAwesomeIcon icon={faCalendar}/>
                             <div>
                                 <span className="label">Start Date:</span>
-                                <span className="value">{new Date(warranty.warrantyStartDate).toLocaleDateString()}</span>
+                                <span
+                                    className="value">{new Date(warranty.warrantyStartDate).toLocaleDateString()}</span>
                             </div>
                         </div>
                         <div className="warranty-modal__info-item">
-                            <FontAwesomeIcon icon={faCalendar} />
+                            <FontAwesomeIcon icon={faCalendar}/>
                             <div>
                                 <span className="label">Expiration Date:</span>
-                                <span className="value">{new Date(warranty.warrantyExpirationDate).toLocaleDateString()}</span>
+                                <span
+                                    className="value">{new Date(warranty.warrantyExpirationDate).toLocaleDateString()}</span>
                             </div>
                         </div>
                         <div className="warranty-modal__info-item">
-                            <FontAwesomeIcon icon={faShieldAlt} />
+                            <FontAwesomeIcon icon={faShieldAlt}/>
                             <div>
                                 <span className="label">Warranty Type:</span>
-                                <span className="value">{warranty.warrantyType}</span>
+                                <span className="value">{warranty.warrantyType || 'N/A'}</span>
+
                             </div>
                         </div>
                         <div className="warranty-modal__info-item">
-                            <FontAwesomeIcon icon={faClock} />
+                            <FontAwesomeIcon icon={faClock}/>
                             <div>
                                 <span className="label">Duration:</span>
-                                <span className="value">{calculateDuration(warranty.warrantyStartDate, warranty.warrantyExpirationDate)}</span>
+                                <span
+                                    className="value">{calculateDuration(warranty.warrantyStartDate, warranty.warrantyExpirationDate)}</span>
                             </div>
+                        </div>
+                        <div className="warranty-modal__view-more">
+                            <span>View Details</span>
+                            <FontAwesomeIcon icon={faChevronRight}/>
                         </div>
                     </div>
                 ) : (
@@ -97,6 +117,8 @@ const WarrantyModal = ({ isOpen, onClose, productId, orderId }) => {
 };
 
 function calculateDuration(startDate, endDate) {
+    if (!startDate || !endDate) return 'N/A';
+
     const start = new Date(startDate);
     const end = new Date(endDate);
     const diffTime = Math.abs(end - start);
@@ -109,7 +131,7 @@ function calculateDuration(startDate, endDate) {
     if (years > 0) duration += `${years} year${years > 1 ? 's' : ''} `;
     if (months > 0) duration += `${months} month${months > 1 ? 's' : ''} `;
     if (days > 0) duration += `${days} day${days > 1 ? 's' : ''}`;
-    return duration.trim();
+    return duration.trim() || 'N/A';
 }
 
 export default WarrantyModal;

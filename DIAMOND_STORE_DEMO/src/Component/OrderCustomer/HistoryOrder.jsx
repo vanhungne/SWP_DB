@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { CreditCard, Info } from 'lucide-react';
 import {
     faShoppingCart,
     faChevronRight,
@@ -114,13 +115,13 @@ const OrderDashboard = () => {
         <div className="order-dashboard">
             <h1 className="dashboard-title">
                 <FontAwesomeIcon icon={faShoppingCart} />
-                Purchase Order
+                History Order
             </h1>
             <div className="order-table-container">
                 <table className="order-table">
                     <thead>
                     <tr>
-                        <th>Date</th>
+                        <th >Date</th>
                         <th>Total Amount</th>
                         <th>Delivery Address</th>
                         <th>Status</th>
@@ -141,22 +142,22 @@ const OrderDashboard = () => {
                                     {order.status}
                                 </span>
                             </td>
-                            <td>
+                            <td style={{display: 'flex', gap: '10px'}}>
+                                <button
+                                    onClick={() => handleDetailsClick(order.orderId)}
+                                    className="details-button"
+                                >
+                                 Details
+                                </button>
                                 {order.status === 'PENDING' && (
                                     <button
                                         onClick={() => handlePayNowClick(order.orderId)}
                                         className="details-button"
                                         style={{backgroundColor: "green", width: '102px', textAlign: 'center'}}
                                     >
-                                        Pay
+                                        <CreditCard size={16}/> Pay
                                     </button>
                                 )}
-                                <button
-                                    onClick={() => handleDetailsClick(order.orderId)}
-                                    className="details-button"
-                                >
-                                    Details
-                                </button>
                             </td>
                         </tr>
                     ))}
