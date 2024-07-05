@@ -1,51 +1,51 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import Swal from 'sweetalert2';
-import '../../Scss/Register.css';
-import {API_URL} from "../../Config/config";
+import { FiUser, FiLock, FiPhone, FiMail, FiMapPin } from 'react-icons/fi';
+import { API_URL } from "../../Config/config";
+import '../../Scss/Register.scss';
 
-
-function Register() {
+const Register = () => {
     const navigate = useNavigate();
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [phoneNumber, setPhoneNumber] = useState("");
-    const [address, setAddress] = useState("");
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        password: "",
+        phoneNumber: "",
+        address: ""
+    });
     const [emailValidationMessage, setEmailValidationMessage] = useState("");
     const [errorMessages, setErrorMessages] = useState({});
 
     useEffect(() => {
-        if (email) {
+        if (formData.email) {
             const checkEmail = async () => {
                 try {
-                    const response = await axios.post(`${API_URL}login/checkemail`, { email });
-                    if (response.data.exists) {
-                        setEmailValidationMessage("Email is already taken");
-                    } else {
-                        setEmailValidationMessage("");
-                    }
+                    const response = await axios.post(`${API_URL}login/checkemail`, { email: formData.email });
+                    setEmailValidationMessage(response.data.exists ? "Email is already taken" : "");
                 } catch (error) {
                     console.error("Error checking email", error);
                 }
             };
             checkEmail();
         }
-    }, [email]);
+    }, [formData.email]);
 
     const validateForm = () => {
         const errors = {};
-        if (!name) errors.name = "Name is required";
-        if (!email) errors.email = "Email is required";
-        if (!password) errors.password = "Password is required";
-        if (!phoneNumber) errors.phoneNumber = "Phone number is required";
-        if (!address) errors.address = "Address is required";
+        Object.keys(formData).forEach(key => {
+            if (!formData[key]) errors[key] = `${key.charAt(0).toUpperCase() + key.slice(1)} is required`;
+        });
         return errors;
     };
 
-    async function save(event) {
-        event.preventDefault();
+    const handleChange = (e) => {
+        setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         const errors = validateForm();
         if (Object.keys(errors).length > 0) {
             setErrorMessages(errors);
@@ -62,21 +62,14 @@ function Register() {
         }
 
         try {
-            await axios.post(`${API_URL}login/signup`, {
-                name: name,
-                password: password,
-                phoneNumber: phoneNumber,
-                email: email,
-                address: address
-            });
+            await axios.post(`${API_URL}login/signup`, formData);
             Swal.fire({
                 icon: 'success',
-                title: 'Customer Registration Successfully',
+                title: 'Customer Registration Successful',
                 showConfirmButton: false,
                 timer: 1500
             }).then(() => {
-                navigate('/verifycode');
-                navigate(`/verifycode/${email}`);
+                navigate(`/verifycode/${formData.email}`);
             });
         } catch (err) {
             Swal.fire({
@@ -85,85 +78,87 @@ function Register() {
                 text: err.message,
             });
         }
-    }
-
+    };
 
     return (
-        <div className="register-container d-flex justify-content-center align-items-center">
-            <div className="card shadow-lg p-4" style={{ width: '500px' }}>
-                <div className="card-body">
-                    <h2 className="card-title text-center mb-4">Customer Registration</h2>
-                    <form onSubmit={save}>
-                        <div className="form-group">
-                            <label>Customer Name</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                id="name"
-                                placeholder="Enter Name"
-                                value={name}
-                                onChange={(event) => setName(event.target.value)}
-                            />
-                            {errorMessages.name && <small className="text-danger">{errorMessages.name}</small>}
+        <div className="ed-register-container">
+            <div className="ed-register-card">
+                <h2 className="ed-register-title">Customer Registration</h2>
+                <form onSubmit={handleSubmit} className="ed-register-form">
+                    <div className="ed-form-group">
+                        <FiUser className="ed-input-icon" />
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Enter Name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            className="ed-input"
+                        />
+                        {errorMessages.name && <small className="ed-error-message">{errorMessages.name}</small>}
+                    </div>
+                    <div className="ed-form-group">
+                        <FiLock className="ed-input-icon" />
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Enter Password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            className="ed-input"
+                        />
+                        {errorMessages.password && <small className="ed-error-message">{errorMessages.password}</small>}
+                    </div>
+                    <div className="ed-form-group">
+                        <FiPhone className="ed-input-icon" />
+                        <input
+                            type="tel"
+                            name="phoneNumber"
+                            placeholder="Enter Phone Number"
+                            value={formData.phoneNumber}
+                            onChange={handleChange}
+                            className="ed-input"
+                        />
+                        {errorMessages.phoneNumber && <small className="ed-error-message">{errorMessages.phoneNumber}</small>}
+                    </div>
+                    <div className="ed-form-group">
+                        <FiMail className="ed-input-icon" />
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Enter Email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            className="ed-input"
+                        />
+                        {emailValidationMessage && <small className="ed-error-message">{emailValidationMessage}</small>}
+                        {errorMessages.email && <small className="ed-error-message">{errorMessages.email}</small>}
+                    </div>
+                    <div className="ed-form-group">
+                        <FiMapPin className="ed-input-icon" />
+                        <input
+                            type="text"
+                            name="address"
+                            placeholder="Enter Address"
+                            value={formData.address}
+                            onChange={handleChange}
+                            className="ed-input"
+                        />
+                        {errorMessages.address && <small className="ed-error-message">{errorMessages.address}</small>}
+                    </div>
+                    <div className="row">
+                        <div className="col-md-3"></div>
+                        <div className="col-md-6">
+                            <button type="submit" className="ed-btn-primary">Register</button>
                         </div>
-                        <div className="form-group">
-                            <label>Password</label>
-                            <input
-                                type="password"
-                                className="form-control"
-                                placeholder="Enter Password"
-                                value={password}
-                                onChange={(event) => setPassword(event.target.value)}
-                            />
-                            {errorMessages.password && <small className="text-danger">{errorMessages.password}</small>}
-                        </div>
-                        <div className="form-group">
-                            <label>Phone Number</label>
-                            <input
-                                type="tel"
-                                className="form-control"
-                                placeholder="Enter Phone Number"
-                                value={phoneNumber}
-                                onChange={(event) => setPhoneNumber(event.target.value)}
-                            />
-                            {errorMessages.phoneNumber && <small className="text-danger">{errorMessages.phoneNumber}</small>}
-                        </div>
-                        <div className="form-group">
-                            <label>Email</label>
-                            <input
-                                type="email"
-                                className="form-control"
-                                placeholder="Enter Email"
-                                value={email}
-                                onChange={(event) => setEmail(event.target.value)}
-                            />
-                            {emailValidationMessage && (
-                                <small className="text-danger">{emailValidationMessage}</small>
-                            )}
-                            {errorMessages.email && <small className="text-danger">{errorMessages.email}</small>}
-                        </div>
-                        <div className="form-group">
-                            <label>Address</label>
-                            <input
-                                type="text"
-                                className="form-control"
-                                placeholder="Enter Address"
-                                value={address}
-                                onChange={(event) => setAddress(event.target.value)}
-                            />
-                            {errorMessages.address && <small className="text-danger">{errorMessages.address}</small>}
-                        </div>
-                        <div   style={{width:'100%',textAlign:'center'}}>
-                            <button type="submit" className="btn"
-                                    style={{backgroundColor:"blue", color: 'white', textDecoration: 'none',width:'40%' }}>
-                                Save
-                            </button>
-                        </div>
-                    </form>
-                </div>
+
+                        <div className="col-md-3"></div>
+                    </div>
+
+                </form>
             </div>
         </div>
     );
-}
+};
 
 export default Register;

@@ -108,9 +108,9 @@ const Header = () => {
                     </Nav>
                     <Nav className="nav-right">
                         <div className="nav-right-items">
-                            <Nav.Link onClick={toggleSearch} className="custom-nav-link-icon">
-                                <FontAwesomeIcon icon={faSearch}/>
-                            </Nav.Link>
+                            {/*<Nav.Link onClick={toggleSearch} className="custom-nav-link-icon">*/}
+                            {/*    <FontAwesomeIcon icon={faSearch}/>*/}
+                            {/*</Nav.Link>*/}
                             <Nav.Link as={Link} to="/cart" className="custom-nav-link-icon">
                                 <FontAwesomeIcon icon={faShoppingCart}/>
                             </Nav.Link>
@@ -158,14 +158,14 @@ const Header = () => {
             </Container>
             {!currentUser && (
                 <div className="auth-buttons">
-                    <Link to="/login" className="btn btn-login">Sign in</Link>
-                    <Link to="/register" className="btn btn-register">Sign up</Link>
+                    <Link to="/login" className="auth-buttons__btn auth-buttons__btn--login">Sign in</Link>
+                    <Link to="/register" className="auth-buttons__btn auth-buttons__btn--register">Sign up</Link>
                 </div>
             )}
             {isSearchOpen && (
                 <div className="search-overlay">
                     <Container>
-                        <input type="text" placeholder="Search..." className="search-input" />
+                        <input type="text" placeholder="Search..." className="search-input"/>
                         <button onClick={toggleSearch} className="close-search">×</button>
                     </Container>
                 </div>

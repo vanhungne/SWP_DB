@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingBag, faCreditCard, faCheckCircle, faTimesCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
+import {
+    faShoppingBag,
+    faCreditCard,
+    faCheckCircle,
+    faTimesCircle,
+    faSpinner,
+    faTag, faTruck
+} from '@fortawesome/free-solid-svg-icons';
 import { API_URL } from "../../Config/config";
 import axios from "axios";
 import '../../Scss/paymentResult.scss';
@@ -91,43 +98,52 @@ const VNPayCallback = () => {
 
     return (
         <div className="payment-result-container">
-            <div className={`payment-result ${message.includes('successful') ? 'success' : 'error'} fade-in`}>
-                <p>
-                    <FontAwesomeIcon
-                        icon={message.includes('successful') ? faCheckCircle : faTimesCircle}
-                        className="icon"
-                    />
-                    {message}
-                </p>
+            <div className={`payment-result ${message.includes('successful') ? 'success' : 'error'} fade-in pulse`}>
+                <FontAwesomeIcon
+                    icon={message.includes('successful') ? faCheckCircle : faTimesCircle}
+                    className="icon"
+                />
+                <p>{message}</p>
             </div>
 
-            {error && <p className="error-message">{error}</p>}
+            {error && <p className="error-message fade-in">{error}</p>}
 
             {loading ? (
-                <div className="loading-spinner">
+                <div className="loading-spinner fade-in">
                     <FontAwesomeIcon icon={faSpinner} spin />
-                    <span>Loading...</span>
+                    <span>Loading order details...</span>
                 </div>
             ) : (
                 <>
                     {order && (
-                        <div className="order-details">
+                        <div className="order-details fade-in">
                             <h2>
                                 <FontAwesomeIcon icon={faShoppingBag} className="icon" />
                                 Order Details
                             </h2>
                             <div className="grid">
-                                <p><strong>Order ID:</strong> {order.orderId}</p>
-                                <p><strong>Date:</strong> {order.orderDate ? new Date(order.orderDate).toLocaleString() : ''}</p>
-                                <p><strong>Total Amount:</strong> {order.orderTotalAmount !== undefined ? `$${order.orderTotalAmount.toFixed(2)}` : ''}</p>
-                                <p><strong>Delivery Address:</strong> {order.orderDeliveryAddress}</p>
-                                <p><strong>Discount Code:</strong> {order.discountCode || 'N/A'}</p>
+                                <div className="detail-item">
+                                    <FontAwesomeIcon icon={faCreditCard} className="detail-icon" />
+                                    <p><strong>Total Amount:</strong> {order.orderTotalAmount !== undefined ? `$${order.orderTotalAmount.toFixed(2)}` : ''}</p>
+                                </div>
+                                <div className="detail-item">
+                                    <FontAwesomeIcon icon={faTruck} className="detail-icon" />
+                                    <p><strong>Delivery Address:</strong> {order.orderDeliveryAddress}</p>
+                                </div>
+                                <div className="detail-item">
+                                    <FontAwesomeIcon icon={faTag} className="detail-icon" />
+                                    <p><strong>Discount Code:</strong> {order.discountCode || 'N/A'}</p>
+                                </div>
+                                <div className="detail-item">
+                                    <FontAwesomeIcon icon={faShoppingBag} className="detail-icon" />
+                                    <p><strong>Order Date:</strong> {order.orderDate ? new Date(order.orderDate).toLocaleString() : ''}</p>
+                                </div>
                             </div>
                         </div>
                     )}
 
                     {orderDetails.length > 0 && (
-                        <div className="order-items">
+                        <div className="order-items fade-in">
                             <h2>
                                 <FontAwesomeIcon icon={faCreditCard} className="icon" />
                                 Order Items

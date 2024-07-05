@@ -168,18 +168,21 @@ body {
 .auth-buttons {
     display: flex;
     align-items: center;
-    margin-left: 5px;
+    justify-content: center;
+    margin-top: 1rem;
 
-    .btn {
+    &__btn {
         padding: 8px 16px;
         border-radius: 20px;
         font-weight: 500;
         font-size: 0.95rem;
         transition: all 0.3s ease;
         text-decoration: none;
-        margin-left: 10px;
+        margin: 0 5px;
+        border: none;
+        cursor: pointer;
 
-        &-login {
+        &--login {
             background-color: $btn-login-bg;
             color: white;
 
@@ -188,12 +191,13 @@ body {
             }
         }
 
-        &-register {
+        &--register {
             background-color: $btn-register-bg;
             color: $brand-color;
+            border: 1px solid $brand-color;
 
             &:hover {
-                background-color: darken($btn-register-bg, 10%);
+                background-color: rgba($btn-login-bg, 0.1);
             }
         }
     }

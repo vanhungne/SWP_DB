@@ -6,7 +6,7 @@ import '../../Scss/ProductDetails.scss';
 import Swal from 'sweetalert2';
 import { API_URL } from "../../Config/config";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRuler } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faRuler, faTimes } from '@fortawesome/free-solid-svg-icons';
 import ProductCard from "./ProductCard";
 
 // Utility function to set a cookie
@@ -43,6 +43,7 @@ const ProductDetail = () => {
     const [similarProducts, setSimilarProducts] = useState([]);
     const [showSizeGuide, setShowSizeGuide] = useState(false);
     const [addedToCart, setAddedToCart] = useState(false);
+    const [showProductInfo, setShowProductInfo] = useState(false);
 
     useEffect(() => {
         if (productId) {
@@ -186,6 +187,10 @@ const ProductDetail = () => {
         setShowSizeGuide(!showSizeGuide);
     };
 
+    const toggleProductInfo = () => {
+        setShowProductInfo(!showProductInfo);
+    };
+
     const fetchShellDetail = async (shellId) => {
         if (shellId) {
             try {
@@ -252,7 +257,10 @@ const ProductDetail = () => {
                         <h1>{product.productName}</h1>
                         <p>{product.description}</p>
                         <h5>Stock quantity: <span className="text-danger"
-                                                  style={{fontSize: '20px', fontWeight: 'bold'}}>{product.stockQuantity}</span></h5>
+                                                  style={{
+                                                      fontSize: '20px',
+                                                      fontWeight: 'bold'
+                                                  }}>{product.stockQuantity}</span></h5>
                         <div className="size-select-container">
                             <label htmlFor="sizeSelect">Select Size:</label>
                             <div className="size-select-wrapper">
@@ -270,15 +278,19 @@ const ProductDetail = () => {
                                     ))}
                                 </select>
                                 {product.categoryId !== 6 && (
-                                    <button className="size-guide-btn" style={{width:'30%'}} onClick={toggleSizeGuide}>
+                                    <button className="size-guide-btn" style={{width: '30%'}} onClick={toggleSizeGuide}>
                                         <FontAwesomeIcon icon={faRuler}/> Size Guide
                                     </button>
                                 )}
                             </div>
                         </div>
+
                         {showSizeGuide && (
-                            <div className="size-guide-overlay" onClick={toggleSizeGuide}>
-                                <div className="size-guide-content" onClick={(e) => e.stopPropagation()}>
+                            <div className="popup-overlay" onClick={toggleSizeGuide}>
+                                <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+                                    <button className="close-btn" onClick={toggleSizeGuide}>
+                                        <FontAwesomeIcon icon={faTimes} />
+                                    </button>
                                     <h3>Size Guide</h3>
                                     <img
                                         src={
@@ -290,86 +302,110 @@ const ProductDetail = () => {
                                         }
                                         alt="Size Guide"
                                     />
-                                    <p>Click anywhere outside this box to close</p>
                                 </div>
                             </div>
                         )}
+
                         {product.stockQuantity > 0 && (
-                            <div style={{textAlign: "center"}}>
-                                <button className="btn btn-info" style={{width: '40%',backgroundColor:'#2e3338'}} onClick={toggleDiamondDetails}>
-                                    <span style={{color:'white'}}>Product Information</span>
+                            <div className="product-info-section">
+                                <button
+                                    className="product-info-button"
+                                    onClick={toggleProductInfo}
+                                >
+                                    <FontAwesomeIcon icon={faInfoCircle} className="info-icon" />
+                                    <span>Product Information</span>
                                 </button>
                             </div>
                         )}
 
-                        {showDiamond && (
-                            <div className="product-details-card">
-                                <h4>Diamond Details</h4>
-                                <table>
-                                    <tbody>
-                                    <tr>
-                                        <th>Carat:</th>
-                                        <td>{diamond.carat}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Price:</th>
-                                        <td>${diamond.price}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Cut:</th>
-                                        <td>{diamond.cut}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Color:</th>
-                                        <td>{diamond.color}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Clarity:</th>
-                                        <td>{diamond.clarity}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
-                                <h4>Shell Details</h4>
-                                <table>
-                                    <tbody>
-                                    <tr>
-                                        <th>Name:</th>
-                                        <td>{shell.shellName}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Material:</th>
-                                        <td>{shell.shellMaterial}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Design:</th>
-                                        <td>{shell.shellDesign}</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Weight:</th>
-                                        <td>{shell.shellWeight}</td>
-                                    </tr>
-                                    </tbody>
-                                </table>
+                        {showProductInfo && (
+                            <div className="popup-overlay" onClick={toggleProductInfo}>
+                                <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+                                    <button className="close-btn" onClick={toggleProductInfo}>
+                                        <FontAwesomeIcon icon={faTimes} />
+                                    </button>
+                                    <h3>Product Information</h3>
+                                    <div className="product-details-card">
+                                        <h4>Diamond Details</h4>
+                                        <table>
+                                            <tbody>
+                                            <tr>
+                                                <th>Carat:</th>
+                                                <td>{diamond.carat}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Price:</th>
+                                                <td>${diamond.price}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Cut:</th>
+                                                <td>{diamond.cut}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Color:</th>
+                                                <td>{diamond.color}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Clarity:</th>
+                                                <td>{diamond.clarity}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                        <h4>Shell Details</h4>
+                                        <table>
+                                            <tbody>
+                                            <tr>
+                                                <th>Name:</th>
+                                                <td>{shell.shellName}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Material:</th>
+                                                <td>{shell.shellMaterial}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Design:</th>
+                                                <td>{shell.shellDesign}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Weight:</th>
+                                                <td>{shell.shellWeight}</td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         )}
-                        <h5 className="text-success">Price: ${product.price.toFixed(2)}</h5>
-                        <div className="action-buttons">
-                            {product.stockQuantity > 0 && !addedToCart ? (
-                                <button className="btn btn-primary" onClick={handleAddToCart}>Add to Cart</button>
-                            ) : product.stockQuantity > 0 && addedToCart ? (
-                                <button className="btn btn-secondary" disabled>Added to Cart</button>
-                            ) : (
-                                <button className="btn btn-secondary" disabled>Sold Out</button>
-                            )}
-                            <Link to="/cart" className="btn btn-outline-primary"
-                                  style={{backgroundColor:'red'}}><span style={{color:'white',fontWeight:'bold'}}>Cart</span></Link>
+                        <div className="product-price-actions">
+                            <div className="price-display">
+                                <span className="price-value">${product.price.toFixed(2)}</span>
+                            </div>
+                            <div className="action-buttons">
+                                {product.stockQuantity > 0 && !addedToCart ? (
+                                    <button className="btn btn-add-to-cart" onClick={handleAddToCart}>
+                                        Add to Cart
+                                    </button>
+                                ) : product.stockQuantity > 0 && addedToCart ? (
+                                    <button className="btn btn-add-to-cart" disabled>
+                                        Added to Cart
+                                    </button>
+                                ) : (
+                                    <button className="btn btn-add-to-cart" disabled>
+                                        Sold Out
+                                    </button>
+                                )}
+                                <Link to="/cart" className="btn btn-view-cart">
+                                    View Cart
+                                </Link>
+                            </div>
                         </div>
                     </div>
                 </div>
             )}
 
             <div className="similar-products">
-                <div style={{textAlign: 'center',padding:'45px 0'}}><span style={{color: 'black', fontSize: '38px', fontWeight: 'bold'}}>Similar Products</span>
+                <div style={{textAlign: 'center', padding: '45px 0'}}><span
+                    style={{color: 'black', fontSize: '38px', fontWeight: 'bold'}}>Similar Products</span>
                 </div>
 
                 <div className="row">

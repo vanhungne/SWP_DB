@@ -1,11 +1,13 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import Swal from 'sweetalert2';
+import { FcGoogle } from 'react-icons/fc';
+import { FiMail, FiLock, FiLogIn, FiUserPlus } from 'react-icons/fi';
+import { API_URL } from "../../Config/config";
 import '../../Scss/Login.scss';
-import { FcGoogle } from 'react-icons/fc'; // Import Google icon from react-icons
-import {API_URL} from "../../Config/config";
 
+
+import Swal from 'sweetalert2';
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -47,78 +49,58 @@ function Login() {
     const handleGoogleLogin = () => {
         window.location.href = `${API_URL}oauth2/authorization/google`;
     };
-
     return (
-
-        <div className="login-container d-flex justify-content-center align-items-center">
-
-            <div className="card shadow-lg p-4" style={{ width: '400px' }}>
-                <div className="card-body">
-                    <h2 className="card-title text-center mb-4">ESTHER DIAMOND</h2>
-                    <form onSubmit={login}>
-                        <div className="form-group">
-                            <label htmlFor="email">Email</label>
-                            <input
-                                type="email"
-                                className="form-control"
-                                id="email"
-                                placeholder="Enter Email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                autoComplete="off"
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label htmlFor="password">Password</label>
-                            <input
-                                type="password"
-                                className="form-control"
-                                id="password"
-                                placeholder="Enter Password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                autoComplete="off"
-                            />
-                        </div>
-                        <div className="row">
-                            <div className="col-md-6">
-                                <button type="submit" className="btn btn-secondary btn-block mt-2">Login</button>
-                            </div>
-                            <div className="col-md-6">
-                                <button
-                                    type="button"
-                                    className="btn btn-secondary btn-block mt-2"
-                                    onClick={() => navigate('/register')}
-                                >
-                                    Register
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                    <br/>
-                    <div className="login-toggle-btn">
-                        <button
-                            className="btn btn-link"
-                            type="button"
-                            onClick={() => navigate('/forgot-password')}
-                            style={{backgroundColor: "blue", color: 'white', textDecoration: 'none'}}
-                        >
+        <div className="login-container">
+            <div className="login-card">
+                <div className="login-header">
+                    <h1>ESTHER DIAMOND</h1>
+                    <p>Welcome back! Please login to your account.</p>
+                </div>
+                <form onSubmit={login} className="login-form">
+                    <div className="input-group">
+                        <FiMail className="input-icon" />
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="input-group">
+                        <FiLock className="input-icon" />
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="forgot-password">
+                        <button type="button" onClick={() => navigate('/forgot-password')}>
                             Forgot Password?
                         </button>
                     </div>
-                    <hr/>
-                    <button
-                        type="button"
-                        className="btn btn-google btn-block"
-                        onClick={handleGoogleLogin}
-                        style={{backgroundColor: 'red', color: 'white'}}
-                    >
-                        <FcGoogle size={20} style={{ marginRight: '10px' }} /> Login with Google
+                    <button type="submit" className="btn-login">
+                        <FiLogIn /> Login
+                    </button>
+                </form>
+                <div className="divider">
+                    <span>OR</span>
+                </div>
+                <button onClick={handleGoogleLogin} className="btn-google">
+                    <FcGoogle /> Login with Google
+                </button>
+                <div className="register-link">
+                    <p>Don't have an account?</p>
+                    <button onClick={() => navigate('/register')} className="btn-secondary">
+                        <FiUserPlus /> Register
                     </button>
                 </div>
             </div>
         </div>
     );
-}
+};
 
 export default Login;

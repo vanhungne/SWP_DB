@@ -18,7 +18,6 @@ import {
     MenuItem
 } from '@material-ui/core';
 import { API_URL } from "../../Config/config";
-import {color} from "framer-motion";
 
 const DiscountCode = () => {
     const [discountCodes, setDiscountCodes] = useState([]);
