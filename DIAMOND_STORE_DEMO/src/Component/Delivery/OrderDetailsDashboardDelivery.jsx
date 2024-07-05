@@ -11,7 +11,6 @@ import {
     faMapMarkerAlt,
     faTag,
     faUser,
-    faTruck,
     faPercent,
     faPhone,
     faEnvelope,
@@ -26,8 +25,6 @@ import ViewFeedbackStaff from "./ViewFeedbackStaff";
 const OrderDetails = ({ orderData }) => {
     const [customerInfo, setCustomerInfo] = useState(null);
     const [productInfo, setProductInfo] = useState({});
-    const [saleInfo, setSaleInfo] = useState(null);
-    const [deliveryInfo, setDeliveryInfo] = useState(null);
     const [paymentInfo, setPaymentInfo] = useState(null);
     const [diamondInfo, setDiamondInfo] = useState({});
     const [loading, setLoading] = useState(true);
@@ -47,7 +44,7 @@ const OrderDetails = ({ orderData }) => {
             try {
                 const token = localStorage.getItem('token');
 
-                const [customerResponse, saleResponse, deliveryResponse, ...productAndDiamondResponses] = await Promise.all([
+                const [customerResponse, ...productAndDiamondResponses] = await Promise.all([
                     axios.get(`${API_URL}manage/accounts/${orderData.customerId}`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     }),
@@ -76,8 +73,6 @@ const OrderDetails = ({ orderData }) => {
                 }
 
                 setCustomerInfo(customerResponse.data);
-                setSaleInfo(saleResponse.data);
-                setDeliveryInfo(deliveryResponse.data);
 
                 const productInfoMap = {};
                 const diamondInfoMap = {};

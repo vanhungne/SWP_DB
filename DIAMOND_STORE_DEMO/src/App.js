@@ -63,8 +63,6 @@ function App() {
                         <Route path="warranty" element={<WarrantyDetails />} />
 
                         {/* Protected router*/}
-
-                        //ADMIN
                         <Route
                             path="dashboard-account"
                             element={
@@ -73,8 +71,6 @@ function App() {
                                 </ProtectedRoute>
                             }
                         />
-
-                        //Manager
                         <Route
                             path="manager"
                             element={
@@ -83,7 +79,6 @@ function App() {
                                 </ProtectedRoute>
                             }
                         />
-                        //SALE
                         <Route
                             path="sale-dashboard"
                             element={
@@ -92,8 +87,6 @@ function App() {
                                 </ProtectedRoute>
                             }
                         />
-
-                        //DELIVERY
                         <Route
                             path="delivery-dashboard"
                             element={

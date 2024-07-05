@@ -1,7 +1,6 @@
-// CartItem.js
 import React from 'react';
 import '../../Scss/CartItem.scss';
-import {API_URL} from "../../Config/config";
+
 
 const CartItem = ({item, onQuantityChange, onRemoveFromCart}) => {
     const handleRemoveFromCart = () => {

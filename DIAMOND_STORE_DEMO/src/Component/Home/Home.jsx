@@ -16,7 +16,6 @@ const Home = () => {
     const [collectionProducts, setCollectionProducts] = useState([]);
     const [collectionError, setCollectionError] = useState('');
     const [error, setError] = useState('');
-    const [collection, setCollection] = useState(null);
     const videoRef = useRef(null);
     const navigate = useNavigate();
 
@@ -63,7 +62,6 @@ const Home = () => {
                     collection: 'Esther Lock'
                 }
             });
-            setCollection(response.data.collection);
             setCollectionProducts(response.data.content);
         } catch (error) {
             console.error('Error fetching collection products:', error);

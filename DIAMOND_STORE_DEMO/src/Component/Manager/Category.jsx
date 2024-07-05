@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../../Scss/ManagerDashBoard.scss';
 import { API_URL } from "../../Config/config";
-import {Edit, Eye, Trash2} from "lucide-react";
+import {Edit, Trash2} from "lucide-react";
 
 const Category = () => {
     const [categories, setCategories] = useState([]);

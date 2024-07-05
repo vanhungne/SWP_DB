@@ -16,10 +16,6 @@ const Footer = () => {
                         <p className="mb-2">Tax ID: 0123456789</p>
                         <p>Office: Đường D1, Đ. D1, Long Thạnh Mỹ, Thành Phố Thủ Đức, Hồ Chí Minh</p>
                         <p className="mb-2">Email: hungse17002@gmail.com</p>
-                       <img style={{maxWidth: '40%'}}
-                                  src="/images/logod.jpg"
-                                  alt="Logo Image "
-                        />
                     </Col>
 
                     <Col md={3}>
