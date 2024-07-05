@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import Swal from 'sweetalert2';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 import CartItem from './CartItem'; // Adjust path if necessary
 import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router-dom'; // Import useHistory
+import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../../Scss/cart.scss'; // Import the SCSS file
+import '../../Scss/cart.scss';
 import { API_URL } from '../../Config/config';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
@@ -39,11 +40,11 @@ const Cart = () => {
             updateCartCookie(updatedItems);
         } catch (error) {
             console.error('Error updating cart item quantity:', error);
-            Swal.fire({
+            iziToast.error({
                 title: 'Error',
-                text: 'There was an error updating the quantity. Please try again later.',
-                icon: 'error',
-                confirmButtonText: 'Ok',
+                message: 'There was an error updating the quantity. Please try again later.',
+                position: 'topRight',
+                timeout: 5000
             });
         }
     };
@@ -61,17 +62,22 @@ const Cart = () => {
             const updatedItems = cartItems.filter((item) => item.productId !== productId);
             setCartItems(updatedItems);
             updateCartCookie(updatedItems);
+            iziToast.success({
+                title: 'Success',
+                message: 'Item removed from cart successfully',
+                position: 'topRight',
+                timeout: 3000
+            });
         } catch (error) {
             console.error('Error removing item from cart:', error);
-            Swal.fire({
+            iziToast.error({
                 title: 'Error',
-                text: 'There was an error removing the item from your cart. Please try again later.',
-                icon: 'error',
-                confirmButtonText: 'Ok',
+                message: 'There was an error removing the item from your cart. Please try again later.',
+                position: 'topRight',
+                timeout: 5000
             });
         }
     };
-
     const getCartFromCookie = () => {
         const cartCookie = Cookies.get('cart');
         if (cartCookie) {

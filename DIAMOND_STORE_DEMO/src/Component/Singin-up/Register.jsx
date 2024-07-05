@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import Swal from 'sweetalert2';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 import { FiUser, FiLock, FiPhone, FiMail, FiMapPin } from 'react-icons/fi';
 import { API_URL } from "../../Config/config";
 import '../../Scss/Register.scss';
@@ -53,33 +54,32 @@ const Register = () => {
         }
 
         if (emailValidationMessage) {
-            Swal.fire({
-                icon: 'error',
+            iziToast.error({
                 title: 'Error',
-                text: emailValidationMessage,
+                message: emailValidationMessage,
+                position: 'topRight'
             });
             return;
         }
 
         try {
             await axios.post(`${API_URL}login/signup`, formData);
-            Swal.fire({
-                icon: 'success',
-                title: 'Customer Registration Successful',
-                showConfirmButton: false,
-                timer: 1500
-            }).then(() => {
-                navigate(`/verifycode/${formData.email}`);
+            iziToast.success({
+                title: 'Success',
+                message: 'Customer Registration Successful',
+                position: 'topRight',
+                onClosing: () => {
+                    navigate(`/verifycode/${formData.email}`);
+                }
             });
         } catch (err) {
-            Swal.fire({
-                icon: 'error',
+            iziToast.error({
                 title: 'Error',
-                text: err.message,
+                message: err.response?.data?.message || 'An error occurred during registration',
+                position: 'topRight'
             });
         }
     };
-
     return (
         <div className="ed-register-container">
             <div className="ed-register-card">

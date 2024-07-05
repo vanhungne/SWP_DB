@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../Authentication/AuthContext';
-import Swal from 'sweetalert2';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingCart, faUser, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faShoppingCart, faUser } from '@fortawesome/free-solid-svg-icons';
 import Cookies from 'js-cookie';
 import '../Scss/Header.scss';
 
@@ -28,21 +29,21 @@ const Header = () => {
         try {
             await logout();
             Cookies.remove('cart');
-            Swal.fire({
-                icon: 'success',
-                title: 'Logged out successfully',
-                showConfirmButton: false,
-                timer: 1500,
+            iziToast.success({
+                title: 'Success',
+                message: 'Logged out successfully',
+                position: 'topRight',
+                timeout: 1500
             });
         } catch (error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Logout failed',
-                text: error.message,
+            iziToast.error({
+                title: 'Error',
+                message: error.message || 'Logout failed',
+                position: 'topRight',
+                timeout: 5000
             });
         }
     };
-
     useEffect(() => {
         const handleScroll = () => {
             const scrollTop = window.pageYOffset || document.documentElement.scrollTop;

@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
-import Swal from 'sweetalert2';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 import '../../Scss/Login.scss';
-import {API_URL} from "../../Config/config";
+import { API_URL } from "../../Config/config";
 
 function ForgotPass() {
     const [email, setEmail] = useState("");
@@ -17,31 +18,30 @@ function ForgotPass() {
             });
 
             if (response.data.data) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Send verify code successful',
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(() => {
-                    // Redirect to verify registration page
-                    navigate(`/reset-password/${email}`);
+                iziToast.success({
+                    title: 'Success',
+                    message: 'Send verify code successful',
+                    position: 'topRight',
+                    timeout: 1500,
+                    onClosing: () => {
+                        navigate(`/reset-password/${email}`);
+                    }
                 });
             } else {
-                Swal.fire({
-                    icon: 'error',
+                iziToast.error({
                     title: 'Error',
-                    text: 'Email is not exist or not register yet!',
+                    message: 'Email does not exist or is not registered yet!',
+                    position: 'topRight'
                 });
             }
         } catch (err) {
-            Swal.fire({
-                icon: 'error',
-                title: 'ERROR',
-                text: 'Email is not exist or not register yet!',
+            iziToast.error({
+                title: 'Error',
+                message: 'Email does not exist or is not registered yet!',
+                position: 'topRight'
             });
         }
     }
-
     return (
         <div className="login-container d-flex justify-content-center align-items-center">
             <div className="card shadow-lg p-4" style={{width: '400px'}}>

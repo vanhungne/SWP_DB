@@ -10,14 +10,17 @@ $google-color: #ec1e07;
     justify-content: center;
     align-items: center;
     min-height: 90vh;
-    background-color: $secondary-color;
+    //background-color: $secondary-color;
+    background-image: url('../../public/images/backgroundLogin.jpg');
+    background-size: cover;
+    background-position: center;
     padding: 10px;
 }
 
 .login-card {
     background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(64, 61, 61, 0.5);
     padding: 40px;
     width: 100%;
     max-width: 400px;

@@ -3,7 +3,8 @@ import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../Scss/ProductDetails.scss';
-import Swal from 'sweetalert2';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 import { API_URL } from "../../Config/config";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faInfoCircle, faRuler, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -38,8 +39,8 @@ const ProductDetail = () => {
     const [selectedSize, setSelectedSize] = useState('');
     const [diamond, setDiamond] = useState(null);
     const [shell, setShell] = useState(null);
-    const [showDiamond, setShowDiamond] = useState(false);
-    const [showShell, setShowShell] = useState(false);
+    // const [showDiamond, setShowDiamond] = useState(false);
+    // const [showShell, setShowShell] = useState(false);
     const [similarProducts, setSimilarProducts] = useState([]);
     const [showSizeGuide, setShowSizeGuide] = useState(false);
     const [addedToCart, setAddedToCart] = useState(false);
@@ -97,11 +98,11 @@ const ProductDetail = () => {
 
     const handleAddToCart = async () => {
         if (!selectedSize) {
-            Swal.fire({
+            iziToast.warning({
                 title: 'Select a Size',
-                text: 'Please select a size before adding to cart.',
-                icon: 'warning',
-                confirmButtonText: 'Ok'
+                message: 'Please select a size before adding to cart.',
+                position: 'topRight',
+                timeout: 5000
             });
             return;
         }
@@ -132,8 +133,8 @@ const ProductDetail = () => {
                 productId: product.productId,
                 productName: product.productName,
                 image1: product.image1,
-                totalPrice: product.price, // Total price for 1 item
-                quantity: 1, // Quantity is 1
+                totalPrice: product.price,
+                quantity: 1,
                 size: sizes.find(size => size.sizeId === Number(selectedSize)).valueSize
             };
 
@@ -141,19 +142,19 @@ const ProductDetail = () => {
 
             setCookie('cart', btoa(JSON.stringify(cart)), 7);
             setAddedToCart(true);
-            Swal.fire({
+            iziToast.success({
                 title: 'Added to Cart',
-                text: `Add to cart successfully`,
-                icon: 'success',
-                confirmButtonText: 'Ok'
+                message: 'Add to cart successfully',
+                position: 'topRight',
+                timeout: 5000
             });
         } catch (error) {
             console.error('Error adding to cart:', error);
-            Swal.fire({
+            iziToast.error({
                 title: 'Error',
-                text: 'There was an error adding the product to your cart. Please try again later.',
-                icon: 'error',
-                confirmButtonText: 'Ok'
+                message: 'There was an error adding the product to your cart. Please try again later.',
+                position: 'topRight',
+                timeout: 5000
             });
         }
     };
@@ -207,10 +208,10 @@ const ProductDetail = () => {
         }
     };
 
-    const toggleDiamondDetails = () => {
-        setShowDiamond(!showDiamond);
-        setShowShell(false);
-    };
+    // const toggleDiamondDetails = () => {
+    //     setShowDiamond(!showDiamond);
+    //     setShowShell(false);
+    // };
 
     //check nêếu có product đó trong card thì disable
     const isProductInCart = (productId) => {

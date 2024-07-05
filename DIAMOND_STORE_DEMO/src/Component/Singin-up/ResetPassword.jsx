@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from "axios";
-import Swal from 'sweetalert2';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 import '../../Scss/Login.scss';
-import {API_URL} from "../../Config/config";
+import { API_URL } from "../../Config/config";
 
 function Resetpassword() {
     const { email } = useParams();
@@ -18,42 +19,42 @@ function Resetpassword() {
 
         // Validate password and confirm password match
         if (password !== conPassword) {
-            Swal.fire({
-                icon: 'error',
+            iziToast.error({
                 title: 'Error',
-                text: 'Passwords do not match!',
+                message: 'Passwords do not match!',
+                position: 'topRight'
             });
             return;
         }
 
         try {
             const response = await axios.post(`${API_URL}login/resetpassword`, {
-
                 email,
                 verificationCode,
                 password,
             });
 
             if (response.data.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Password Reset Successful',
-                    text: 'Your password has been reset.',
-                }).then(() => {
-                    navigate('/');
+                iziToast.success({
+                    title: 'Success',
+                    message: 'Your password has been reset.',
+                    position: 'topRight',
+                    onClosing: () => {
+                        navigate('/');
+                    }
                 });
             } else {
-                Swal.fire({
-                    icon: 'error',
+                iziToast.error({
                     title: 'Password Reset Failed',
-                    text: response.data.message,
+                    message: response.data.message,
+                    position: 'topRight'
                 });
             }
         } catch (err) {
-            Swal.fire({
-                icon: 'error',
+            iziToast.error({
                 title: 'Error',
-                text: err.message,
+                message: err.response?.data?.message || 'An error occurred during password reset',
+                position: 'topRight'
             });
         }
     }

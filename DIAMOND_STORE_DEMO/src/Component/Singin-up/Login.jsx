@@ -6,8 +6,9 @@ import { FiMail, FiLock, FiLogIn, FiUserPlus } from 'react-icons/fi';
 import { API_URL } from "../../Config/config";
 import '../../Scss/Login.scss';
 
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 
-import Swal from 'sweetalert2';
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -22,26 +23,27 @@ function Login() {
 
             if (response.data.data) {
                 localStorage.setItem('token', response.data.data);
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Login Successful',
-                    showConfirmButton: false,
-                    timer: 1500
-                }).then(() => {
-                    navigate('/');
+                iziToast.success({
+                    title: 'Success',
+                    message: 'Login successfully',
+                    position: 'topRight',
+                    timeout: 1500,
+                    onClosing: () => {
+                        navigate('/');
+                    }
                 });
             } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Incorrect Email or Password',
+                iziToast.error({
+                    title: 'error',
+                    message: 'Incorrect Email or Password',
+                    position: 'topRight'
                 });
             }
         } catch (err) {
-            Swal.fire({
-                icon: 'error',
+            iziToast.error({
                 title: 'Error',
-                text: err.message,
+                message: err.message,
+                position: 'topRight'
             });
         }
     };

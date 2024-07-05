@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import Swal from 'sweetalert2';
+import iziToast from 'izitoast';
+import 'izitoast/dist/css/iziToast.min.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import MetaTags from "react-meta-tags";
-import {API_URL} from "../../Config/config";
+import { API_URL } from "../../Config/config";
 
 const VerifyCodeForm = () => {
     const { email } = useParams();
     const navigate = useNavigate();
     const [verificationCode, setVerificationCode] = useState('');
-    const [loading, setLoading] = useState(false); // State for loading
+    const [loading, setLoading] = useState(false);
 
     const handleVerificationCodeChange = (event) => {
         setVerificationCode(event.target.value);
@@ -25,26 +26,30 @@ const VerifyCodeForm = () => {
 
             setLoading(false);
             if (response.data.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Verification Successful',
-                    text: 'Your account has been verified.',
-                }).then(() => {
-                    navigate('/'); // Navigate to the home page
+                iziToast.success({
+                    title: 'Success',
+                    message: 'Your account has been verified.',
+                    position: 'topRight',
+                    timeout: 5000,
+                    onClosing: () => {
+                        navigate('/');
+                    }
                 });
             } else {
-                Swal.fire({
-                    icon: 'error',
+                iziToast.error({
                     title: 'Verification Failed',
-                    text: response.data.message,
+                    message: response.data.message,
+                    position: 'topRight',
+                    timeout: 5000
                 });
             }
         } catch (err) {
             setLoading(false);
-            Swal.fire({
-                icon: 'error',
+            iziToast.error({
                 title: 'Error',
-                text: err.message,
+                message: err.response?.data?.message || 'An error occurred during verification',
+                position: 'topRight',
+                timeout: 5000
             });
         }
     };
