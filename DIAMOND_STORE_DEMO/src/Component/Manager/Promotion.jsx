@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useAuth } from '../Authentication/AuthContext';
 import {
     Table,
     TableBody,
@@ -18,7 +19,14 @@ import {
 import { API_URL } from "../../Config/config";
 
 const Promotion = () => {
+    const { currentUser} = useAuth();
     const [promotions, setPromotions] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [searchCriteria, setSearchCriteria] = useState('');
+    const [currentPage, setCurrentPage] = useState(0);
+    const [pageSize] = useState(10);
+    const [totalPages, setTotalPages] = useState(0);
+    const token = localStorage.getItem('token');
     const [form, setForm] = useState({
         promotionId: null,
         promotionName: '',
@@ -26,12 +34,6 @@ const Promotion = () => {
         promotionEndDate: '',
         managerId: 0
     });
-    const [open, setOpen] = useState(false);
-    const [searchCriteria, setSearchCriteria] = useState('');
-    const [currentPage, setCurrentPage] = useState(0);
-    const [pageSize] = useState(10);
-    const [totalPages, setTotalPages] = useState(0);
-    const token = localStorage.getItem('token');
 
     useEffect(() => {
         if (searchCriteria) {
@@ -117,7 +119,7 @@ const Promotion = () => {
             promotionName: '',
             promotionStartDate: '',
             promotionEndDate: '',
-            managerId: 0
+            managerId: currentUser.userid
         });
         setOpen(true);
     };
@@ -242,14 +244,14 @@ const Promotion = () => {
                         fullWidth
                         InputLabelProps={{shrink: true}}
                     />
-                    <TextField
-                        label="Manager ID"
-                        type="number"
-                        name="managerId"
-                        value={form.managerId}
-                        onChange={handleFormChange}
-                        fullWidth
-                    />
+                    {/*<TextField*/}
+                    {/*    label="Manager ID"*/}
+                    {/*    type="number"*/}
+                    {/*    name="managerId"*/}
+                    {/*    value={form.managerId}*/}
+                    {/*    onChange={handleFormChange}*/}
+                    {/*    fullWidth*/}
+                    {/*/>*/}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose} color="primary">
