@@ -4,18 +4,20 @@ import './SidebarP.scss';
 const SidebarP = ({ categories, selectedCategory, onCategoryChange, onCollectionChange }) => {
     return (
         <div className="sidebarP__container">
-            <h3 className="sidebarP__title">Categories</h3>
-            <ul className="sidebarP__category-list">
-                {categories.map((category) => (
-                    <li
-                        key={category.categoryId}
-                        className={`sidebarP__category-item ${selectedCategory === category.categoryName ? 'sidebarP__category-item--active' : ''}`}
-                        onClick={() => onCategoryChange(category.categoryName)}
-                    >
-                        {category.categoryName}
-                    </li>
-                ))}
-            </ul>
+            <div className="sidebarP__category-wrapper">
+                <h3 className="sidebarP__title">Categories</h3>
+                <ul className="sidebarP__category-list">
+                    {categories.map((category) => (
+                        <li
+                            key={category.categoryId}
+                            className={`sidebarP__category-item ${selectedCategory === category.categoryName ? 'sidebarP__category-item--active' : ''}`}
+                            onClick={() => onCategoryChange(category.categoryName)}
+                        >
+                            {category.categoryName}
+                        </li>
+                    ))}
+                </ul>
+            </div>
 
             <div className="sidebarP__collection-wrapper">
                 <h3 className="sidebarP__title">Collections</h3>

@@ -22,6 +22,7 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
         image4: '',
         diamonds: []
     });
+    const [loading, setLoading] = useState(false);
     const token = localStorage.getItem('token');
 
     useEffect(() => {
@@ -29,10 +30,13 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
         fetchShells();
         if (productId) {
             fetchProductDetails(productId);
-        } else {setProduct({})}
+        } else {
+            setProduct({});
+        }
     }, [productId]);
 
     const fetchProductDetails = async (id) => {
+        setLoading(true);
         try {
             const response = await axios.get(`${API_URL}product/${id}`);
             setProduct(response.data);
@@ -52,6 +56,8 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
         } catch (error) {
             console.error('Error fetching product details:', error);
             setError('Error fetching product details. Please try again later.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -96,7 +102,6 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
             ...updatedProduct,
             [name]: value,
         });
-        console.log(name+": "+value);
     };
 
     const handleImageUpload = (e, imageField) => {
@@ -130,6 +135,7 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
         try {
             if(productId) {
                 await axios.put(
@@ -144,17 +150,18 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
                 );
                 viewProduct(productId);
             } else {
-                const respone = await  axios.post(`${API_URL}product/add`, updatedProduct, {
+                const response = await axios.post(`${API_URL}product/add`, updatedProduct, {
                     headers: {
                         Authorization: `Bearer ${token}`,
                     },
                 });
-                viewProduct(respone.data.productId);
+                viewProduct(response.data.productId);
             }
-
         } catch (error) {
             console.error('Error updating product:', error);
             setError('Error updating product. Please try again later.');
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -211,28 +218,33 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
         }
     };
 
+    if (loading) {
+        return <div className="loading">Loading...</div>;
+    }
+
     if (error) {
-        return <div className="alert alert-danger">{error}</div>;
+        return <div className="error">{error}</div>;
     }
 
     if (!product) {
-        return <div>Loading...</div>;
+        return <div className="loading">Loading...</div>;
     }
 
     return (
         <div className="edit-product">
-            <div className="button-container">
-                <button onClick={goBack}>Back</button>
+            <div className="header">
+                <button className="back-button" onClick={goBack}>Back</button>
+                <h1>{productId ? 'Edit Product' : 'Add New Product'}</h1>
             </div>
-            <h1>Edit Product</h1>
             <form onSubmit={handleSubmit}>
-                <div>
+                <div className="form-group">
                     <label>Product ID:</label>
                     <span>{product.productId}</span>
                 </div>
-                <div>
-                    <label>Product Name:</label>
+                <div className="form-group">
+                    <label htmlFor="productName">Product Name:</label>
                     <input
+                        id="productName"
                         type="text"
                         name="productName"
                         value={updatedProduct.productName}
@@ -240,37 +252,40 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
                         required
                     />
                 </div>
-                <div>
+                <div className="form-group">
                     <label>Stock Quantity:</label>
                     <span>{product.stockQuantity}</span>
                 </div>
-                <div>
-                    <label>Collection:</label>
+                <div className="form-group">
+                    <label htmlFor="collection">Collection:</label>
                     <input
+                        id="collection"
                         type="text"
                         name="collection"
                         value={updatedProduct.collection}
                         onChange={handleInputChange}
                     />
                 </div>
-                <div>
-                    <label>Description:</label>
+                <div className="form-group">
+                    <label htmlFor="description">Description:</label>
                     <textarea
+                        id="description"
                         name="description"
                         value={updatedProduct.description}
                         onChange={handleInputChange}
                         required
                     />
                 </div>
-                <div>
-                    <label>Category:</label>
+                <div className="form-group">
+                    <label htmlFor="categoryId">Category:</label>
                     <select
+                        id="categoryId"
                         name="categoryId"
                         value={updatedProduct.categoryId}
                         onChange={handleInputChange}
                         required
                     >
-                        <option value="" disabled={true}>Select Category</option>
+                        <option value="" disabled>Select Category</option>
                         {categories.map(category => (
                             <option key={category.categoryId} value={category.categoryId}>
                                 {category.categoryName}
@@ -278,15 +293,16 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
                         ))}
                     </select>
                 </div>
-                <div>
-                    <label>Shell:</label>
+                <div className="form-group">
+                    <label htmlFor="shellId">Shell:</label>
                     <select
+                        id="shellId"
                         name="shellId"
                         value={updatedProduct.shellId}
                         onChange={handleInputChange}
                         required
                     >
-                        <option value="" disabled={true}>Select Shell</option>
+                        <option value="" disabled>Select Shell</option>
                         {shells.map(shell => (
                             <option key={shell.shellId} value={shell.shellId}>
                                 {shell.shellName}
@@ -294,27 +310,27 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
                         ))}
                     </select>
                 </div>
-                <div>
+                <div className="form-group">
                     <label>Diamonds:</label>
-                    <ul className="diamonds">
+                    <ul className="diamonds-list">
                         {diamonds.length > 0 ? (
                             diamonds.map((diamond, index) => (
                                 <li key={index}>
                                     <span>{diamond.diamondId}</span>
-                                    <button type="button" onClick={() => handleRemoveDiamond(diamond.diamondId)} className={"float-end"}>Remove</button>
+                                    <button type="button" onClick={() => handleRemoveDiamond(diamond.diamondId)} className="remove-button">Remove</button>
                                 </li>
                             ))
                         ) : (
                             <p>No diamonds</p>
                         )}
                     </ul>
-                    <div>
-                        <button type="button" onClick={fetchUnusedDiamonds}>Load Diamonds</button>
+                    <div className="add-diamond">
+                        <button type="button" onClick={fetchUnusedDiamonds} className="load-diamonds-button">Load Diamonds</button>
                         <select
                             name="unusedDiamondId"
                             onChange={(e) => handleAddDiamond(e.target.value)}
                         >
-                            <option value="" disabled={true}>Select Diamond to Add</option>
+                            <option value="" disabled>Select Diamond to Add</option>
                             {unusedDiamonds.map(diamond => (
                                 <option key={diamond.diamondId} value={diamond.diamondId}>
                                     {diamond.diamondId}
@@ -323,26 +339,24 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
                         </select>
                     </div>
                 </div>
-                <div className="image-uploads manager-product-images">
-                    <label>Main Image:</label>
-                    <input type="file" onChange={(e) => handleImageUpload(e, 'image1')} />
-                    <img src={product.image1} alt="Product Image 1" />
-                    <br />
-                    <label>Image 2:</label>
-                    <input type="file" onChange={(e) => handleImageUpload(e, 'image2')} />
-                    <img src={product.image2} alt="Product Image 2" />
-                    <br />
-                    <label>Image 3:</label>
-                    <input type="file" onChange={(e) => handleImageUpload(e, 'image3')} />
-                    <img src={product.image3} alt="Product Image 3" />
-                    <br />
-                    <label>Image 4:</label>
-                    <input type="file" onChange={(e) => handleImageUpload(e, 'image4')} />
-                    <img src={product.image4} alt="Product Image 4" />
+                <div className="image-uploads">
+                    {['image1', 'image2', 'image3', 'image4'].map((imageField, index) => (
+                        <div key={imageField} className="image-upload">
+                            <label htmlFor={imageField}>Image {index + 1}:</label>
+                            <input
+                                id={imageField}
+                                type="file"
+                                onChange={(e) => handleImageUpload(e, imageField)}
+                            />
+                            {product[imageField] && (
+                                <img src={product[imageField]} alt={`Product Image ${index + 1}`} />
+                            )}
+                        </div>
+                    ))}
                 </div>
-                <div className="button-container">
-                    <button type="submit">Save</button>
-                    <button type="button" onClick={goBack}>Cancel</button>
+                <div className="form-actions">
+                    <button type="submit" className="save-button">Save</button>
+                    <button type="button" onClick={goBack} className="cancel-button">Cancel</button>
                 </div>
             </form>
         </div>
