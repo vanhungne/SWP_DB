@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../Scss/cart.scss';
 import { API_URL } from '../../Config/config';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingCart, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import {faCreditCard, faShoppingCart, faTrashAlt} from '@fortawesome/free-solid-svg-icons';
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
@@ -100,44 +100,49 @@ const Cart = () => {
     const navigateToCheckout = () => {
         navigate('/checkout');
     };
-
+    const calculateTotal = () => {
+        return cartItems.reduce((total, item) => total + item.totalPrice * item.quantity, 0).toFixed(2);
+    };
     return (
-        <div className="cart-container mt-5" style={{marginBottom:'18%'}}>
+        <div className="cart-container">
             <div className="cart-header">
-                <h2><FontAwesomeIcon icon={faShoppingCart} /> Cart</h2>
+                <h2><FontAwesomeIcon icon={faShoppingCart} /> Your Cart</h2>
             </div>
             {cartItems.length === 0 ? (
                 <div className="cart-empty">
                     <p>Your cart is empty.</p>
                 </div>
             ) : (
-                <div className="cart-items">
-                    {cartItems.map((item) => (
-                        <CartItem
-                            key={item.productId}
-                            item={item}
-                            onQuantityChange={handleQuantityChange}
-                            onRemoveFromCart={handleRemoveFromCart}
-                        />
-                    ))}
-                </div>
+                <>
+                    <div className="cart-items">
+                        {cartItems.map((item) => (
+                            <CartItem
+                                key={item.productId}
+                                item={item}
+                                onQuantityChange={handleQuantityChange}
+                                onRemoveFromCart={handleRemoveFromCart}
+                            />
+                        ))}
+                    </div>
+                    <div className="cart-summary">
+                        <div className="total">
+                            <span>Total:</span>
+                            <span>${calculateTotal()}</span>
+                        </div>
+                        <div className="cart-actions">
+                            <button className="cart-btn cart-btn-clear" onClick={clearCart}>
+                                <FontAwesomeIcon icon={faTrashAlt} /> Clear Cart
+                            </button>
+                            <button className="cart-btn cart-btn-checkout" onClick={navigateToCheckout}>
+                                <FontAwesomeIcon icon={faCreditCard} /> Checkout
+                            </button>
+                        </div>
+                    </div>
+                </>
             )}
-            <div className="row mt-3">
-                <div className="col-lg-3"></div>
-                <div className="col-lg-3 text-center">
-                    <button className="btn btn-danger" onClick={clearCart}>
-                        <FontAwesomeIcon icon={faTrashAlt} /> Clear Cart
-                    </button>
-                </div>
-                <div className="col-lg-3 text-center" style={{width:'25%'}}>
-                    <button className="btn btn-primary" onClick={navigateToCheckout}>
-                        Go to Checkout
-                    </button>
-                </div>
-                <div className="col-lg-3"></div>
-            </div>
         </div>
     );
 };
+
 
 export default Cart;

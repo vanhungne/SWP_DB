@@ -8,6 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faUser } from '@fortawesome/free-solid-svg-icons';
 import Cookies from 'js-cookie';
 import '../Scss/Header.scss';
+import MiniCart from "../Component/Cart/miniCart";
 
 const Header = () => {
     const { currentUser, logout } = useAuth();
@@ -15,6 +16,8 @@ const Header = () => {
     const [lastScrollTop, setLastScrollTop] = useState(0);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(window.innerWidth < 992);
+    const [showMiniCart, setShowMiniCart] = useState(false);
+    const [cartItems, setCartItems] = useState([]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -25,6 +28,19 @@ const Header = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
+    useEffect(() => {
+        const cartFromCookie = getCartFromCookie();
+        setCartItems(cartFromCookie);
+    }, []);
+
+    const getCartFromCookie = () => {
+        const cartCookie = Cookies.get('cart');
+        if (cartCookie) {
+            const decodedCart = atob(cartCookie);
+            return JSON.parse(decodedCart);
+        }
+        return [];
+    };
     const handleLogout = async () => {
         try {
             await logout();
@@ -76,6 +92,13 @@ const Header = () => {
             ))}
         </NavDropdown>
     );
+    const handleMouseEnter = () => {
+        setShowMiniCart(true);
+    };
+
+    const handleMouseLeave = () => {
+        setShowMiniCart(false);
+    };
 
     return (
         <Navbar className={`mb-4 custom-navbar ${scrollDirection === 'down' ? 'hidden' : ''}`} expand="lg" sticky="top">
@@ -112,9 +135,17 @@ const Header = () => {
                             {/*<Nav.Link onClick={toggleSearch} className="custom-nav-link-icon">*/}
                             {/*    <FontAwesomeIcon icon={faSearch}/>*/}
                             {/*</Nav.Link>*/}
-                            <Nav.Link as={Link} to="/cart" className="custom-nav-link-icon">
-                                <FontAwesomeIcon icon={faShoppingCart}/>
-                            </Nav.Link>
+                            <div
+                                className="custom-nav-link-icon cart-icon"
+                                onMouseEnter={handleMouseEnter}
+                                onMouseLeave={handleMouseLeave}
+                            >
+                                <Link to="/cart">
+                                    <FontAwesomeIcon icon={faShoppingCart}/>
+                                    {cartItems.length > 0 && <span className="cart-count">{cartItems.length}</span>}
+                                </Link>
+                                {showMiniCart && <MiniCart cartItems={cartItems}/>}
+                            </div>
                             <div className="nav-account">
                                 {currentUser ? (
                                     <NavDropdown

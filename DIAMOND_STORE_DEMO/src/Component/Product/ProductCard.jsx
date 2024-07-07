@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { Heart } from 'lucide-react';
 import '../../Scss/ProductCard.scss';
+
 const ProductCard = ({ product }) => {
     const navigate = useNavigate();
 
@@ -16,27 +17,32 @@ const ProductCard = ({ product }) => {
 
     return (
         <div className="col-md-3 mb-4">
-            <div className="card product-card" onClick={() => handleProductClick(product.productId)}>
+            <div className="product-card" onClick={() => handleProductClick(product.productId)}>
                 <div className="card-img-wrapper">
                     <img
                         src={product.image1}
                         alt={product.productName}
                         className="card-img-top"
                     />
-                    <button className="btn btn-light btn-sm favorite-btn">
-                        <Heart size={16} />
+                    <button className="favorite-btn" aria-label="Add to favorites">
+                        <Heart size={18} />
                     </button>
+                    {product.originalPrice && (
+                        <span className="discount-badge">
+                            {Math.round((1 - product.price / product.originalPrice) * 100)}% OFF
+                        </span>
+                    )}
                 </div>
                 <div className="card-body">
                     <h5 className="card-title">{product.productName}</h5>
-                    <p className="card-text price">
-                        {formatCurrency(product.price)}
+                    <div className="price-container">
+                        <p className="current-price">{formatCurrency(product.price)}</p>
                         {product.originalPrice && (
-                            <span className="original-price">
+                            <p className="original-price">
                                 {formatCurrency(product.originalPrice)}
-                            </span>
+                            </p>
                         )}
-                    </p>
+                    </div>
                 </div>
             </div>
         </div>
