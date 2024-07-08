@@ -91,6 +91,7 @@ const OrderDetails = () => {
         };
 
         fetchAllData();
+        window.scrollTo(0, 0);
     }, [orderId]);
 
     const handleBack = () => {

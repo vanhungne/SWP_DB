@@ -1,7 +1,10 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './Policy.scss';
 import SnowEffect from "../Home/SnowEffect";
 const WarrantyPolicy = () => {
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     return (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' ,marginBottom:'10%',marginTop:'3%'}}>
             <SnowEffect />

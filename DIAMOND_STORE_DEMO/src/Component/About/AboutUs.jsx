@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './AboutUs.scss';
 import SnowEffect from "../Home/SnowEffect";
 
@@ -7,6 +7,9 @@ const AboutUs = () => {
         // Replace with your contact page navigation logic
         window.location.href = '/contact';
     };
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     return (
         <div className="about-us">

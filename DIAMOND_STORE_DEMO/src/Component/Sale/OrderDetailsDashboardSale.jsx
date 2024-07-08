@@ -49,12 +49,6 @@ const OrderDetails = ({ orderData }) => {
                     axios.get(`${API_URL}manage/accounts/${orderData.customerId}`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     }),
-                    orderData.saleId ? axios.get(`${API_URL}sales/${orderData.saleId}`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    }) : Promise.resolve({ data: null }),
-                    orderData.deliveryId ? axios.get(`${API_URL}delivery/${orderData.deliveryId}`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    }) : Promise.resolve({ data: null }),
                     ...orderData.orderDetails.flatMap(detail => [
                         axios.get(`${API_URL}product/${detail.productId}`),
                         detail.diamondId ? axios.get(`${API_URL}manage/diamond/${detail.diamondId}`, {
@@ -133,17 +127,7 @@ const OrderDetails = ({ orderData }) => {
         setSelectedCertificate(certificateUrl);
     };
 
-    //warranty
-    // const handleManageWarranty = (productId) => {
-    //     console.log('handleManageWarranty called with productId:', productId);
-    //     setSelectedProductForWarranty(productId);
-    //     setIsWarrantyModalOpen(true);
-    //     console.log('isWarrantyModalOpen set to:', true);
-    // };
-    //
-    // const handleWarrantyUpdated = (updatedWarranty) => {
-    //     console.log('Warranty updated:', updatedWarranty);
-    // };
+
 
     console.log('Rendering OrderDetails, isWarrantyModalOpen:', isWarrantyModalOpen);
     return (

@@ -18,6 +18,7 @@ const Cart = () => {
     useEffect(() => {
         const cartFromCookie = getCartFromCookie();
         setCartItems(cartFromCookie);
+        window.scrollTo(0, 0);
     }, []);
 
     const handleQuantityChange = async (productId, quantity) => {

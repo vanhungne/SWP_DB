@@ -37,11 +37,12 @@ const WarrantyManager = ({ productId, orderId }) => {
                 setWarranty(response.data);
                 setMode('view');
             } else {
+                setWarranty(null);
                 setMode('add');
             }
         } catch (err) {
             console.error('Error fetching warranty:', err);
-            setError('Failed to fetch warranty information. Please try again.');
+            setWarranty(null);
             setMode('add');
         } finally {
             setIsLoading(false);

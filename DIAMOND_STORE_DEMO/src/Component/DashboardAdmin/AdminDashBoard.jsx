@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import Sidebar from './Siderbar';
 import UserDashboard from './UserDashBoard';
@@ -20,6 +20,9 @@ const AdminDashboard = () => {
         setSelectedOrderId(null);
         setOrderDetailsData(null);
     };
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     const handleOrderClick = async (orderId) => {
         setLoading(true);

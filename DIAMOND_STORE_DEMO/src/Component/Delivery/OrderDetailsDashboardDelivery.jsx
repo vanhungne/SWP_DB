@@ -48,12 +48,6 @@ const OrderDetails = ({ orderData }) => {
                     axios.get(`${API_URL}manage/accounts/${orderData.customerId}`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     }),
-                    orderData.saleId ? axios.get(`${API_URL}sales/${orderData.saleId}`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    }) : Promise.resolve({ data: null }),
-                    orderData.deliveryId ? axios.get(`${API_URL}delivery/${orderData.deliveryId}`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    }) : Promise.resolve({ data: null }),
                     ...orderData.orderDetails.flatMap(detail => [
                         axios.get(`${API_URL}product/${detail.productId}`),
                         detail.diamondId ? axios.get(`${API_URL}manage/diamond/${detail.diamondId}`, {

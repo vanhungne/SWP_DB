@@ -1,8 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './OurStory.scss';
 import SnowEffect from "../Home/SnowEffect";
 
 const OurStory = () => {
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     return (
         <section className="our-story">
             <div className="our-story-header">

@@ -33,7 +33,6 @@ const statusLabels = {
     CANCELED: 'CANCELED',
     RECEIVED: 'RECEIVED'
 };
-
 const OrderDetails = ({ orderData }) => {
     const [customerInfo, setCustomerInfo] = useState(null);
     const [productInfo, setProductInfo] = useState({});
@@ -49,48 +48,55 @@ const OrderDetails = ({ orderData }) => {
 
             setLoading(true);
             setError(null);
+            const token = localStorage.getItem('token');
+
             try {
-                const token = localStorage.getItem('token');
+                // Fetch customer info
+                const customerResponse = await axios.get(`${API_URL}manage/accounts/${orderData.customerId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                setCustomerInfo(customerResponse.data);
 
-                const [customerResponse, ...productAndDiamondResponses] = await Promise.all([
-                    axios.get(`${API_URL}manage/accounts/${orderData.customerId}`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    }),
-                    orderData.saleId ? axios.get(`${API_URL}sales/${orderData.saleId}`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    }) : Promise.resolve({ data: null }),
-                    orderData.deliveryId ? axios.get(`${API_URL}delivery/${orderData.deliveryId}`, {
-                        headers: { 'Authorization': `Bearer ${token}` }
-                    }) : Promise.resolve({ data: null }),
-                    ...orderData.orderDetails.flatMap(detail => [
-                        axios.get(`${API_URL}product/${detail.productId}`),
-                        detail.diamondId ? axios.get(`${API_URL}manage/diamond/${detail.diamondId}`, {
-                            headers: { 'Authorization': `Bearer ${token}` }
-                        }) : Promise.resolve({ data: null })
-                    ])
-                ]);
+                // Fetch product info
+                const productInfoMap = {};
+                for (const detail of orderData.orderDetails) {
+                    try {
+                        const productResponse = await axios.get(`${API_URL}product/${detail.productId}`);
+                        productInfoMap[detail.productId] = productResponse.data;
+                    } catch (productError) {
+                        console.error(`Error fetching product ${detail.productId}:`, productError);
+                        productInfoMap[detail.productId] = null;
+                    }
+                }
+                setProductInfo(productInfoMap);
 
+                // Fetch diamond info
+                const diamondInfoMap = {};
+                for (const detail of orderData.orderDetails) {
+                    if (detail.diamondId) {
+                        try {
+                            const diamondResponse = await axios.get(`${API_URL}manage/diamond/${detail.diamondId}`, {
+                                headers: { 'Authorization': `Bearer ${token}` }
+                            });
+                            diamondInfoMap[detail.productId] = diamondResponse.data;
+                        } catch (diamondError) {
+                            console.error(`Error fetching diamond for product ${detail.productId}:`, diamondError);
+                            diamondInfoMap[detail.productId] = null;
+                        }
+                    }
+                }
+                setDiamondInfo(diamondInfoMap);
+
+                // Fetch payment info
                 try {
                     const paymentResponse = await axios.get(`${API_URL}payment/getPaymentByOrderId/${orderData.orderId}`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     });
                     setPaymentInfo(paymentResponse.data.data);
                 } catch (paymentError) {
-                    console.warn('Not found payment:', paymentError);
+                    console.warn('Payment not found:', paymentError);
                     setPaymentInfo(null);
                 }
-
-                setCustomerInfo(customerResponse.data);
-                const productInfoMap = {};
-                const diamondInfoMap = {};
-                orderData.orderDetails.forEach((detail, index) => {
-                    productInfoMap[detail.productId] = productAndDiamondResponses[index * 2].data;
-                    if (detail.diamondId) {
-                        diamondInfoMap[detail.productId] = productAndDiamondResponses[index * 2 + 1].data;
-                    }
-                });
-                setProductInfo(productInfoMap);
-                setDiamondInfo(diamondInfoMap);
 
                 setLoading(false);
             } catch (err) {
@@ -99,6 +105,7 @@ const OrderDetails = ({ orderData }) => {
                 setLoading(false);
             }
         };
+
         fetchAdditionalData();
     }, [orderData]);
 

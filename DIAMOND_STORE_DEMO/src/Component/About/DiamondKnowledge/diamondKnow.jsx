@@ -1,8 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './know.scss';
 import SnowEffect from "../../Home/SnowEffect";
 
 const DiamondKnowledge = () => {
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     return (
         <div className="diamond-knowledge" style={{paddingBottom:'10%'}}>
             <SnowEffect />

@@ -35,6 +35,7 @@ const MyAccount = () => {
         } else {
             setError('User is not logged in or token is missing');
         }
+        window.scrollTo(0, 0);
     }, [token]);
 
     const fetchUserInfo = async (userId) => {

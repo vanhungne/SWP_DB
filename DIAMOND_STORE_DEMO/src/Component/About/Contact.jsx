@@ -1,8 +1,11 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import './ContactInfo.scss';
 import SnowEffect from "../Home/SnowEffect";
 
 const ContactInfo = () => {
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     return (
         <div className="contact-page">
             <SnowEffect />
