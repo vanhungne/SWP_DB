@@ -1,0 +1,51 @@
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.product-slider {
+  font-family: 'Roboto', sans-serif;
+
+  .slider-item {
+    .col-md-3 {
+      width: 90%;
+      max-width: 100%;
+      flex: 0 0 100%;
+      max-height: 100%;
+    }
+  }
+
+  .slider-title {
+    margin-top: 5%;
+    text-align: center;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: #321313;
+    opacity: 0;
+    animation: fadeInUp 1s ease-in-out forwards;
+  }
+
+  .slick-prev,
+  .slick-next {
+    &:before {
+      color: #b87979;
+    }
+  }
+
+  .slick-dots {
+    li {
+      button:before {
+        color: #270303;
+      }
+      &.slick-active button:before {
+        color: #270303;
+      }
+    }
+  }
+}

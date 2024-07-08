@@ -113,8 +113,6 @@ const Header = () => {
                         <Nav.Link as={Link} to="/" className="custom-nav-link">Home</Nav.Link>
                         {renderNavDropdown("Products", "products-dropdown", [
                             {text: "Category", link: "/category"},
-                            {text: "Featured Products", link: "/featured-products"},
-                            {text: "New Arrivals", link: "/new-arrivals"}
                         ])}
                         <Nav.Link as={Link} to="/diamonds-price" className="custom-nav-link">Diamonds</Nav.Link>
                         {renderNavDropdown("About", "about-dropdown", [
