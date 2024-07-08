@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import axios from 'axios';
 import './DiamondPrice.scss';
 import {
@@ -39,6 +39,7 @@ const DiamondSearch = () => {
     const [activeTab, setActiveTab] = useState(0);
     const [categoryValue, setCategoryValue] = useState('');
 
+    const shouldScrollRef = useRef(false);
     const cutOptions = ["Oval", "Heart", "Round"];
     const clarityOptions = ["VS1", "VS2", "VVS1", "VVS2"];
     const colorOptions = ["D", "E", "G", "J"];
@@ -67,8 +68,15 @@ const DiamondSearch = () => {
             const params = { [['cut', 'color', 'clarity'][activeTab - 1]]: categoryValue };
             fetchDiamonds(endpoints[activeTab - 1], params);
         }
+        shouldScrollRef.current = true;
     }, [currentPage, pageSize, searchParams, activeTab, categoryValue]);
 
+    useEffect(() => {
+        if (shouldScrollRef.current) {
+            window.scrollTo(0, 0);
+            shouldScrollRef.current = false;
+        }
+    }, [currentPage]);
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setSearchParams(prev => ({ ...prev, [name]: value }));
@@ -83,6 +91,7 @@ const DiamondSearch = () => {
     };
 
     const handlePageChange = (newPage) => {
+        shouldScrollRef.current = true;
         setCurrentPage(newPage);
     };
 
@@ -95,16 +104,16 @@ const DiamondSearch = () => {
     return (
         <div className="diamond-search">
             <Tabs value={activeTab} onChange={handleTabChange} className="mb-4">
-                <Tab label="Search" />
-                <Tab label="By Cut" />
-                <Tab label="By Color" />
-                <Tab label="By Clarity" />
+                <Tab label="Search"/>
+                <Tab label="By Cut"/>
+                <Tab label="By Color"/>
+                <Tab label="By Clarity"/>
             </Tabs>
 
             {activeTab === 0 ? (
                 <Card className="mb-4 p-4">
                     <CardContent>
-                        <div className="grid grid-cols-2 gap-4 mb-4" style={{ display: 'flex', gap: '15px' }}>
+                        <div className="grid grid-cols-2 gap-4 mb-4" style={{display: 'flex', gap: '15px'}}>
                             <Select
                                 name="cut"
                                 label="Cut"
@@ -177,7 +186,7 @@ const DiamondSearch = () => {
                             variant="contained"
                             color="primary"
                             onClick={() => setCurrentPage(0)}
-                            startIcon={<SearchIcon />}
+                            startIcon={<SearchIcon/>}
                         >
                             Search
                         </Button>
@@ -230,7 +239,7 @@ const DiamondSearch = () => {
                             variant="contained"
                             color="primary"
                             onClick={() => setCurrentPage(0)}
-                            startIcon={<SearchIcon />}
+                            startIcon={<SearchIcon/>}
                         >
                             Get Diamonds
                         </Button>
