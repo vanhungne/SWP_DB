@@ -5,6 +5,7 @@ import { FcGoogle } from 'react-icons/fc';
 import { FiMail, FiLock, FiLogIn, FiUserPlus } from 'react-icons/fi';
 import { API_URL } from "../../Config/config";
 import '../../Scss/Login.scss';
+import { useAuth } from '../../Authentication/AuthContext';
 
 import iziToast from 'izitoast';
 import 'izitoast/dist/css/iziToast.min.css';
@@ -13,8 +14,9 @@ function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+    const { login } = useAuth();
 
-    const login = async (event) => {
+    const loginSubmit = async (event) => {
         event.preventDefault();
         try {
             const response = await axios.post(`${API_URL}login/signin`, null, {
@@ -23,6 +25,7 @@ function Login() {
 
             if (response.data.data) {
                 localStorage.setItem('token', response.data.data);
+                login(response.data.data);
                 iziToast.success({
                     title: 'Success',
                     message: 'Login successfully',
@@ -58,7 +61,7 @@ function Login() {
                     <h1>ESTHER DIAMOND</h1>
                     <p>Welcome back! Please login to your account.</p>
                 </div>
-                <form onSubmit={login} className="login-form">
+                <form onSubmit={loginSubmit} className="login-form">
                     <div className="input-group">
                         <FiMail className="input-icon" />
                         <input
