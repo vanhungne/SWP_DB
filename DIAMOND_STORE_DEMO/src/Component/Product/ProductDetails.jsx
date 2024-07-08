@@ -51,6 +51,7 @@ const ProductDetail = () => {
             fetchProductDetail();
             setAddedToCart(isProductInCart(parseInt(productId)));
         }
+        window.scrollTo(0, 0);
     }, [productId]);
 
     const fetchProductDetail = async () => {
