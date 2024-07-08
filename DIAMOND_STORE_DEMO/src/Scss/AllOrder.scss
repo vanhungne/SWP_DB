@@ -208,3 +208,73 @@
 .order-dashboard {
   animation: fadeIn 0.5s ease-out;
 }
+/* Responsive styles */
+@media screen and (max-width: 768px) {
+  .order-dashboard {
+    padding: 1rem;
+
+    .dashboard-title {
+      font-size: 2rem;
+    }
+
+    .order-table {
+      th, td {
+        padding: 0.75rem 0.5rem;
+      }
+    }
+
+    .status-badge {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+    }
+
+    .details-button {
+      padding: 0.4rem 1rem;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .order-dashboard {
+    .order-table {
+      display: block;
+
+      thead {
+        display: none;
+      }
+
+      tbody {
+        display: block;
+      }
+
+      .order-row {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+
+        td {
+          display: flex;
+          font-size: 0.85rem;
+
+          &:before {
+            content: attr(data-label);
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.75rem;
+          }
+        }
+      }
+    }
+    .status-badge {
+      width: 30%;
+      text-align: center;
+    }
+
+    .details-button {
+      width: 30%;
+      margin-top: 0.5rem;
+    }
+  }
+}

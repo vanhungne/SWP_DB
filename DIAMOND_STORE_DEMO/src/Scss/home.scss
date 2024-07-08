@@ -224,6 +224,10 @@ body {
 }
 
 @media (max-width: 768px) {
+    .col-md-3 {
+        flex: 0 0 auto;
+        width: 50%;
+    }
     .faq {
         padding: 3rem 1rem;
 
