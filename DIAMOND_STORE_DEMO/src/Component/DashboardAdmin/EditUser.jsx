@@ -95,13 +95,13 @@ const EditUser = ({ user, onSave, onCancel }) => {
                 <div className="billing-back-btn">
                     <div className="billing-btn">
                         <button
-                            className="btn btn-success mr-2"
+                            className="btn mr-2"
                             onClick={handleSave}
                         >
                             <i className="fas fa-save mr-2"></i>Save
                         </button>
                         <button
-                            className="btn btn-secondary"
+                            className="btn"
                             onClick={onCancel}
                         >
                             <i className="fas fa-times mr-2"></i>Cancel

@@ -17,7 +17,7 @@ const UserDashboard = () => {
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [totalElements, setTotalElements] = useState(0);
-    const pageSize = 10;
+    const pageSize = 7;
 
     useEffect(() => {
         fetchUsers(currentPage);
@@ -297,37 +297,130 @@ const UserDashboard = () => {
             </div>
 
             {showCreateUser && (
-                <div className={`modal ${styles['ud-modal']}`} style={{display: 'block'}}>
-                    <div className="modal-dialog modal-dialog-centered">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">Create User</h5>
-                                <button type="button" className="close" onClick={() => setShowCreateUser(false)}>
+                <div style={{
+
+                    display: 'block',
+                    position: 'fixed',
+                    zIndex: 1050,
+                    left: 0,
+                    top: 0,
+                    width: '100%',
+                    height: '100%',
+                    overflow: 'auto',
+                    backgroundColor: 'rgba(0,0,0,0.4)'
+                }}>
+                    <div style={{
+                        marginTop:'10%',
+                        position: 'relative',
+                        width: 'auto',
+                        margin: '1.75rem auto',
+                        maxWidth: '500px'
+                    }}>
+                        <div style={{
+                            position: 'relative',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            width: '100%',
+                            backgroundColor: '#fff',
+                            borderRadius: '.3rem',
+                            outline: 0
+                        }}>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'flex-start',
+                                justifyContent: 'space-between',
+                                padding: '1rem',
+                                borderBottom: '1px solid #dee2e6',
+                                borderTopLeftRadius: '.3rem',
+                                borderTopRightRadius: '.3rem'
+                            }}>
+                                <h5 style={{marginBottom: 0, lineHeight: 1.5}}>Create User</h5>
+                                <button onClick={() => setShowCreateUser(false)} style={{
+                                    padding: '1rem',
+                                    margin: '-1rem -1rem -1rem auto',
+                                    backgroundColor: 'transparent',
+                                    border: 0,
+                                    fontSize: '1.5rem',
+                                    fontWeight: 700,
+                                    lineHeight: 1,
+                                    color: '#000',
+                                    textShadow: '0 1px 0 #fff',
+                                    opacity: .5
+                                }}>
                                     <span>&times;</span>
                                 </button>
                             </div>
-                            <div className="modal-body">
+                            <div style={{position: 'relative', flex: '1 1 auto', padding: '1rem'}}>
                                 <CreateUser
-                                    user={newUser} onSave={handleCreateUser}
-                                            onCancel={() => setShowCreateUser(false)}/>
+                                    user={newUser}
+                                    onSave={handleCreateUser}
+                                    onCancel={() => setShowCreateUser(false)}
+                                />
                             </div>
                         </div>
                     </div>
                 </div>
             )}
             {showEditModal && (
-                <div className={`modal ${styles['ud-modal']}`} style={{display: 'block'}}>
-                    <div className="modal-dialog modal-dialog-centered">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title">Edit User</h5>
-                                <button type="button" className="close" onClick={() => setShowEditModal(false)}>
+                <div style={{
+                    display: 'block',
+                    position: 'fixed',
+                    zIndex: 1050,
+                    left: 0,
+                    top: 0,
+                    width: '100%',
+                    height: '100%',
+                    overflow: 'auto',
+                    backgroundColor: 'rgba(0,0,0,0.4)'
+                }}>
+                    <div style={{
+                        marginTop:'10%',
+                        position: 'relative',
+                        width: 'auto',
+                        margin: '1.75rem auto',
+                        maxWidth: '500px'
+                    }}>
+                        <div style={{
+                            marginTop:'10%',
+                            position: 'relative',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            width: '100%',
+                            backgroundColor: '#fff',
+                            borderRadius: '.3rem',
+                            outline: 0
+                        }}>
+                            <div style={{
+                                display: 'flex',
+                                alignItems: 'flex-start',
+                                justifyContent: 'space-between',
+                                padding: '1rem',
+                                borderBottom: '1px solid #dee2e6',
+                                borderTopLeftRadius: '.3rem',
+                                borderTopRightRadius: '.3rem'
+                            }}>
+                                <h5 style={{marginBottom: 0, lineHeight: 1.5}}>Edit User</h5>
+                                <button onClick={() => setShowEditModal(false)} style={{
+                                    padding: '1rem',
+                                    margin: '-1rem -1rem -1rem auto',
+                                    backgroundColor: 'transparent',
+                                    border: 0,
+                                    fontSize: '1.5rem',
+                                    fontWeight: 700,
+                                    lineHeight: 1,
+                                    color: '#000',
+                                    textShadow: '0 1px 0 #fff',
+                                    opacity: .5
+                                }}>
                                     <span>&times;</span>
                                 </button>
                             </div>
-                            <div className="modal-body">
-                                <EditUser user={editingUser} onSave={handleUpdateUser}
-                                          onCancel={() => setShowEditModal(false)}/>
+                            <div style={{position: 'relative', flex: '1 1 auto', padding: '1rem'}}>
+                                <EditUser
+                                    user={editingUser}
+                                    onSave={handleUpdateUser}
+                                    onCancel={() => setShowEditModal(false)}
+                                />
                             </div>
                         </div>
                     </div>

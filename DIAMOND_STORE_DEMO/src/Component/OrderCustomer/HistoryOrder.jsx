@@ -121,7 +121,7 @@ const OrderDashboard = () => {
                 <table className="order-table">
                     <thead>
                     <tr>
-                        <th >Date</th>
+                        <th>Date</th>
                         <th>Total Amount</th>
                         <th>Delivery Address</th>
                         <th>Status</th>
@@ -129,38 +129,44 @@ const OrderDashboard = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {orders.map((order) => (
-                        <tr key={order.orderId} className="order-row">
-                            <td style={{color: 'blue', fontSize: '15px'}}>
-                                {new Date(order.orderDate).toLocaleString()}
-                            </td>
-                            <td>${order.orderTotalAmount.toFixed(2)}</td>
-                            <td>{order.orderDeliveryAddress}</td>
-                            <td>
-                                <span className={`status-badge ${order.status.toLowerCase()}`}>
-                                    <FontAwesomeIcon icon={statusIcons[order.status]}/>
-                                    {order.status}
-                                </span>
-                            </td>
-                            <td style={{display: 'flex', gap: '10px'}}>
-                                <button
-                                    onClick={() => handleDetailsClick(order.orderId)}
-                                    className="details-button"
-                                >
-                                 Details
-                                </button>
-                                {order.status === 'PENDING' && (
+                    {orders.length > 0 ? (
+                        orders.map((order) => (
+                            <tr key={order.orderId} className="order-row">
+                                <td style={{color: 'blue', fontSize: '15px'}}>
+                                    {new Date(order.orderDate).toLocaleString()}
+                                </td>
+                                <td>${order.orderTotalAmount.toFixed(2)}</td>
+                                <td>{order.orderDeliveryAddress}</td>
+                                <td>
+                <span className={`status-badge ${order.status.toLowerCase()}`}>
+                  <FontAwesomeIcon icon={statusIcons[order.status]}/>
+                    {order.status}
+                </span>
+                                </td>
+                                <td style={{display: 'flex', gap: '10px'}}>
                                     <button
-                                        onClick={() => handlePayNowClick(order.orderId)}
+                                        onClick={() => handleDetailsClick(order.orderId)}
                                         className="details-button"
-                                        style={{backgroundColor: "green", width: '102px', textAlign: 'center'}}
                                     >
-                                        <CreditCard size={16}/> Pay
+                                        Details
                                     </button>
-                                )}
-                            </td>
+                                    {order.status === 'PENDING' && (
+                                        <button
+                                            onClick={() => handlePayNowClick(order.orderId)}
+                                            className="details-button"
+                                            style={{backgroundColor: "green", width: '102px', textAlign: 'center'}}
+                                        >
+                                            <CreditCard size={16}/> Pay
+                                        </button>
+                                    )}
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="5" style={{textAlign: 'center',fontWeight:'bold'}}>No orders</td>
                         </tr>
-                    ))}
+                    )}
                     </tbody>
                 </table>
             </div>

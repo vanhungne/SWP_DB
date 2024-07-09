@@ -10,7 +10,6 @@ import { useNavigate } from 'react-router-dom';
 import {API_URL} from "../../Config/config";
 import ImageCarousel from "../../Layouttest/SliderHome";
 import SnowEffect from "./SnowEffect";
-import { motion, useAnimation } from 'framer-motion';
 import ProductSlider from './ProductSlider';
 
 // Hàm xáo trộn mảng
@@ -35,7 +34,6 @@ const Home = () => {
         fetchFeaturedProducts();
         fetchCollectionProducts();
         fetchAllProducts();
-
 
         const handleVisibilityChange = () => {
             if (document.visibilityState === 'visible' && videoRef.current) {
@@ -83,6 +81,7 @@ const Home = () => {
             setCollectionError('Error fetching collection products. Please try again later.');
         }
     };
+
     const fetchAllProducts = async () => {
         try {
             const response = await axios.get(`${API_URL}home`);
@@ -111,10 +110,6 @@ const Home = () => {
             answer: "Yes, Diamonds Ethers provides custom design services to create unique diamond jewelry pieces. Our process involves: 1) An initial consultation to discuss your vision and budget. 2) Creation of detailed sketches or 3D renderings for your approval. 3) Selection of the perfect diamond and other materials. 4) Crafting of the piece by our expert artisans. 5) Quality control and final adjustments. 6) Presentation of your custom piece, complete with a certificate of authenticity. This service allows you to create a one-of-a-kind piece that perfectly matches your style and preferences."
         }
     ];
-    const sectionVariants = {
-        hidden: { opacity: 0, y: 50 },
-        visible: { opacity: 1, y: 0, transition: { duration: 0.5 } }
-    };
 
     return (
         <>
@@ -125,12 +120,7 @@ const Home = () => {
             <SnowEffect/>
             <VideoBanner/>
 
-            <motion.div
-                className="container"
-                initial="hidden"
-                animate="visible"
-                variants={sectionVariants}
-            >
+            <div className="container">
                 <div className="row">
                     <div className="col-12 mb-4">
                         <h1>SPECIAL PRODUCT</h1>
@@ -142,14 +132,9 @@ const Home = () => {
                         <div className="alert alert-danger" role="alert">{error}</div>
                     </div>}
                 </div>
-            </motion.div>
 
-            <motion.div
-                className="row mt-5"
-                initial="hidden"
-                animate="visible"
-                variants={sectionVariants}
-            >
+
+            <div className="row mt-5">
                 <div className="col-12 mb-4">
                     <h1>OUTSTANDING PRODUCT</h1>
                 </div>
@@ -177,22 +162,11 @@ const Home = () => {
                         className="img-fluid"
                     />
                 </div>
-            </motion.div>
+            </div>
 
-            <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={sectionVariants}
-            >
-                <ProductSlider products={allProducts} title="You may like" />
-            </motion.div>
+            <ProductSlider products={allProducts} title="You may like" />
 
-            <motion.div
-                className="row mt-5"
-                initial="hidden"
-                animate="visible"
-                variants={sectionVariants}
-            >
+            <div className="row mt-5">
                 <div className="col-12 mb-4">
                     <h1>Esther Lock Collection</h1>
                 </div>
@@ -203,38 +177,21 @@ const Home = () => {
                 {collectionProducts.map((product) => (
                     <ProductCard key={product.productId} product={product}/>
                 ))}
-            </motion.div>
+            </div>
+            </div>
+            <ImageCarousel/>
 
-            <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={sectionVariants}
-            >
-                <ImageCarousel/>
-            </motion.div>
-
-            <motion.section
-                className="faq"
-                initial="hidden"
-                animate="visible"
-                variants={sectionVariants}
-            >
+            <section className="faq">
                 <h2>Frequently Asked Questions</h2>
                 <div className="faq-list">
                     {faqItems.map((item, index) => (
-                        <motion.details
-                            key={index}
-                            className="faq-item"
-                            initial="hidden"
-                            animate="visible"
-                            variants={sectionVariants}
-                        >
+                        <details key={index} className="faq-item">
                             <summary>{item.question}</summary>
                             <p>{item.answer}</p>
-                        </motion.details>
+                        </details>
                     ))}
                 </div>
-            </motion.section>
+            </section>
         </>
     );
 };

@@ -79,10 +79,10 @@ const CreateUser = ({ onCancel, onSave }) => {
                 </div>
                 <div className="billing-back-btn">
                     <div className="billing-btn">
-                        <button className="btn btn-success mr-2" onClick={handleCreateUser}>
+                        <button className="btn mr-2" onClick={handleCreateUser}>
                             <i className="fas fa-plus-circle mr-2"></i>Create
                         </button>
-                        <button className="btn btn-secondary" onClick={onCancel}><i className="fas fa-times mr-2"></i>Cancel
+                        <button className="btn" onClick={onCancel}><i className="fas fa-times mr-2"></i>Cancel
                         </button>
                     </div>
                 </div>
