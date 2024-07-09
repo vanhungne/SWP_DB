@@ -54,7 +54,11 @@ const ProductTable = ({setSelectedProductId, setCurrentView} ) => {
 
     const deleteProduct = async (id) => {
         try {
-            await axios.delete(`${API_URL}product/delete/${id}`);
+            await axios.delete(`${API_URL}product/delete/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            });
             fetchProducts(currentPage, pageSize);
         } catch (error) {
             console.error('Error deleting product:', error);

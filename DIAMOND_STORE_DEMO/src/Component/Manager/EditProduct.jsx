@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../../Config/config';
 import '../../Scss/EditProduct.scss';
+import iziToast from "izitoast";
 
 const EditProduct = ({ productId, goBack, viewProduct }) => {
     const [product, setProduct] = useState(null);
@@ -98,10 +99,12 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
-        setUpdatedProduct({
-            ...updatedProduct,
-            [name]: value,
-        });
+        if(value !== null && value !== "") {
+            setUpdatedProduct({
+                ...updatedProduct,
+                [name]: value,
+            });
+        }
     };
 
     const handleImageUpload = (e, imageField) => {
@@ -185,7 +188,11 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
                 }));
             } else {
                 console.error('Invalid diamondId:', diamondId);
-                setError('Please select a valid diamond.');
+                iziToast.error({
+                    title: 'error',
+                    message: 'Please select a valid diamond',
+                    position: 'topRight'
+                });
             }
         } catch (error) {
             console.error('Error adding diamond:', error);
@@ -285,7 +292,7 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
                         onChange={handleInputChange}
                         required
                     >
-                        <option value="" disabled>Select Category</option>
+                        <option value="">Select Category</option>
                         {categories.map(category => (
                             <option key={category.categoryId} value={category.categoryId}>
                                 {category.categoryName}
@@ -302,7 +309,7 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
                         onChange={handleInputChange}
                         required
                     >
-                        <option value="" disabled>Select Shell</option>
+                        <option value="">Select Shell</option>
                         {shells.map(shell => (
                             <option key={shell.shellId} value={shell.shellId}>
                                 {shell.shellName}
@@ -330,7 +337,7 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
                             name="unusedDiamondId"
                             onChange={(e) => handleAddDiamond(e.target.value)}
                         >
-                            <option value="" disabled>Select Diamond to Add</option>
+                            <option value="">Select Diamond to Add</option>
                             {unusedDiamonds.map(diamond => (
                                 <option key={diamond.diamondId} value={diamond.diamondId}>
                                     {diamond.diamondId}
