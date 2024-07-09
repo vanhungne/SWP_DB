@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_URL } from '../../Config/config';
-import '../../Scss/EditProduct.scss';
+import '../../Scss/EditDiamond.scss';
 
 const EditDiamond = ({ diamondId, goBack }) => {
     const [diamond, setDiamond] = useState({});
