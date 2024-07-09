@@ -164,7 +164,7 @@ const Home = () => {
                 </div>
             </div>
 
-            <ProductSlider products={allProducts} title="You may like" />
+            <ProductSlider products={allProducts} title="Best of the best" />
 
             <div className="row mt-5">
                 <div className="col-12 mb-4">
