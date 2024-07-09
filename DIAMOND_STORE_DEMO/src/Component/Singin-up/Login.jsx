@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { FcGoogle } from 'react-icons/fc';
@@ -54,6 +54,9 @@ function Login() {
     const handleGoogleLogin = () => {
         window.location.href = `${API_URL}oauth2/authorization/google`;
     };
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
     return (
         <div className="login-container">
             <div className="login-card">

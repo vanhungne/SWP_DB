@@ -31,6 +31,7 @@ const Register = () => {
             };
             checkEmail();
         }
+        window.scrollTo(0, 0);
     }, [formData.email]);
 
     const validateForm = () => {
