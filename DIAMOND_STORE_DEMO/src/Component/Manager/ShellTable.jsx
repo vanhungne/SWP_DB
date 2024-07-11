@@ -3,6 +3,7 @@ import axios from "axios";
 import {API_URL} from "../../Config/config";
 import {Link} from "react-router-dom";
 import {Edit, Eye, Trash2} from "lucide-react";
+import iziToast from 'izitoast';
 
 const ShellTable = ({ setSelectedShellId, setCurrentView }) => {
     const [productsPage, setProductsPage] = useState({
@@ -45,17 +46,42 @@ const ShellTable = ({ setSelectedShellId, setCurrentView }) => {
     };
 
     const deleteShell = async (id) => {
-        try {
-            await axios.delete(`${API_URL}manage/shell/delete/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            fetchShells(currentPage, pageSize);
-        } catch (error) {
-            console.error('Error deleting shell:', error);
-            setError('Error deleting shell. Please try again later.');
-        }
+        iziToast.question({
+            timeout: 20000,
+            close: false,
+            overlay: true,
+            displayMode: 'once',
+            id: 'question',
+            zindex: 999,
+            title: 'Confirm',
+            message: 'Are you sure you want to delete this shell?',
+            position: 'center',
+            buttons: [
+                ['<button><b>YES</b></button>', async function (instance, toast) {
+                    try {
+                        await axios.delete(`${API_URL}manage/shell/delete/${id}`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
+                        fetchShells(currentPage, pageSize);
+                        iziToast.success({
+                            title: 'Success',
+                            message: 'Delete shell successfully',
+                            position: 'topRight',
+                            timeout: 1500,
+                        });
+                    } catch (error) {
+                        console.error('Error deleting shell:', error);
+                        setError('Error deleting shell. Please try again later.');
+                    }
+                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                }, true],
+                ['<button>NO</button>', function (instance, toast) {
+                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                }]
+            ]
+        });
     };
 
     const handleSearchChange = (event) => {

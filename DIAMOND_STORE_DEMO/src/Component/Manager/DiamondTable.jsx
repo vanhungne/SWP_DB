@@ -4,6 +4,7 @@ import {API_URL} from "../../Config/config";
 import {Link} from "react-router-dom";
 import '../../Scss/DiamondTable.scss'
 import {Edit, Eye, Trash2} from "lucide-react";
+import iziToast from 'izitoast';
 
 const DiamondTable = ({ setSelectedDiamondId, setCurrentView}) => {
     const [productsPage, setProductsPage] = useState({
@@ -74,13 +75,41 @@ const DiamondTable = ({ setSelectedDiamondId, setCurrentView}) => {
     };
 
     const deleteDiamond = async (id) => {
-        try {
-            await axios.delete(`${API_URL}manage/diamond/delete/${id}`);
-            fetchDiamonds(currentPage, pageSize);
-        } catch (error) {
-            console.error('Error deleting diamond:', error);
-            setError('Error deleting diamond. Please try again later.');
-        }
+        iziToast.question({
+            timeout: 20000,
+            close: false,
+            overlay: true,
+            displayMode: 'once',
+            id: 'question',
+            title: 'Confirm',
+            message: 'Are you sure you want to delete this diamond?',
+            position: 'center',
+            buttons: [
+                ['<button><b>YES</b></button>', async function (instance, toast) {
+                    try {
+                        await axios.delete(`${API_URL}manage/diamond/delete/${id}`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
+                        fetchDiamonds(currentPage, pageSize);
+                        iziToast.success({
+                            title: 'Success',
+                            message: 'Delete diamond successfully',
+                            position: 'topRight',
+                            timeout: 1500,
+                        });
+                    } catch (error) {
+                        console.error('Error deleting diamond:', error);
+                        setError('Error deleting diamond. Please try again later.');
+                    }
+                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                }, true],
+                ['<button>NO</button>', function (instance, toast) {
+                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                }]
+            ]
+        });
     };
 
     const handleDiamondSearchChange = (event) => {
@@ -212,6 +241,7 @@ const DiamondTable = ({ setSelectedDiamondId, setCurrentView}) => {
                                     onClick={() => deleteDiamond(diamond.diamondId)}
                                     className="p-2 text-red-600 hover:bg-red-100 rounded-full transition-colors"
                                     title="Delete"
+                                    disabled={!diamond.status}
                                 >
                                     <Trash2 size={20}/>
                                 </button>

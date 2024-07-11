@@ -19,6 +19,7 @@ import {
     DialogTitle,
 } from '@material-ui/core';
 import { API_URL } from "../../Config/config";
+import iziToast from 'izitoast';
 
 const DiamondPrice = () => {
     const [diamonds, setDiamonds] = useState([]);
@@ -167,17 +168,43 @@ const DiamondPrice = () => {
     };
 
     const handleDelete = async (id) => {
-        try {
-            await axios.delete(`${API_URL}manage/diamond-price/delete/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            fetchDiamondPrices(currentPage, pageSize);
-        } catch (error) {
-            console.error('Error deleting diamond price:', error);
-            setError('Error deleting diamond price. Please try again later.');
-        }
+        iziToast.question({
+            timeout: 20000,
+            close: false,
+            overlay: true,
+            displayMode: 'once',
+            id: 'question',
+            zindex: 999,
+            title: 'Confirm',
+            message: 'Are you sure you want to delete this diamond price?',
+            position: 'center',
+            buttons: [
+                ['<button><b>YES</b></button>', async function (instance, toast) {
+                    try {
+                        await axios.delete(`${API_URL}manage/diamond-price/delete/${id}`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
+                        fetchDiamondPrices(currentPage, pageSize);
+                        iziToast.success({
+                            title: 'Success',
+                            message: 'Delete diamond price successfully',
+                            position: 'topRight',
+                            timeout: 1500,
+                        });
+                    } catch (error) {
+                        console.error('Error deleting diamond price:', error);
+                        setError('Error deleting diamond price. Please try again later.');
+                    }
+                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                }, true],
+                ['<button>NO</button>', function (instance, toast) {
+                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                }]
+            ]
+        });
+
     };
 
     const handlePageChange = (newPage) => {

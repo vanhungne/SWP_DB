@@ -3,6 +3,7 @@ import axios from "axios";
 import {API_URL} from "../../Config/config";
 import {Link} from "react-router-dom";
 import { Eye, Edit, Trash2 } from 'lucide-react';
+import iziToast from 'izitoast';
 
 const ProductTable = ({setSelectedProductId, setCurrentView} ) => {
     const [productsPage, setProductsPage] = useState({
@@ -53,18 +54,42 @@ const ProductTable = ({setSelectedProductId, setCurrentView} ) => {
     };
 
     const deleteProduct = async (id) => {
-        try {
-            await axios.delete(`${API_URL}product/delete/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+        iziToast.question({
+            timeout: 20000,
+            close: false,
+            overlay: true,
+            displayMode: 'once',
+            id: 'question',
+            title: 'Confirm',
+            message: 'Are you sure you want to delete this product?',
+            position: 'center',
+            buttons: [
+                ['<button><b>YES</b></button>', async function (instance, toast) {
+                    try {
+                        await axios.delete(`${API_URL}product/delete/${id}`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
+                        fetchProducts(currentPage, pageSize);
+                        iziToast.success({
+                            title: 'Success',
+                            message: 'Delete product successfully',
+                            position: 'topRight',
+                            timeout: 1500,
+                        });
+                    } catch (error) {
+                        console.error('Error deleting product:', error);
+                        setError('Error deleting product. Please try again later.');
+                    }
+                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                }, true],
+                ['<button>NO</button>', function (instance, toast) {
+                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                }]
+            ]
             });
-            fetchProducts(currentPage, pageSize);
-        } catch (error) {
-            console.error('Error deleting product:', error);
-            setError('Error deleting product. Please try again later.');
-        }
-    };
+        };
 
     const handleSearchChange = (event) => {
         setSearchKeyword(event.target.value);

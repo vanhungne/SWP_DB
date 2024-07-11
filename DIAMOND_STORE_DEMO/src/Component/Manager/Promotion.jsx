@@ -17,6 +17,7 @@ import {
     DialogTitle
 } from '@material-ui/core';
 import { API_URL } from "../../Config/config";
+import iziToast from 'izitoast';
 
 const Promotion = () => {
     const { currentUser} = useAuth();
@@ -101,16 +102,41 @@ const Promotion = () => {
     };
 
     const handleDelete = async (id) => {
-        try {
-            await axios.delete(`${API_URL}manage/promotion/delete/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            fetchPromotions(currentPage, pageSize);
-        } catch (error) {
-            console.error('Error deleting promotion:', error);
-        }
+        iziToast.question({
+            timeout: 20000,
+            close: false,
+            overlay: true,
+            displayMode: 'once',
+            id: 'question',
+            zindex: 999,
+            title: 'Confirm',
+            message: 'Are you sure you want to delete this promotion?',
+            position: 'center',
+            buttons: [
+                ['<button><b>YES</b></button>', async function (instance, toast) {
+                    try {
+                        await axios.delete(`${API_URL}manage/promotion/delete/${id}`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
+                        fetchPromotions(currentPage, pageSize);
+                        iziToast.success({
+                            title: 'Success',
+                            message: 'Delete promotion successfully',
+                            position: 'topRight',
+                            timeout: 1500,
+                        });
+                    } catch (error) {
+                        console.error('Error deleting promotion:', error);
+                    }
+                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                }, true],
+                ['<button>NO</button>', function (instance, toast) {
+                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                }]
+            ]
+        });
     };
 
     const handleCreate = () => {

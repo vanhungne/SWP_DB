@@ -3,7 +3,7 @@ import axios from 'axios';
 import '../../Scss/ManagerDashBoard.scss';
 import { API_URL } from "../../Config/config";
 import {Edit, Trash2} from "lucide-react";
-
+import iziToast from 'izitoast';
 const Category = () => {
     const [categories, setCategories] = useState([]);
     const [form, setForm] = useState({ categoryId: '', categoryName: '' });
@@ -71,16 +71,42 @@ const Category = () => {
     };
 
     const handleDelete = async (id) => {
-        try {
-            await axios.delete(`${API_URL}manager/category/delete/${id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            });
-            fetchCategories();
-        } catch (error) {
-            console.error('Error deleting category', error);
-        }
+        iziToast.question({
+            timeout: 20000,
+            close: false,
+            overlay: true,
+            displayMode: 'once',
+            id: 'question',
+            zindex: 999,
+            title: 'Confirm',
+            message: 'Are you sure you want to delete this category?',
+            position: 'center',
+            buttons: [
+                ['<button><b>YES</b></button>', async function (instance, toast) {
+                    try {
+                        await axios.delete(`${API_URL}manager/category/delete/${id}`, {
+                            headers: {
+                                Authorization: `Bearer ${token}`,
+                            },
+                        });
+                        fetchCategories();
+                        iziToast.success({
+                            title: 'Success',
+                            message: 'Delete category successfully',
+                            position: 'topRight',
+                            timeout: 1500,
+                        });
+                    } catch (error) {
+                        console.error('Error deleting category', error);
+                    }
+                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                }, true],
+                ['<button>NO</button>', function (instance, toast) {
+                    instance.hide({ transitionOut: 'fadeOut' }, toast, 'button');
+                }]
+            ]
+        });
+
     };
 
     const handleShowModal = () => {
