@@ -4,7 +4,7 @@ import '../../Scss/sidebar.scss';
 const Sidebar = ({ selectedComponent, onComponentChange }) => {
     return (
         <div className="custom-sidebar">
-            <h3 className="custom-sidebar__title" style={{textAlign:'center'}}>Sale</h3>
+            <h3 className="custom-sidebar__title" style={{textAlign:'center'}}>DELIVERY</h3>
             <ul className="custom-sidebar__menu">
                 <li
                     className={`custom-sidebar__item ${selectedComponent === 'Order' ? 'custom-sidebar__item--active' : ''}`}
