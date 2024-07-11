@@ -11,7 +11,7 @@ import {
     faCreditCard,
     faTruck,
     faTimesCircle,
-    faBoxOpen
+    faBoxOpen, faChevronLeft
 } from '@fortawesome/free-solid-svg-icons';
 import '../../Scss/AllOrder.scss';
 import { API_URL } from "../../Config/config";
@@ -96,7 +96,7 @@ const OrderDashboard = ({ onOrderClick }) => {
     return (
         <div className="order-dashboard">
             <h1 className="dashboard-title">
-                <FontAwesomeIcon icon={faShoppingCart} />
+                <FontAwesomeIcon icon={faShoppingCart}/>
                 Order Dashboard
             </h1>
             <div className="order-table-container">
@@ -127,7 +127,7 @@ const OrderDashboard = ({ onOrderClick }) => {
                                           icon={statusIcons[order.status].icon}
                                           style={{color: statusIcons[order.status].color}}
                                       />
-                                           {statusLabels[order.status]}
+                                    {statusLabels[order.status]}
                                 </span>
                             </td>
                             <td>{order.customerId}</td>
@@ -146,25 +146,30 @@ const OrderDashboard = ({ onOrderClick }) => {
                 </table>
             </div>
             <div className="pagination">
+                <button
+                    onClick={() => paginate(currentPage - 1)}
+                    disabled={currentPage === 0}
+                    className="pagination-button"
+                >
+                    {/* eslint-disable-next-line no-undef */}
+                    <FontAwesomeIcon icon={faChevronLeft}/> Previous
+                </button>
                 {Array.from({length: totalPages}, (_, i) => (
                     <button
                         key={i}
                         onClick={() => paginate(i)}
-                        style={{
-                            padding: '5px 10px',
-                            margin: '0 2px',
-                            fontSize: '14px',
-                            fontWeight: 'bold',
-                            color: currentPage === i ? 'white' : 'black',
-                            backgroundColor: currentPage === i ? 'blue' : 'transparent',
-                            border: '1px solid blue',
-                            borderRadius: '3px',
-                            cursor: 'pointer',
-                        }}
+                        className={`pagination-button ${currentPage === i ? 'active' : ''}`}
                     >
                         {i + 1}
                     </button>
                 ))}
+                <button
+                    onClick={() => paginate(currentPage + 1)}
+                    disabled={currentPage === totalPages - 1}
+                    className="pagination-button"
+                >
+                    Next <FontAwesomeIcon icon={faChevronRight}/>
+                </button>
             </div>
 
         </div>
