@@ -6,6 +6,7 @@ import '../../Scss/EditDiamond.scss';
 const EditDiamond = ({ diamondId, goBack }) => {
     const [diamond, setDiamond] = useState({});
     const [error, setError] = useState('');
+    const [formErrors, setFormErrors] = useState({});
     const [updatedDiamond, setUpdatedDiamond] = useState({
         diamondId: '',
         carat: '',
@@ -58,6 +59,11 @@ const EditDiamond = ({ diamondId, goBack }) => {
             ...updatedDiamond,
             [name]: value,
         });
+        // Clear the error for this field when the user starts typing
+        setFormErrors({
+            ...formErrors,
+            [name]: ''
+        });
     };
 
     const handleFileChange = (e) => {
@@ -81,6 +87,11 @@ const EditDiamond = ({ diamondId, goBack }) => {
                         ...prevState,
                         certification: response.data.url,
                     }));
+                    // Clear the error for certification when a file is uploaded
+                    setFormErrors({
+                        ...formErrors,
+                        certification: ''
+                    });
                 })
                 .catch((error) => {
                     console.error('Error uploading image:', error);
@@ -89,8 +100,27 @@ const EditDiamond = ({ diamondId, goBack }) => {
         }
     };
 
+    const validateForm = () => {
+        const errors = {};
+        let isValid = true;
+
+        // Check each required field
+        ['carat', 'cut', 'color', 'clarity', 'certification'].forEach(field => {
+            if (!updatedDiamond[field]) {
+                errors[field] = `${field.charAt(0).toUpperCase() + field.slice(1)} is required`;
+                isValid = false;
+            }
+        });
+
+        setFormErrors(errors);
+        return isValid;
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!validateForm()) {
+            return;
+        }
         try {
             if (diamondId) {
                 await axios.put(`${API_URL}manage/diamond/update`, updatedDiamond, {
@@ -144,6 +174,10 @@ const EditDiamond = ({ diamondId, goBack }) => {
                         onChange={handleInputChange}
                         required
                     />
+                    {formErrors.carat && <span className="error">{formErrors.carat}</span>}
+                </div>
+                <div>
+                    <span>{updatedDiamond.price}</span>
                 </div>
                 <div>
                     <label>Cut:</label>
@@ -154,6 +188,7 @@ const EditDiamond = ({ diamondId, goBack }) => {
                         onChange={handleInputChange}
                         required
                     />
+                    {formErrors.cut && <span className="error">{formErrors.cut}</span>}
                 </div>
                 <div>
                     <label>Color:</label>
@@ -164,6 +199,7 @@ const EditDiamond = ({ diamondId, goBack }) => {
                         onChange={handleInputChange}
                         required
                     />
+                    {formErrors.color && <span className="error">{formErrors.color}</span>}
                 </div>
                 <div>
                     <label>Clarity:</label>
@@ -174,6 +210,7 @@ const EditDiamond = ({ diamondId, goBack }) => {
                         onChange={handleInputChange}
                         required
                     />
+                    {formErrors.clarity && <span className="error">{formErrors.clarity}</span>}
                 </div>
                 <div>
                     <label>Certification:</label>
@@ -181,6 +218,7 @@ const EditDiamond = ({ diamondId, goBack }) => {
                         type="file"
                         onChange={handleFileChange}
                     />
+                    {formErrors.certification && <span className="error">{formErrors.certification}</span>}
                 </div>
                 {diamond.certification && <img src={diamond.certification} alt="Certification" />}
                 <div className="button-container">

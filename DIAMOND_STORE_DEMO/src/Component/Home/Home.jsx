@@ -107,8 +107,21 @@ const Home = () => {
         },
         {
             question: "Does Diamonds Ethers offer custom design services for diamond jewelry?",
-            answer: "Yes, Diamonds Ethers provides custom design services to create unique diamond jewelry pieces. Our process involves: 1) An initial consultation to discuss your vision and budget. 2) Creation of detailed sketches or 3D renderings for your approval. 3) Selection of the perfect diamond and other materials. 4) Crafting of the piece by our expert artisans. 5) Quality control and final adjustments. 6) Presentation of your custom piece, complete with a certificate of authenticity. This service allows you to create a one-of-a-kind piece that perfectly matches your style and preferences."
+            answer: (
+                <div>
+                    Yes, Diamonds Ethers provides custom design services to create unique diamond jewelry pieces. Our process involves:<br />
+                    1) An initial consultation to discuss your vision and budget.<br />
+                    2) Creation of detailed sketches or 3D renderings for your approval.<br />
+                    3) Selection of the perfect diamond and other materials.<br />
+                    4) Crafting of the piece by our expert artisans.<br />
+                    5) Quality control and final adjustments.<br />
+                    6) Presentation of your custom piece, complete with a certificate of authenticity. This service allows you
+                         to create a one-of-a-kind piece that perfectly matches your style and preferences.
+                </div>
+            )
         }
+
+
     ];
 
     return (
@@ -140,7 +153,7 @@ const Home = () => {
                 </div>
                 <div className="col-md-4 mb-4">
                     <img
-                        style={{height: '100%', objectFit: 'cover', borderRadius: '15px'}}
+                        style={{height: '100%', objectFit: 'cover', borderRadius: '5px'}}
                         src="/images/beau1.webp"
                         alt="Beautiful Image 1"
                         className="img-fluid"
@@ -148,7 +161,7 @@ const Home = () => {
                 </div>
                 <div className="col-md-4 mb-4">
                     <img
-                        style={{height: '100%', objectFit: 'cover', borderRadius: '15px'}}
+                        style={{height: '100%', objectFit: 'cover', borderRadius: '5px'}}
                         src="/images/beau2.webp"
                         alt="Beautiful Image 2"
                         className="img-fluid"
@@ -156,7 +169,7 @@ const Home = () => {
                 </div>
                 <div className="col-md-4 mb-4">
                     <img
-                        style={{height: '100%', objectFit: 'cover', borderRadius: '15px'}}
+                        style={{height: '100%', objectFit: 'cover', borderRadius: '5px'}}
                         src="/images/beau3.webp"
                         alt="Beautiful Image 3"
                         className="img-fluid"

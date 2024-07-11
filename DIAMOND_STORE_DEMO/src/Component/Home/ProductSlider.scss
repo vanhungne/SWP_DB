@@ -35,7 +35,7 @@
   .slick-prev,
   .slick-next {
     &:before {
-      color: #b87979;
+      color: rgba(39, 10, 10, 0.1);
     }
   }
 
@@ -47,6 +47,28 @@
       &.slick-active button:before {
         color: #270303;
       }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .product-slider {
+    .slider-title {
+      font-size: 2rem;
+    }
+
+    .slider-item {
+      .col-md-3 {
+        width: 100%;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .product-slider {
+    .slider-title {
+      font-size: 1.5rem;
     }
   }
 }

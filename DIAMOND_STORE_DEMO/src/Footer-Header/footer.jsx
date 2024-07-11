@@ -3,9 +3,9 @@ import { Container, Row, Col, Form, Button } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faInstagram, faYoutube } from '@fortawesome/free-brands-svg-icons';
 import '../Scss/Footer.scss';
+
 const Footer = () => {
     return (
-
         <footer className="bg-light py-5">
             <div className="mt-5"></div>
             <Container>
@@ -21,21 +21,19 @@ const Footer = () => {
                     <Col md={3}>
                         <h3 className="h5 mb-4">COMPANY</h3>
                         <ul className="list-unstyled">
-                        <li className="mb-2">About Esther Diamonds</li>
-                            <li className="mb-2">Fashion News</li>
-                            <li className="mb-2">Brand Collaborations</li>
-                            <li>Contact Us</li>
+                            <li className="mb-2"><a style={{textDecoration:'none'}} href="/about" className="text-dark">About Esther Diamonds</a></li>
+                            <li className="mb-2"><a style={{textDecoration:'none'}}  href="/story" className="text-dark">Our Story</a></li>
+                            <li className="mb-2"><a style={{textDecoration:'none'}}  href="/knowledge" className="text-dark">Knowledge</a></li>
+                            <li><a style={{textDecoration:'none'}}  href="/contact" className="text-dark">Contact Us</a></li>
                         </ul>
                     </Col>
 
                     <Col md={3}>
                         <h3 className="h5 mb-4">CUSTOMER POLICIES</h3>
                         <ul className="list-unstyled">
-                            <li className="mb-2">Loyalty Program</li>
-                            <li className="mb-2">Warranty Policy</li>
-                            <li className="mb-2">Privacy Policy</li>
-                            <li className="mb-2">FAQ</li>
-                            <li>Online Shopping Guide</li>
+                            <li className="mb-2"><a style={{textDecoration:'none'}}  href="/loyalty" className="text-dark">Loyalty Program</a></li>
+                            <li className="mb-2"><a style={{textDecoration:'none'}}  href="/warranty" className="text-dark">Warranty Policy</a></li>
+                            <li className="mb-2"><a style={{textDecoration:'none'}}  href="/policy" className="text-dark">FAQ</a></li>
                         </ul>
                     </Col>
 
@@ -49,7 +47,7 @@ const Footer = () => {
                             <li className="mb-2"><strong>BRANCH STORE</strong></li>
                             <li>789 Sparkle Road, Jewel Town, NY 10001</li>
                         </ul>
-                        <a href="/" className="text-primary" style={{fontWeight: 'bold'}}>HOME STORES</a>
+                        <a href="/" className="text-primary" style={{fontWeight: 'bold',textDecoration:'none'}}>HOME STORES</a>
                     </Col>
                 </Row>
 
@@ -65,12 +63,17 @@ const Footer = () => {
                     <Col md={6}>
                         <h3 className="h5 mb-3">CONNECT WITH US</h3>
                         <div>
-                            <FontAwesomeIcon icon={faFacebook} size="lg" className="me-3"/>
-                            <FontAwesomeIcon icon={faInstagram} size="lg" className="me-3"/>
-                            <FontAwesomeIcon icon={faYoutube} size="lg"/>
+                            <a href="https://www.facebook.com" target="_blank" rel="noopener noreferrer" className="text-dark me-3">
+                                <FontAwesomeIcon icon={faFacebook} size="lg" />
+                            </a>
+                            <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="text-dark me-3">
+                                <FontAwesomeIcon icon={faInstagram} size="lg" />
+                            </a>
+                            <a href="https://www.youtube.com" target="_blank" rel="noopener noreferrer" className="text-dark">
+                                <FontAwesomeIcon icon={faYoutube} size="lg" />
+                            </a>
                         </div>
                     </Col>
-
                 </Row>
             </Container>
         </footer>
