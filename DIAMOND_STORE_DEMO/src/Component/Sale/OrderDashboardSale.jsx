@@ -59,7 +59,15 @@ const OrderDashboard = ({ onOrderClick }) => {
                 new Date(b.orderDate) - new Date(a.orderDate)
             );
 
-            setOrders(sortedOrders);
+            // Fetch customer emails
+            const ordersWithEmails = await Promise.all(sortedOrders.map(async (order) => {
+                const customerResponse = await axios.get(`${API_URL}manage/accounts/${order.customerId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                return {...order, customerEmail: customerResponse.data.email};
+            }));
+
+            setOrders(ordersWithEmails);
             setTotalPages(response.data.totalPages);
             setLoading(false);
         } catch (err) {
@@ -103,12 +111,12 @@ const OrderDashboard = ({ onOrderClick }) => {
                 <table className="order-table">
                     <thead>
                     <tr>
-                        <th>Order ID</th>
+                        <th>ID</th>
                         <th>Date</th>
-                        <th>Total Amount</th>
-                        <th>Delivery Address</th>
+                        <th>Amount</th>
+                        <th>Address</th>
                         <th>Status</th>
-                        <th>Customer ID</th>
+                        <th>Customer</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -130,7 +138,7 @@ const OrderDashboard = ({ onOrderClick }) => {
                                     {statusLabels[order.status]}
                                 </span>
                             </td>
-                            <td>{order.customerId}</td>
+                            <td>{order.customerEmail}</td>
                             <td>
                                 <button
                                     onClick={() => handleOrderDetailsClick(order.orderId)}

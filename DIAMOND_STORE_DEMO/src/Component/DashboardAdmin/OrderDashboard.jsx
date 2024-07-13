@@ -11,7 +11,8 @@ import {
     faCreditCard,
     faTruck,
     faTimesCircle,
-    faBoxOpen
+    faBoxOpen,
+    faSearch
 } from '@fortawesome/free-solid-svg-icons';
 import '../../Scss/AllOrder.scss';
 import { API_URL } from "../../Config/config";
@@ -40,11 +41,13 @@ const OrderDashboard = ({ onOrderClick }) => {
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
+    const [searchTerm, setSearchTerm] = useState('');
     const ordersPerPage = 5;
 
     useEffect(() => {
         fetchOrders(currentPage);
     }, [currentPage]);
+
 
     const fetchOrders = async (page) => {
         try {
@@ -55,7 +58,13 @@ const OrderDashboard = ({ onOrderClick }) => {
                 headers: { 'Authorization': `Bearer ${token}` },
                 params: { page: page, size: ordersPerPage }
             });
-            const sortedOrders = response.data.content.sort((a, b) =>
+            const ordersWithCustomerInfo = await Promise.all(
+                response.data.content.map(async (order) => {
+                    const customerInfo = await fetchCustomerInfo(order.customerId);
+                    return { ...order, customerEmail: customerInfo?.email };
+                })
+            );
+            const sortedOrders = ordersWithCustomerInfo.sort((a, b) =>
                 new Date(b.orderDate) - new Date(a.orderDate)
             );
 
@@ -70,11 +79,33 @@ const OrderDashboard = ({ onOrderClick }) => {
         }
     };
 
+    const fetchCustomerInfo = async (customerId) => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`${API_URL}manage/accounts/${customerId}`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            return response.data;
+        } catch (err) {
+            console.error('Failed to fetch customer info:', err);
+            return null;
+        }
+    };
+
     const handleOrderDetailsClick = (orderId) => {
         onOrderClick(orderId);
     };
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
+    const handleSearch = (e) => {
+        setSearchTerm(e.target.value);
+    };
+
+    const filteredOrders = orders.filter(order =>
+        order.orderId.toString().includes(searchTerm) ||
+        (order.customerEmail && order.customerEmail.toLowerCase().includes(searchTerm.toLowerCase()))
+    );
 
     if (loading) {
         return (
@@ -99,21 +130,30 @@ const OrderDashboard = ({ onOrderClick }) => {
                 <FontAwesomeIcon icon={faShoppingCart} />
                 Order Dashboard
             </h1>
+            <div className="search-container">
+                <input
+                    type="text"
+                    placeholder="Search by email in page"
+                    value={searchTerm}
+                    onChange={handleSearch}
+                    className="search-input"
+                />
+            </div>
             <div className="order-table-container">
                 <table className="order-table">
                     <thead>
                     <tr>
-                        <th>Order ID</th>
+                        <th>Order</th>
                         <th>Date</th>
-                        <th>Total Amount</th>
-                        <th>Delivery Address</th>
+                        <th>Amount</th>
+                        <th>Address</th>
                         <th>Status</th>
-                        <th>Customer ID</th>
+                        <th>Customer</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {orders.map((order) => (
+                    {filteredOrders.map((order) => (
                         <tr key={order.orderId} className="order-row">
                             <td>{order.orderId}</td>
                             <td style={{color: 'blue', fontSize: '15px'}}>
@@ -123,14 +163,14 @@ const OrderDashboard = ({ onOrderClick }) => {
                             <td>{order.orderDeliveryAddress}</td>
                             <td>
                                 <span className={`status-badge ${order.status.toLowerCase()}`}>
-                                      <FontAwesomeIcon
-                                          icon={statusIcons[order.status].icon}
-                                          style={{color: statusIcons[order.status].color}}
-                                      />
+                                    <FontAwesomeIcon
+                                        icon={statusIcons[order.status].icon}
+                                        style={{color: statusIcons[order.status].color}}
+                                    />
                                     {statusLabels[order.status]}
                                 </span>
                             </td>
-                            <td>{order.customerId}</td>
+                            <td>{order.customerEmail || 'N/A'}</td>
                             <td>
                                 <button
                                     onClick={() => handleOrderDetailsClick(order.orderId)}
@@ -166,7 +206,6 @@ const OrderDashboard = ({ onOrderClick }) => {
                     </button>
                 ))}
             </div>
-
         </div>
     );
 };
