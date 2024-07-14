@@ -18,6 +18,7 @@ const Register = () => {
     });
     const [emailValidationMessage, setEmailValidationMessage] = useState("");
     const [errorMessages, setErrorMessages] = useState({});
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     useEffect(() => {
         if (formData.email) {
@@ -49,6 +50,9 @@ const Register = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         const errors = validateForm();
+
+        if (isSubmitting) return;
+
         if (Object.keys(errors).length > 0) {
             setErrorMessages(errors);
             return;
@@ -62,6 +66,8 @@ const Register = () => {
             });
             return;
         }
+
+        setIsSubmitting(true);
 
         try {
             await axios.post(`${API_URL}login/signup`, formData);
@@ -79,6 +85,8 @@ const Register = () => {
                 message: err.response?.data?.message || 'An error occurred during registration',
                 position: 'topRight'
             });
+        } finally {
+            setIsSubmitting(false);
         }
     };
     return (
@@ -150,7 +158,13 @@ const Register = () => {
                     <div className="row">
                         <div className="col-md-3"></div>
                         <div className="col-md-6">
-                            <button type="submit" className="ed-btn-primary">Register</button>
+                            <button
+                                type="submit"
+                                className="ed-btn-primary"
+                                disabled={isSubmitting}
+                            >
+                                {isSubmitting ? 'Registering...' : 'Register'}
+                            </button>
                         </div>
 
                         <div className="col-md-3"></div>

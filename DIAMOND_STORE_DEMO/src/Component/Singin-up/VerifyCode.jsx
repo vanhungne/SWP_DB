@@ -30,9 +30,9 @@ const VerifyCodeForm = () => {
                     title: 'Success',
                     message: 'Your account has been verified.',
                     position: 'topRight',
-                    timeout: 5000,
+                    timeout: 1000,
                     onClosing: () => {
-                        navigate('/');
+                        navigate('/login');
                     }
                 });
             } else {
@@ -47,7 +47,7 @@ const VerifyCodeForm = () => {
             setLoading(false);
             iziToast.error({
                 title: 'Error',
-                message: err.response?.data?.message || 'An error occurred during verification',
+                message: err.response?.data?.message || 'Wrong code',
                 position: 'topRight',
                 timeout: 5000
             });
@@ -77,15 +77,18 @@ return (
                             style={{ borderRadius: '10px', fontSize: '16px' }}
                         />
                     </div>
-                    <button
-                        type="button"
-                        className="btn btn-primary btn-block mt-4"
-                        onClick={handleVerifyCode}
-                        disabled={loading} // Disable button while loading
-                        style={{ borderRadius: '10px', fontSize: '18px', fontWeight: 'bold' }}
-                    >
-                        {loading ? 'Verifying...' : 'Verify'}
-                    </button>
+                    <div style={{textAlign:'center'}}>
+                        <button
+                            type="button"
+                            className="btn mt-4"
+                            onClick={handleVerifyCode}
+                            disabled={loading} // Disable button while loading
+                            style={{borderRadius: '10px', fontSize: '20px', fontWeight: 'bold',backgroundColor:'blue'}}
+                        >
+                            {loading ? 'Verifying...' : 'Verify'}
+                        </button>
+                    </div>
+
                 </div>
             </div>
         </div>
