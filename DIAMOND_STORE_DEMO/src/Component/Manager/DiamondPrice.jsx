@@ -51,6 +51,7 @@ const DiamondPrice = () => {
         } else {
             fetchDiamondPrices(currentPage, pageSize);
         }
+        window.scrollTo(0, 0);
     }, [currentPage, pageSize, searchCriteria]);
 
     const fetchDiamondPrices = async (page, size) => {

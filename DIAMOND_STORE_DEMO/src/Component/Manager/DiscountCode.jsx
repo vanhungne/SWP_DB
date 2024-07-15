@@ -40,6 +40,7 @@ const DiscountCode = () => {
     useEffect(() => {
         fetchPromotions();
         fetchDiscountCodes(currentPage, pageSize);
+        window.scrollTo(0, 0);
     }, [currentPage, pageSize]);
 
     const fetchDiscountCodes = async (page, size) => {

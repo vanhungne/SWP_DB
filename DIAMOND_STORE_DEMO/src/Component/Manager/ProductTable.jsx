@@ -23,6 +23,7 @@ const ProductTable = ({setSelectedProductId, setCurrentView} ) => {
         } else {
             fetchProducts(currentPage, pageSize);
         }
+        window.scrollTo(0, 0);
     }, [currentPage, pageSize, searchKeyword]);
 
     const fetchProducts = async (page, size) => {

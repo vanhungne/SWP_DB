@@ -29,6 +29,7 @@ const DiamondTable = ({ setSelectedDiamondId, setCurrentView}) => {
         } else {
             fetchDiamonds(currentPage, pageSize);
         }
+        window.scrollTo(0, 0);
     }, [currentPage, pageSize, searchCriteria]);
 
     const fetchDiamonds = async (page, size) => {

@@ -15,6 +15,7 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
         productName: '',
         collection: '',
         description: '',
+        markupRate: '',
         categoryId: '',
         shellId: '',
         image1: '',
@@ -34,6 +35,7 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
         } else {
             setProduct({});
         }
+        window.scrollTo(0, 0);
     }, [productId]);
 
     const fetchProductDetails = async (id) => {
@@ -46,6 +48,7 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
                 productName: response.data.productName,
                 collection: response.data.collection,
                 description: response.data.description,
+                markupRate: response.data.markupRate,
                 categoryId: response.data.categoryId,
                 shellId: response.data.shellId,
                 image1: response.data.image1,
@@ -284,6 +287,17 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
                     />
                 </div>
                 <div className="form-group">
+                    <label htmlFor="markupRate">Markup rate:</label>
+                    <input
+                        id="markupRate"
+                        name="markupRate"
+                        type="number"
+                        value={updatedProduct.markupRate}
+                        onChange={handleInputChange}
+                        required
+                    />
+                </div>
+                <div className="form-group">
                     <label htmlFor="categoryId">Category:</label>
                     <select
                         id="categoryId"
@@ -324,7 +338,9 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
                             diamonds.map((diamond, index) => (
                                 <li key={index}>
                                     <span>{diamond.diamondId}</span>
-                                    <button type="button" onClick={() => handleRemoveDiamond(diamond.diamondId)} className="remove-button">Remove</button>
+                                    <button type="button" onClick={() => handleRemoveDiamond(diamond.diamondId)}
+                                            className="remove-button">Remove
+                                    </button>
                                 </li>
                             ))
                         ) : (
@@ -332,7 +348,9 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
                         )}
                     </ul>
                     <div className="add-diamond">
-                        <button type="button" onClick={fetchUnusedDiamonds} className="load-diamonds-button">Load Diamonds</button>
+                        <button type="button" onClick={fetchUnusedDiamonds} className="load-diamonds-button">Load
+                            Diamonds
+                        </button>
                         <select
                             name="unusedDiamondId"
                             onChange={(e) => handleAddDiamond(e.target.value)}
@@ -356,7 +374,7 @@ const EditProduct = ({ productId, goBack, viewProduct }) => {
                                 onChange={(e) => handleImageUpload(e, imageField)}
                             />
                             {product[imageField] && (
-                                <img src={product[imageField]} alt={`Product Image ${index + 1}`} />
+                                <img src={product[imageField]} alt={`Product Image ${index + 1}`}/>
                             )}
                         </div>
                     ))}

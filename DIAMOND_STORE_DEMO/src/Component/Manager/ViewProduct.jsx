@@ -11,6 +11,7 @@ const ViewProduct = ({ productId, goBack }) => {
         if (productId) {
             fetchProductDetails(productId);
         }
+        window.scrollTo(0, 0);
     }, [productId]);
 
     const fetchProductDetails = async (id) => {

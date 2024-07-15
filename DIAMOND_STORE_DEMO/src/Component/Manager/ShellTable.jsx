@@ -23,6 +23,7 @@ const ShellTable = ({ setSelectedShellId, setCurrentView }) => {
         } else {
             fetchShells(currentPage, pageSize);
         }
+        window.scrollTo(0, 0);
     }, [currentPage, pageSize, searchKeyword]);
 
     const fetchShells = async (page, size) => {

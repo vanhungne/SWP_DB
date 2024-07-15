@@ -12,6 +12,7 @@ const ViewShell = ({ shellId, goBack }) => {
         if (shellId) {
             fetchShell(shellId);
         }
+        window.scrollTo(0, 0);
     }, [shellId]);
 
     const fetchShell = async (id) => {

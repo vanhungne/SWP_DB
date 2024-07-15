@@ -12,6 +12,7 @@ const ViewDiamond = ({ diamondId, goBack }) => {
         if (diamondId) {
             fetchDiamond(diamondId);
         }
+        window.scrollTo(0, 0);
     }, [diamondId]);
 
     const fetchDiamond = async (id) => {

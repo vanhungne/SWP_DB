@@ -26,6 +26,7 @@ const EditDiamond = ({ diamondId, goBack }) => {
         } else {
             setDiamond({});
         }
+        window.scrollTo(0, 0);
     }, [diamondId]);
 
     const fetchDiamondDetails = async (id) => {
