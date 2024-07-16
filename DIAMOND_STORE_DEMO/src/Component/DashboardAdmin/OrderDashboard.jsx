@@ -42,28 +42,34 @@ const OrderDashboard = ({ onOrderClick }) => {
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
-    const ordersPerPage = 5;
+    const [ordersPerPage, setOrdersPerPage] = useState(5);
 
     useEffect(() => {
-        fetchOrders(currentPage);
+        fetchOrders(currentPage, '');
     }, [currentPage]);
 
-
-    const fetchOrders = async (page) => {
+    const fetchOrders = async (page, search = '') => {
+        setLoading(true);
         try {
             const token = localStorage.getItem('token');
             if (!token) throw new Error('No authentication token found');
 
             const response = await axios.get(`${API_URL}order`, {
                 headers: { 'Authorization': `Bearer ${token}` },
-                params: { page: page, size: ordersPerPage }
+                params: {
+                    page: page,
+                    size: ordersPerPage,
+                    search: search
+                }
             });
+
             const ordersWithCustomerInfo = await Promise.all(
                 response.data.content.map(async (order) => {
                     const customerInfo = await fetchCustomerInfo(order.customerId);
                     return { ...order, customerEmail: customerInfo?.email };
                 })
             );
+
             const sortedOrders = ordersWithCustomerInfo.sort((a, b) =>
                 new Date(b.orderDate) - new Date(a.orderDate)
             );
@@ -98,15 +104,14 @@ const OrderDashboard = ({ onOrderClick }) => {
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
-    const handleSearch = (e) => {
+    const handleSearchChange = (e) => {
         setSearchTerm(e.target.value);
     };
 
-    const filteredOrders = orders.filter(order =>
-        order.orderId.toString().includes(searchTerm) ||
-        (order.customerEmail && order.customerEmail.toLowerCase().includes(searchTerm.toLowerCase()))
-    );
-
+    const handleSearchClick = () => {
+        setCurrentPage(0);
+        fetchOrders(0, searchTerm);
+    };
     if (loading) {
         return (
             <div className="loading-spinner">
@@ -123,21 +128,55 @@ const OrderDashboard = ({ onOrderClick }) => {
             </div>
         );
     }
+    const searchContainerStyle = {
+        display: 'flex',
+        alignItems: 'center',
+        marginBottom: '20px',
+    };
+
+    const searchInputStyle = {
+        flexGrow: 1,
+        padding: '8px',
+        fontSize: '14px',
+        border: '1px solid #ccc',
+        borderRadius: '4px 0 0 4px',
+
+    };
+
+    const searchButtonStyle = {
+        padding: '8px 12px',
+        fontSize: '14px',
+        backgroundColor: '#007bff',
+        color: 'white',
+        border: 'none',
+        borderRadius: '0 4px 4px 0',
+        cursor: 'pointer',
+        transition: 'background-color 0.3s',
+    };
 
     return (
         <div className="order-dashboard">
             <h1 className="dashboard-title">
-                <FontAwesomeIcon icon={faShoppingCart} />
+                <FontAwesomeIcon icon={faShoppingCart}/>
                 Order Dashboard
             </h1>
-            <div className="search-container">
+            <div style={searchContainerStyle}>
                 <input
                     type="text"
-                    placeholder="Search by email in page"
+                    placeholder="Search by order ID, email, or address"
                     value={searchTerm}
-                    onChange={handleSearch}
-                    className="search-input"
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    style={searchInputStyle}
                 />
+                <button
+                    onClick={() => {
+                        setCurrentPage(0);
+                        fetchOrders(0, searchTerm);
+                    }}
+                    style={searchButtonStyle}
+                >
+                    <FontAwesomeIcon icon={faSearch}/>
+                </button>
             </div>
             <div className="order-table-container">
                 <table className="order-table">
@@ -153,7 +192,7 @@ const OrderDashboard = ({ onOrderClick }) => {
                     </tr>
                     </thead>
                     <tbody>
-                    {filteredOrders.map((order) => (
+                    {orders.map((order) => (
                         <tr key={order.orderId} className="order-row">
                             <td>{order.orderId}</td>
                             <td style={{color: 'blue', fontSize: '15px'}}>
