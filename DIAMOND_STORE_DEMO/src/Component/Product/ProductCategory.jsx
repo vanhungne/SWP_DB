@@ -291,6 +291,8 @@ const ProductCategoryPage = () => {
                                 <ProductCard key={product.productId} product={product} />
                             ))}
                         </ProductsContainer>
+
+
                         <PaginationContainer>
                             {[...Array(totalPages).keys()].map((page) => (
                                 <PaginationButton

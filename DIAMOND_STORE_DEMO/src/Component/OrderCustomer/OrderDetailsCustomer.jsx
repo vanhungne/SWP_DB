@@ -196,7 +196,7 @@ const OrderDetails = () => {
                     orderDetailsData={orderDetailsData}
                     productInfo={productInfo}
                     diamondInfo={diamondInfo}
-                    orderStatus={orderData.status}
+                    orderStatus={orderData.status === "DELIVERED" ? "DELIVERING" : orderData.status}
                     handleManageWarranty={handleManageWarranty}
                     toggleCertificate={toggleCertificate}
                 />

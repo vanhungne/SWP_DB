@@ -96,9 +96,6 @@ const StatisticsDashboard = () => {
                         <Form.Control type="number" value={year} onChange={handleYearChange} />
                     </Col>
                 </Row>
-                {/*<Button variant="primary" type="button" onClick={fetchStatistics} className="custom-dashboard-button" style={{width:'25%'}}>*/}
-                {/*    Fetch Statistics*/}
-                {/*</Button>*/}
             </Form>
 
             {loading ? (
@@ -120,13 +117,13 @@ const StatisticsDashboard = () => {
                                     <h5 className="custom-dashboard-card-title">Revenue Trend</h5>
                                     {monthlyRevenue !== null ? (
                                         <ResponsiveContainer width="100%" height={400}>
-                                            <LineChart data={[{name: 'Revenue', value: monthlyRevenue}]}>
+                                            <LineChart data={[{name: 'Revenue', value: monthlyRevenue}]}> //ve bieu do duong
                                                 <XAxis dataKey="name"/>
                                                 <YAxis/>
-                                                <CartesianGrid strokeDasharray="3 3"/>
+                                                <CartesianGrid strokeDasharray="3 3"/>  //tạo lới cho đồ thị
                                                 <Tooltip/>
-                                                <Legend/>
-                                                <Line type="monotone" dataKey="value" stroke="#8884d8"/>
+                                                <Legend/> //hien thi chu thich cho gia tri
+                                                <Line type="monotone" dataKey="value" stroke="#8884d8"/> //biểu đồ đường,su dung value lam gia tri
                                             </LineChart>
                                         </ResponsiveContainer>
                                     ) : (
