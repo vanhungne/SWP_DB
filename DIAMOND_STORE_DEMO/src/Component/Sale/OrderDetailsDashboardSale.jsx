@@ -160,7 +160,9 @@ const OrderDetails = ({ orderData }) => {
                         <div className="order-details__info-item order-details__status">
                             <FontAwesomeIcon icon={faTag} className="order-details__status-icon"/>
                             <span style={{backgroundColor: 'white', color: 'black'}}>Current Status:</span>
-                            <span className="order-details__status-value">{status}</span>
+                            <span className="order-details__status-value">
+                                {status === "DELIVERED" ? "DELIVERING" : status}
+                            </span>
                         </div>
                         <div className="order-details__status-update">
                             <select

@@ -111,6 +111,10 @@ const OrderDashboard = () => {
         );
     }
 
+    const getDisplayStatus = (status) => {
+        return status === "DELIVERED" ? "DELIVERING" : status;
+    };
+
     return (
         <div className="order-dashboard">
             <h1 className="dashboard-title">
@@ -138,10 +142,10 @@ const OrderDashboard = () => {
                                 <td>${order.orderTotalAmount.toFixed(2)}</td>
                                 <td>{order.orderDeliveryAddress}</td>
                                 <td>
-                <span className={`status-badge ${order.status.toLowerCase()}`}>
-                  <FontAwesomeIcon icon={statusIcons[order.status]}/>
-                    {order.status}
-                </span>
+                            <span className={`status-badge ${order.status.toLowerCase()}`}>
+                             <FontAwesomeIcon icon={statusIcons[order.status]}/>
+                             {getDisplayStatus(order.status)}
+                            </span>
                                 </td>
                                 <td style={{display: 'flex', gap: '10px'}}>
                                     <button

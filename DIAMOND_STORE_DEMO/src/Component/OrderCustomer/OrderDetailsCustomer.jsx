@@ -120,6 +120,9 @@ const OrderDetails = () => {
         return <div className="order-details-c__not-found">Order not found.</div>;
     }
 
+    const getDisplayStatus = (status) => {
+        return status === "DELIVERED" ? "DELIVERING" : status;
+    };
     return (
         <div className="order-details-c">
             <div className="order-details-c__header">
@@ -148,7 +151,7 @@ const OrderDetails = () => {
                             </div>
                             <div className="order-details-c__info-item order-details-c__status">
                                 <FontAwesomeIcon icon={faTag}/>
-                                <span>Status: {orderData.status}</span>
+                                <span>Status: {getDisplayStatus(orderData.status)}</span>
                             </div>
                             {orderData.discountCode && (
                                 <div className="order-details-c__info-item">
@@ -196,7 +199,7 @@ const OrderDetails = () => {
                     orderDetailsData={orderDetailsData}
                     productInfo={productInfo}
                     diamondInfo={diamondInfo}
-                    orderStatus={orderData.status === "DELIVERED" ? "DELIVERING" : orderData.status}
+                    orderStatus={orderData.status}
                     handleManageWarranty={handleManageWarranty}
                     toggleCertificate={toggleCertificate}
                 />
