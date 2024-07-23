@@ -11,6 +11,7 @@ import {API_URL} from "../../Config/config";
 import ImageCarousel from "../../Layouttest/SliderHome";
 import SnowEffect from "./SnowEffect";
 import ProductSlider from './ProductSlider';
+import HomeNotification from './Notification';
 
 // Hàm xáo trộn mảng
 const shuffleArray = (array) => {
@@ -130,6 +131,7 @@ const Home = () => {
                 <title>Home - Featured & Collection Products</title>
                 <meta name="description" content="Check out our featured and collection products!"/>
             </MetaTags>
+            <HomeNotification />
             <SnowEffect/>
             <VideoBanner/>
 

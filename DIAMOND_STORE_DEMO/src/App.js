@@ -30,10 +30,12 @@ import Contact from "./Component/About/Contact";
 import AboutUs from "./Component/About/AboutUs";
 import DiamondKnow from "./Component/About/DiamondKnowledge/diamondKnow";
 import WarrantyDetails from "./Component/About/WarrantyDetails";
+import HomeNotification from "./Component/Home/Notification";
 function App() {
     return (
         <AuthProvider>
             <BrowserRouter>
+                <HomeNotification />
                 <Routes>
                     <Route path="/" element={<Layout />}>
                         <Route index element={<Home />} />
