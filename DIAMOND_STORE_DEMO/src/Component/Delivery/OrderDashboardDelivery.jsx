@@ -40,7 +40,7 @@ const OrderDashboard = ({ onOrderClick }) => {
     const [error, setError] = useState(null);
     const [currentPage, setCurrentPage] = useState(0);
     const [totalPages, setTotalPages] = useState(0);
-    const ordersPerPage = 5;
+    const ordersPerPage = 10;
 
     useEffect(() => {
         fetchOrders(currentPage);
