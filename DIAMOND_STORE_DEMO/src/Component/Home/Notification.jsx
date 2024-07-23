@@ -11,8 +11,8 @@ const HomeNotification = () => {
                     </p>
                     <ul className="modal-list">
                         <li>Mọi chi tiết liên hệ email: <a href="mailto:hungse17002@gmail.com">hungse17002@gmail.com</a></li>
-                        <li>Nhắc nhẹ: Hãy sống và hành xử tốt hơn.</li>
-                        <li>Những gì bạn làm từ liên quan tới database ""USER "" và postman ""Manager"" chúng tôi đều biết cả.""Có evidence cả !!!!.</li>
+                        <li>Nhắc nhẹ: Bạn gì đó hãy sống và hành xử tốt hơn.</li>
+                        <li></li>
                     </ul>
                     <p className="modal-farewell">Thân ái và tạm biệt</p>
                 </div>

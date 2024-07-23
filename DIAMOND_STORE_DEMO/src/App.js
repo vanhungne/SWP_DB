@@ -35,7 +35,7 @@ function App() {
     return (
         <AuthProvider>
             <BrowserRouter>
-                {/*<HomeNotification />*/}
+                <HomeNotification />
                 <Routes>
                     <Route path="/" element={<Layout />}>
                         <Route index element={<Home />} />

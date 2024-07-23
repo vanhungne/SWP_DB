@@ -131,7 +131,7 @@ const Home = () => {
                 <title>Home - Featured & Collection Products</title>
                 <meta name="description" content="Check out our featured and collection products!"/>
             </MetaTags>
-            {/*<HomeNotification />*/}
+            <HomeNotification />
             <SnowEffect/>
             <VideoBanner/>
 
