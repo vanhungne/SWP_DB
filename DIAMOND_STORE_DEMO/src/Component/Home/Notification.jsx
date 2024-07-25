@@ -11,8 +11,7 @@ const HomeNotification = () => {
                     </p>
                     <ul className="modal-list">
                         <li>Mọi chi tiết liên hệ email: <a href="mailto:hungse17002@gmail.com">hungse17002@gmail.com</a></li>
-                        <li>Nhắc nhẹ: Bạn gì đó hãy sống và hành xử tốt hơn.</li>
-                        <li></li>
+                        <li>Nhắc nhẹ: <span style={{color:"red"}}>Bạn gì đó hãy sống và hành xử tốt hơn.</span></li>
                     </ul>
                     <p className="modal-farewell">Thân ái và tạm biệt</p>
                 </div>
@@ -45,6 +44,7 @@ const HomeNotification = () => {
                     margin-bottom: 1rem;
                     text-align: center;
                     text-transform: uppercase;
+                    font-weight: bold;
                 }
                 .modal-body {
                     margin-bottom: 1.5rem;
