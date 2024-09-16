@@ -11,7 +11,7 @@ const HomeNotification = () => {
                     </p>
                     <ul className="modal-list">
                         <li>Mọi chi tiết liên hệ email: <a href="mailto:hungse17002@gmail.com">hungse17002@gmail.com</a></li>
-                        <li>Nhắc nhẹ: <span style={{color:"red"}}>Bạn gì đó hãy sống và hành xử tốt hơn.</span></li>
+                        <li>Nhắc nhẹ: <span style={{color:"red"}}>Bạn gì đó hãy sống và hành xử tốt hơn.Nguyễn Thanh Phong</span></li>
                     </ul>
                     <p className="modal-farewell">Thân ái và tạm biệt</p>
                 </div>
