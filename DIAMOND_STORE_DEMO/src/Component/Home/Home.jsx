@@ -13,6 +13,7 @@ import SnowEffect from "./SnowEffect";
 import ProductSlider from './ProductSlider';
 import HomeNotification from './Notification';
 
+
 // Hàm xáo trộn mảng
 const shuffleArray = (array) => {
     for (let i = array.length - 1; i > 0; i--) {

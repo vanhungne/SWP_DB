@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Header from "../Footer-Header/header";
 import Footer from "../Footer-Header/footer";
+import { Analytics } from '@vercel/analytics/react';
 const Layout = () => {
     const [headerHeight, setHeaderHeight] = useState(0);
 
@@ -24,6 +25,7 @@ const Layout = () => {
             <Header />
             <div className='flex-grow-1' style={{ paddingTop: `${headerHeight + 0.5}px` }}>
                 <Outlet />
+                <Analytics />
             </div>
             <Footer />
         </div>
