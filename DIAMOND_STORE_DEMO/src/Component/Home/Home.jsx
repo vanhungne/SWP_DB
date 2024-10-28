@@ -131,14 +131,15 @@ const Home = () => {
                 <title>Home - Featured & Collection Products</title>
                 <meta name="description" content="Check out our featured and collection products!"/>
             </MetaTags>
-            <HomeNotification />
+            {/*<HomeNotification />*/}
+
             <SnowEffect/>
             <VideoBanner/>
 
             <div className="container">
                 <div className="row">
                     <div className="col-12 mb-4">
-                        <h1>SPECIAL PRODUCT</h1>
+                        <h1>SPECIAL PRODUCTS</h1>
                     </div>
                     {featuredProducts.map((product) => (
                         <ProductCard key={product.productId} product={product}/>
